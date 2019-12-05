@@ -47,6 +47,8 @@ impl Logger {
         let message = message.to_string();
         eprintln!("{} {}\n\n", "[!]".red(), message.bold());
 
+        // Graceful shutdown in this closure, hopefully
+        // as graceful as possible atleast.
         // Everything broke code
         handler(0x0100);
     }
