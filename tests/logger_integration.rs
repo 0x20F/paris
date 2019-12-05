@@ -28,13 +28,6 @@ fn test_warning() {
 
 
 #[test]
-fn test_attention() {
-    let logger = Logger::new();
-    logger.attention("Pay attention to this");
-}
-
-
-#[test]
 fn test_panic() {
     let logger = Logger::new();
     logger.panic("You should die now", |c| assert_eq!(c, 0x0100));
