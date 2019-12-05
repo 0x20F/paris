@@ -10,10 +10,9 @@ pub struct Logger {}
 impl Logger {
     /// Initializes a new logger
     /// 
-    /// Example
+    /// # Example
     /// ```
     /// extern crate paris;
-    /// 
     /// use paris::Logger;
     /// 
     /// let logger = Logger::new();
@@ -26,8 +25,13 @@ impl Logger {
 
     /// Prints to stdout and adds some info flair to the text
     /// 
-    /// Example
+    /// # Example
     /// ```
+    /// # extern crate paris;
+    /// # use paris::Logger;
+    /// 
+    /// # let logger = Logger::new();
+    /// 
     /// logger.info("This is some info");
     /// ```
     pub fn info<T: Display>(&self, message: T) -> &Logger {
@@ -39,8 +43,13 @@ impl Logger {
 
     /// Prints to stdout and adds some warning flare to text
     /// 
-    /// Example
+    /// # Example
     /// ```
+    /// # extern crate paris;
+    /// # use paris::Logger;
+    /// 
+    /// # let logger = Logger::new();
+    /// 
     /// logger.warning("This is a warning");
     /// ```
     pub fn warning<T: Display>(&self, message: T) -> &Logger {
@@ -52,9 +61,14 @@ impl Logger {
 
     /// Prints to stderr and adds some error flare to text
     /// 
-    /// Example
+    /// # Example
     /// ```
-    /// logger.error("Something broke, here's the error")
+    /// # extern crate paris;
+    /// # use paris::Logger;
+    /// 
+    /// # let logger = Logger::new();
+    /// 
+    /// logger.error("Something broke, here's the error");
     /// ```
     pub fn error<T: Display>(&self, message: T) -> &Logger {
         eprintln!("{} {}", "[-]".red(), message);
@@ -65,8 +79,13 @@ impl Logger {
 
     /// Prints a specified amount of newlines to stdout
     /// 
-    /// Example
+    /// # Example
     /// ```
+    /// # extern crate paris;
+    /// # use paris::Logger;
+    /// 
+    /// # let logger = Logger::new();
+    /// 
     /// logger
     ///     .newline(5)
     ///     .info("Some newlines before info")
@@ -82,8 +101,13 @@ impl Logger {
 
     /// Prints a specified amount of tabs to stdout
     /// 
-    /// Example
+    /// # Example
     /// ```
+    /// # extern crate paris;
+    /// # use paris::Logger;
+    /// 
+    /// # let logger = Logger::new();
+    /// 
     /// logger
     ///     .indent(1)
     ///     .warning("Indented warning eh? Stands out a bit")
@@ -100,16 +124,21 @@ impl Logger {
     /// a closure and cleanup if needed, otherwise just kill the program somehow
     /// *TODO: This isn't so well designed tbh, work in progress*
     /// 
-    /// Example
-    /// ```
+    /// # Example
+    /// ```should_panic
+    /// # extern crate paris;
+    /// # use paris::Logger;
+    /// 
+    /// # let logger = Logger::new();
+    /// 
     /// logger.panic("Everything exploded but I can still pack my bags", |code| {
-    ///     ::std::process::exit(code);
+    ///     panic!("Ending it all now, code: {}", code);
     /// });
     /// ```
     pub fn panic<T, F>(&self, message: T, handler: F)
         where 
             T: Display,
-            F: FnOnce(i16)
+            F: FnOnce(i32)
     {
         let message = message.to_string();
         eprintln!("{} {}\n\n", "[!]".red(), message.bold());
