@@ -95,7 +95,6 @@ impl Logger {
     /// Initializes a new logger
     /// 
     /// # Example
-    /// 
     /// ```
     /// use paris::Logger;
     /// let logger = Logger::new();
@@ -109,14 +108,32 @@ impl Logger {
     /// Prints to stdout and adds some info flair to the text
     /// 
     /// # Example
-    /// 
     /// ```
     /// # use paris::Logger;
     /// # let logger = Logger::new();
     /// logger.info("This is some info");
     /// ```
     pub fn info<T: Display>(&self, message: T) -> &Logger {
-        println!("{} {}", "[+]".cyan(), message);
+        let icon = format!("{}", LogIcon::Info);
+
+        println!("{} {}", icon.cyan(), message);
+        self
+    }
+
+
+
+    /// Prints to stdout and adds some success flair to text
+    /// 
+    /// # Example
+    /// ```
+    /// # use paris::Logger;
+    /// # let logger = Logger::new();
+    /// logger.success("Everything went great!");
+    /// ```
+    pub fn success<T: Display>(&self, message: T) -> &Logger {
+        let icon = format!("{}", LogIcon::Tick);
+
+        println!("{} {}", icon.green(), message);
         self
     }
 
@@ -125,14 +142,15 @@ impl Logger {
     /// Prints to stdout and adds some warning flare to text
     /// 
     /// # Example
-    /// 
     /// ```
     /// # use paris::Logger;
     /// # let logger = Logger::new();
     /// logger.warning("This is a warning");
     /// ```
     pub fn warning<T: Display>(&self, message: T) -> &Logger {
-        println!("{} {}", "[!]".yellow(), message);
+        let icon = format!("{}", LogIcon::Warning);
+
+        println!("{} {}", icon.yellow(), message);
         self
     }
 
@@ -141,14 +159,15 @@ impl Logger {
     /// Prints to stderr and adds some error flare to text
     /// 
     /// # Example
-    /// 
     /// ```
     /// # use paris::Logger;
     /// # let logger = Logger::new();
     /// logger.error("Something broke, here's the error");
     /// ```
     pub fn error<T: Display>(&self, message: T) -> &Logger {
-        eprintln!("{} {}", "[-]".red(), message);
+        let icon = format!("{}", LogIcon::Cross);
+
+        eprintln!("{} {}", icon.red(), message);
         self
     }
 
@@ -157,7 +176,6 @@ impl Logger {
     /// Prints a specified amount of newlines to stdout
     /// 
     /// # Example
-    /// 
     /// ```
     /// # use paris::Logger;
     /// # let logger = Logger::new();
@@ -177,7 +195,6 @@ impl Logger {
     /// Prints a specified amount of tabs to stdout
     /// 
     /// # Example
-    /// 
     /// ```
     /// # use paris::Logger;
     /// # let logger = Logger::new();
@@ -189,34 +206,5 @@ impl Logger {
     pub fn indent(&self, amount: usize) -> &Logger {
         print!("{}", "\t".repeat(amount));
         self
-    }
-
-    
-
-    /// Prints a message to stderr and assumes panic, pass in 
-    /// a closure and cleanup if needed, otherwise just kill the program somehow
-    /// *TODO: This isn't so well designed tbh, work in progress*
-    /// 
-    /// # Example
-    /// 
-    /// ```should_panic
-    /// # use paris::Logger;
-    /// # let logger = Logger::new();
-    /// logger.panic("Everything exploded but I can still pack my bags", |code| {
-    ///     panic!("Ending it all now, code: {}", code);
-    /// });
-    /// ```
-    pub fn panic<T, F>(&self, message: T, handler: F)
-        where 
-            T: Display,
-            F: FnOnce(i32)
-    {
-        let message = message.to_string();
-        eprintln!("{} {}\n\n", "[!]".red(), message.bold());
-
-        // Graceful shutdown in this closure, hopefully
-        // as graceful as possible atleast.
-        // Everything broke code
-        handler(0x0100);
     }
 }
