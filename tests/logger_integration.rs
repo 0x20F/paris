@@ -14,6 +14,13 @@ fn test_info() {
 
 
 #[test]
+fn test_success() {
+    let logger = Logger::new();
+    logger.success("You did it and nothing broke!!");
+}
+
+
+#[test]
 fn test_error() {
     let logger = Logger::new();
     logger
