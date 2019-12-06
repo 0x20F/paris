@@ -3,4 +3,7 @@ Logger in Rust for pretty colors and text in the terminal
 
 ### TODO:
 
-* Integration tests
+* Add examples in README
+* *"parse"* function to build custom combinations and styles
+* ~~Integration tests~~
+
