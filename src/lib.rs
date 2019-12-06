@@ -1,11 +1,95 @@
 extern crate colored;
 
-use std::fmt::Display;
+use std::fmt::{ Display, Formatter, Result };
 use colored::*;
 
 
-pub struct Logger {}
 
+/// Contains definitions for icons that can be
+/// used in the terminal. See [this github repo](https://github.com/sindresorhus/figures) 
+/// for an entire list. Use this in combination with printing macros.
+pub enum LogIcon {
+    /// A check mark, use when things go well
+    /// 
+    /// # Example
+    /// ```
+    /// # use paris::LogIcon;
+    /// println!("{} Everything went well", LogIcon::Tick); 
+    /// // ✔ Everything went well
+    /// ```
+    Tick,
+
+    /// A cross, use when things go bad, or be creative
+    /// 
+    /// # Example
+    /// ```
+    /// # use paris::LogIcon;
+    /// println!("{} Oops, try again!", LogIcon::Cross); 
+    /// // ✖ Oops, try again!
+    /// ```
+    Cross,
+    
+    /// A fancy 'i', for information
+    /// 
+    /// # Example
+    /// ```
+    /// # use paris::LogIcon;
+    /// println!("{} In Switzerland it is illegal to own just one guinea pig", LogIcon::Info); 
+    /// // ℹ In Switzerland it is illegal to own just one guinea pig.
+    /// ```
+    Info,
+    
+    /// A triangle with an exclamation mark in it, dangerous
+    /// 
+    /// # Example
+    /// ```
+    /// # use paris::LogIcon;
+    /// println!("{} Things are starting to catch fire!", LogIcon::Warning);
+    /// // ⚠ Things are starting to catch fire!
+    /// ```
+    Warning,
+    
+    /// ❤️
+    /// # Example
+    /// ```
+    /// // You get it...
+    /// ```
+    Heart
+}
+
+
+impl Display for LogIcon {
+    /// Match the enum value and print out the equivalent icon.
+    /// On Windows, icons will be replaced with other *things* that
+    /// are supported. See [this github repo](https://github.com/sindresorhus/figures) 
+    /// for all replacements
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        let (mut t, mut c, mut i, mut w, mut h) = ("✔", "✖", "ℹ", "⚠", "♥"); 
+
+        if cfg!(windows) {
+            t = "√";
+            c = "×";
+            i = "i";
+            w = "‼";
+            h = "♥";
+        }
+
+        match *self {
+            LogIcon::Tick       => write!(f, "{}", t),
+            LogIcon::Cross      => write!(f, "{}", c),
+            LogIcon::Info       => write!(f, "{}", i),
+            LogIcon::Warning    => write!(f, "{}", w),
+            LogIcon::Heart      => write!(f, "{}", h)
+        }
+    }
+}
+
+
+
+
+
+
+pub struct Logger {}
 
 impl Logger {
     /// Initializes a new logger
