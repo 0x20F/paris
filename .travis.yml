@@ -4,8 +4,7 @@ rust:
   - beta
   - nightly
 os:
-  - osx
-  - windows
+  - linux
 matrix:
   allow_failures:
     - rust: nightly
