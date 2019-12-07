@@ -1,6 +1,3 @@
-extern crate chrono;
-extern crate colored;
-
 use std::fmt::{ Display, Formatter, Result };
 use chrono::{ Timelike, Utc };
 use colored::*;

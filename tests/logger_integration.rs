@@ -1,6 +1,3 @@
-extern crate paris;
-
-
 use paris::Logger;
 use paris::LogIcon;
 
