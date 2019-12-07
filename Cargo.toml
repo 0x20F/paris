@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 colored = "1.9"
+chrono = "0.4.10"
