@@ -1,7 +1,6 @@
 use std::fmt::{ Display, Formatter, Result };
 
 use chrono::{ Timelike, Utc };
-use console::Term;
 use colored::*;
 
 
