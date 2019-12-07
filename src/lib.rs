@@ -1,5 +1,7 @@
 use std::fmt::{ Display, Formatter, Result };
+
 use chrono::{ Timelike, Utc };
+use console::Term;
 use colored::*;
 
 
@@ -110,6 +112,25 @@ impl Logger {
 
 
 
+    /// Prints to stdout with no bells and whistles. I does however
+    /// add a timestamp if enabled.
+    /// 
+    /// # Example
+    /// ```
+    /// # use paris::Logger;
+    /// let logger = Logger::new(false);
+    /// 
+    /// logger.log("Basic and boring."); // Basic and boring.
+    /// ```
+    pub fn log<T: Display>(&self, message: T) -> &Logger {
+        let timestamp = self.timestamp();
+
+        println!("{}{}", timestamp, message);
+        self
+    }
+
+
+
     /// Prints to stdout and adds some info flair to the text
     /// 
     /// # Example
@@ -122,7 +143,7 @@ impl Logger {
         let icon = format!("{}", LogIcon::Info);
         let timestamp = self.timestamp();
 
-        println!("{}{}{}", icon.cyan(), timestamp, message);
+        println!("{} {}{}", icon.cyan(), timestamp, message);
         self
     }
 
@@ -140,7 +161,7 @@ impl Logger {
         let icon = format!("{}", LogIcon::Tick);
         let timestamp = self.timestamp();
 
-        println!("{}{}{}", icon.green(), timestamp, message);
+        println!("{} {}{}", icon.green(), timestamp, message);
         self
     }
 
@@ -158,7 +179,7 @@ impl Logger {
         let icon = format!("{}", LogIcon::Warning);
         let timestamp = self.timestamp();
 
-        println!("{}{}{}", icon.yellow(), timestamp, message);
+        println!("{} {}{}", icon.yellow(), timestamp, message);
         self
     }
 
@@ -176,7 +197,7 @@ impl Logger {
         let icon = format!("{}", LogIcon::Cross);
         let timestamp = self.timestamp();
 
-        eprintln!("{}{}{}", icon.red(), timestamp, message);
+        eprintln!("{} {}{}", icon.red(), timestamp, message);
         self
     }
 
@@ -219,18 +240,19 @@ impl Logger {
 
 
 
+
+
     /// Gets current timestamp in "00:00:00 AM/PM" format
     fn timestamp(&self) -> ColoredString {
         if !self.with_timestamp {
-            return String::from(" ").normal();
+            return String::from("").normal();
         }
 
         let now = Utc::now();
-
         let (is_pm, hour) = now.hour12();
 
         format!(
-            " {:02}:{:02}:{:02} {} > ", 
+            "{:02}:{:02}:{:02} {} > ", 
             hour,
             now.minute(),
             now.second(),
@@ -269,6 +291,7 @@ mod tests {
             .warning("Told")
             .success("Me")
             .newline(5)
+            .log("A basic log eh")
             .indent(2)
             .info("If it didn't crash it's fine");
 

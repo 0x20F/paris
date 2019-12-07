@@ -4,6 +4,13 @@ use paris::LogIcon;
 
 
 #[test]
+fn test_log() {
+    let logger = Logger::new(false);
+    logger.log("This is the most basic of texts.");
+}
+
+
+#[test]
 fn test_info() {
     let logger = Logger::new(false);
     logger.info("This is some info, it should work");
