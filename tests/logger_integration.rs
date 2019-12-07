@@ -8,29 +8,28 @@ use paris::LogIcon;
 
 #[test]
 fn test_info() {
-    let logger = Logger::new();
+    let logger = Logger::new(false);
     logger.info("This is some info, it should work");
 }
 
 
 #[test]
 fn test_success() {
-    let logger = Logger::new();
+    let logger = Logger::new(true);
     logger.success("You did it and nothing broke!!");
 }
 
 
 #[test]
 fn test_error() {
-    let logger = Logger::new();
-    logger
-        .error("This is an error, but test should still work");
+    let logger = Logger::new(false);
+    logger.error("This is an error, but test should still work");
 }
 
 
 #[test]
 fn test_warning() {
-    let logger = Logger::new();
+    let logger = Logger::new(true);
     logger.warning("This is a warning, watch it");
 }
 

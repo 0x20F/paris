@@ -1,6 +1,8 @@
+extern crate chrono;
 extern crate colored;
 
 use std::fmt::{ Display, Formatter, Result };
+use chrono::{ Timelike, Utc };
 use colored::*;
 
 
@@ -89,7 +91,10 @@ impl Display for LogIcon {
 
 
 
-pub struct Logger {}
+pub struct Logger {
+    is_loading: bool,
+    with_timestamp: bool
+}
 
 impl Logger {
     /// Initializes a new logger
@@ -97,10 +102,13 @@ impl Logger {
     /// # Example
     /// ```
     /// use paris::Logger;
-    /// let logger = Logger::new();
+    /// let logger = Logger::new(true); // Passing true will add timestamps to all logs
     /// ```
-    pub fn new() -> Logger {
-        Logger {}
+    pub fn new(timestamp: bool) -> Logger {
+        Logger {
+            is_loading: false,
+            with_timestamp: if timestamp { true } else { false }
+        }
     }
 
 
@@ -110,13 +118,14 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new();
+    /// # let logger = Logger::new(false);
     /// logger.info("This is some info");
     /// ```
     pub fn info<T: Display>(&self, message: T) -> &Logger {
         let icon = format!("{}", LogIcon::Info);
+        let timestamp = self.timestamp();
 
-        println!("{} {}", icon.cyan(), message);
+        println!("{}{}{}", icon.cyan(), timestamp, message);
         self
     }
 
@@ -127,13 +136,14 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new();
+    /// # let logger = Logger::new(false);
     /// logger.success("Everything went great!");
     /// ```
     pub fn success<T: Display>(&self, message: T) -> &Logger {
         let icon = format!("{}", LogIcon::Tick);
+        let timestamp = self.timestamp();
 
-        println!("{} {}", icon.green(), message);
+        println!("{}{}{}", icon.green(), timestamp, message);
         self
     }
 
@@ -144,13 +154,14 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new();
+    /// # let logger = Logger::new(false);
     /// logger.warning("This is a warning");
     /// ```
     pub fn warning<T: Display>(&self, message: T) -> &Logger {
         let icon = format!("{}", LogIcon::Warning);
+        let timestamp = self.timestamp();
 
-        println!("{} {}", icon.yellow(), message);
+        println!("{}{}{}", icon.yellow(), timestamp, message);
         self
     }
 
@@ -161,13 +172,14 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new();
+    /// # let logger = Logger::new(false);
     /// logger.error("Something broke, here's the error");
     /// ```
     pub fn error<T: Display>(&self, message: T) -> &Logger {
         let icon = format!("{}", LogIcon::Cross);
+        let timestamp = self.timestamp();
 
-        eprintln!("{} {}", icon.red(), message);
+        eprintln!("{}{}{}", icon.red(), timestamp, message);
         self
     }
 
@@ -178,7 +190,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new();
+    /// # let logger = Logger::new(false);
     /// logger
     ///     .newline(5)
     ///     .info("Some newlines before info")
@@ -197,7 +209,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new();
+    /// # let logger = Logger::new(false);
     /// logger
     ///     .indent(1)
     ///     .warning("Indented warning eh? Stands out a bit")
@@ -206,5 +218,64 @@ impl Logger {
     pub fn indent(&self, amount: usize) -> &Logger {
         print!("{}", "\t".repeat(amount));
         self
+    }
+
+
+
+    /// Gets current timestamp in "00:00:00 AM/PM" format
+    fn timestamp(&self) -> ColoredString {
+        if !self.with_timestamp {
+            return String::from(" ").normal();
+        }
+
+        let now = Utc::now();
+
+        let (is_pm, hour) = now.hour12();
+
+        format!(
+            " {:02}:{:02}:{:02} {} > ", 
+            hour,
+            now.minute(),
+            now.second(),
+            if is_pm { "PM" } else { "AM" }
+        ).bold()
+    }
+}
+
+
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_timestamp() {
+        let logger = Logger::new(false);
+        assert_eq!(logger.with_timestamp, false);
+        logger.info("It doesn't have a timestamp");
+
+        let logger = Logger::new(true);
+        assert_eq!(logger.with_timestamp, true);
+        logger.info("It has a timestamp");
+    }
+
+    #[test]
+    fn it_works() {
+        let logger = Logger::new(true);
+
+        logger
+            .info("Somebody")
+            .error("Once")
+            .warning("Told")
+            .success("Me")
+            .newline(5)
+            .indent(2)
+            .info("If it didn't crash it's fine");
+
+        assert_eq!(logger.with_timestamp, true);
+        assert_eq!(logger.is_loading, false);
     }
 }
