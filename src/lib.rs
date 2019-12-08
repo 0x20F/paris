@@ -1,4 +1,10 @@
 use std::fmt::{ Display, Formatter, Result };
+use std::thread;
+use std::time::Duration;
+use std::sync::Arc;
+use std::sync::atomic::{ AtomicBool, Ordering };
+use std::io::prelude::*;
+use std::io;
 
 use chrono::{ Timelike, Utc };
 use colored::*;
@@ -49,7 +55,7 @@ pub enum LogIcon {
     /// ```
     Warning,
     
-    /// ❤️
+    /// ❤️🦄
     /// # Example
     /// ```
     /// // You get it...
@@ -90,8 +96,10 @@ impl Display for LogIcon {
 
 
 pub struct Logger {
-    is_loading: bool,
-    with_timestamp: bool
+    is_loading: Arc<AtomicBool>,
+    loading_message: String, // TODO: Use Option<>
+    loading_handle: Option<thread::JoinHandle<()>>,
+    with_timestamp: bool,
 }
 
 impl Logger {
@@ -104,7 +112,9 @@ impl Logger {
     /// ```
     pub fn new(timestamp: bool) -> Logger {
         Logger {
-            is_loading: false,
+            is_loading: Arc::new(AtomicBool::new(false)),
+            loading_message: String::from(""),
+            loading_handle: None,
             with_timestamp: if timestamp { true } else { false }
         }
     }
@@ -239,6 +249,64 @@ impl Logger {
 
 
 
+    /// Starts a loading animation with the given message. No other
+    /// methods can be chained to this one.
+    /// 
+    /// # Example
+    /// ```
+    /// # use paris::Logger;
+    /// let mut logger = Logger::new(false);
+    /// logger.start_loading("Counting to 52!");
+    /// 
+    /// // counting happens here (somehow)
+    /// 
+    /// logger.stop_loading();
+    /// logger.success("Done counting, only took 1 million years");
+    /// ```
+    pub fn start_loading<T: Display>(&mut self, message: T) {
+        self.is_loading.store(true, Ordering::SeqCst);
+
+        let status = self.is_loading.clone();
+        let thread_message = message.to_string().clone();
+        self.loading_message = message.to_string();
+
+        self.loading_handle = Some(thread::spawn(move || {
+            let frames: [&str; 6] = ["⠦", "⠇", "⠋", "⠙", "⠸", "⠴"];
+            let mut i = 1;
+
+            while status.load(Ordering::SeqCst) {
+                if i == frames.len() {
+                    i = 0;
+                }
+
+                print!("\r{} {}", frames[i].cyan(), thread_message);
+                io::stdout().flush().unwrap();
+
+                thread::sleep(Duration::from_millis(100));
+                
+                i = i + 1;
+            }
+        }));
+    }
+
+
+
+    /// Stops the loading animation and clears the line so you can print something else
+    /// when loading is done, maybe a success message. No other methods can be chained
+    /// to this one. 
+    pub fn stop_loading(&mut self) {
+        self.is_loading.store(false, Ordering::SeqCst);
+        self.loading_handle
+            .take().expect("Called stop on a non-existing thread, make sure you ran .start_loading() first!")
+            .join().expect("Could not join spawned thread");
+
+        let clearing_length = self.loading_message.len() + 5;
+        print!("\r{}\r", " ".repeat(clearing_length));
+        io::stdout().flush().unwrap();
+    }
+
+
+
 
 
     /// Gets current timestamp in "00:00:00 AM/PM" format
@@ -265,6 +333,8 @@ impl Logger {
 
 
 
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -278,6 +348,33 @@ mod tests {
         let logger = Logger::new(true);
         assert_eq!(logger.with_timestamp, true);
         logger.info("It has a timestamp");
+    }
+
+    #[test]
+    fn test_loading() {
+        let mut logger = Logger::new(false);
+        logger.start_loading("Loading in the middle of a test is not good!");
+        // Long thing here
+        logger.stop_loading();
+        logger.success("Done loading!");
+
+
+        logger.info("About to load again");
+
+        logger.start_loading("Loading something else");
+        logger.stop_loading();
+        
+        logger
+            .success("Done loading")
+            .info("A bit after loading is finished");
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_stop_loading() {
+        let mut logger = Logger::new(false);
+        // Stop loading without starting first
+        logger.stop_loading();
     }
 
     #[test]
@@ -295,6 +392,5 @@ mod tests {
             .info("If it didn't crash it's fine");
 
         assert_eq!(logger.with_timestamp, true);
-        assert_eq!(logger.is_loading, false);
     }
 }
