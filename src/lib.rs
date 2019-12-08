@@ -294,6 +294,8 @@ impl Logger {
     /// Stops the loading animation and clears the line so you can print something else
     /// when loading is done, maybe a success message. No other methods can be chained
     /// to this one. 
+    /// 
+    /// Panics if `.start_loading()` wasn't called first.
     pub fn stop_loading(&mut self) {
         self.is_loading.store(false, Ordering::SeqCst);
         self.loading_handle
