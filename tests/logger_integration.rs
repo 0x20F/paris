@@ -2,7 +2,6 @@ use paris::Logger;
 use paris::LogIcon;
 
 
-
 #[test]
 fn test_log() {
     let logger = Logger::new(false);
@@ -35,6 +34,23 @@ fn test_error() {
 fn test_warning() {
     let logger = Logger::new(true);
     logger.warning("This is a warning, watch it");
+}
+
+
+#[test]
+fn test_loading() {
+    let mut logger = Logger::new(false);
+    logger.start_loading("Parsing 500 files");
+    logger.stop_loading();
+    logger.success("Parsed 500 files");
+
+    logger.start_loading("Parsing another 500 files");
+    logger.stop_loading();
+    logger.error("Failed parsing another 500 files");
+
+    logger.start_loading("Printing the 1000 files");
+    logger.stop_loading();
+    logger.info("Done printing things");
 }
 
 
