@@ -1,7 +1,7 @@
 use std::fmt::{ Display, Formatter, Result };
 use std::thread;
 use std::time::Duration;
-use std::sync::Arc;
+use std::sync::{ Arc, RwLock };
 use std::sync::atomic::{ AtomicBool, Ordering };
 use std::io::prelude::*;
 use std::io;
@@ -96,7 +96,7 @@ impl Display for LogIcon {
 
 
 pub struct Logger {
-    is_loading: Arc<AtomicBool>,
+    is_loading: Arc<RwLock<bool>>,
     loading_message: String, // TODO: Use Option<>
     loading_handle: Option<thread::JoinHandle<()>>,
     with_timestamp: bool
@@ -112,7 +112,7 @@ impl Logger {
     /// ```
     pub fn new(timestamp: bool) -> Logger {
         Logger {
-            is_loading: Arc::new(AtomicBool::new(false)),
+            is_loading: Arc::new(RwLock::new(false)),
             loading_message: String::from(""),
             loading_handle: None,
             with_timestamp: if timestamp { true } else { false }
@@ -121,17 +121,22 @@ impl Logger {
 
 
 
-    /// Prints to stdout with no newlines or other fancy things.
+    /// Prints to stdout with no bells and whistles. I does however
+    /// add a timestamp if enabled.
     /// 
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// let logger = Logger::new(false);
+    /// let mut logger = Logger::new(false);
     /// 
     /// logger.log("Basic and boring."); // Basic and boring.
     /// ```
-    pub fn log<T: Display>(&self, message: T) -> &Logger {
-        print!("{}", message);
+    pub fn log<T: Display>(&mut self, message: T) -> &mut Logger {
+        self.done();
+
+        let timestamp = self.timestamp();
+
+        println!("{}{}", timestamp, message);
         self
     }
 
@@ -142,10 +147,12 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new(false);
+    /// # let mut logger = Logger::new(false);
     /// logger.info("This is some info");
     /// ```
-    pub fn info<T: Display>(&self, message: T) -> &Logger {
+    pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
+        self.done();
+        
         let icon = format!("{}", LogIcon::Info);
         let timestamp = self.timestamp();
 
@@ -160,10 +167,12 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new(false);
+    /// # let mut logger = Logger::new(false);
     /// logger.success("Everything went great!");
     /// ```
-    pub fn success<T: Display>(&self, message: T) -> &Logger {
+    pub fn success<T: Display>(&mut self, message: T) -> &mut Logger {
+        self.done();
+        
         let icon = format!("{}", LogIcon::Tick);
         let timestamp = self.timestamp();
 
@@ -178,10 +187,12 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new(false);
+    /// # let mut logger = Logger::new(false);
     /// logger.warning("This is a warning");
     /// ```
-    pub fn warning<T: Display>(&self, message: T) -> &Logger {
+    pub fn warning<T: Display>(&mut self, message: T) -> &mut Logger {
+        self.done();
+        
         let icon = format!("{}", LogIcon::Warning);
         let timestamp = self.timestamp();
 
@@ -196,10 +207,12 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new(false);
+    /// # let mut logger = Logger::new(false);
     /// logger.error("Something broke, here's the error");
     /// ```
-    pub fn error<T: Display>(&self, message: T) -> &Logger {
+    pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
+        self.done();
+        
         let icon = format!("{}", LogIcon::Cross);
         let timestamp = self.timestamp();
 
@@ -214,14 +227,15 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new(false);
+    /// # let mut logger = Logger::new(false);
     /// logger
     ///     .newline(5)
     ///     .info("Some newlines before info")
     ///     .newline(2)
     ///     .info("And some more in between");
     /// ```
-    pub fn newline(&self, amount: usize) -> &Logger {
+    pub fn newline(&mut self, amount: usize) -> &mut Logger {
+        self.done();
         print!("{}", "\n".repeat(amount));
         self
     }
@@ -233,35 +247,53 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let logger = Logger::new(false);
+    /// # let mut logger = Logger::new(false);
     /// logger
     ///     .indent(1)
     ///     .warning("Indented warning eh? Stands out a bit")
     ///     .newline(5);
     /// ```
-    pub fn indent(&self, amount: usize) -> &Logger {
+    pub fn indent(&mut self, amount: usize) -> &mut Logger {
+        self.done();
         print!("{}", "\t".repeat(amount));
         self
     }
 
 
 
-    /// Starts a loading animation with the given message. No other
-    /// methods can be chained to this one.
+    /// Starts a loading animation with the given message.
     /// 
     /// # Example
     /// ```
     /// # use paris::Logger;
     /// let mut logger = Logger::new(false);
-    /// logger.start_loading("Counting to 52!");
+    /// logger.loading("Counting to 52!");
     /// 
     /// // counting happens here (somehow)
     /// 
-    /// logger.stop_loading();
-    /// logger.success("Done counting, only took 1 million years");
+    /// logger
+    ///     .done()
+    ///     .success("Done counting, only took 1 million years");
     /// ```
-    pub fn start_loading<T: Display>(&mut self, message: T) {
-        self.is_loading.store(true, Ordering::SeqCst);
+    /// 
+    /// That's on way of doing it, but having to always call `.done()` doesn't
+    /// look that tidy. Well you don't have to, unless you want. All other functions
+    /// (success, info, error, etc.) call `.done()` just in case a loading thread is running
+    /// already. A cleaner example would be:
+    /// ```
+    /// # use paris::Logger;
+    /// let mut logger = Logger::new(false);
+    /// logger.loading("Counting to 52! again");
+    /// 
+    /// // ....
+    /// 
+    /// logger.error("I give up, I can't do it again!");
+    /// ```
+    pub fn loading<T: Display>(&mut self, message: T) -> &mut Logger {
+        let mut status = self.is_loading.write().unwrap();
+        *status = true;
+
+        drop(status); // Release the lock so a mutable can be returned
 
         let status = self.is_loading.clone();
         let thread_message = message.to_string().clone();
@@ -271,7 +303,7 @@ impl Logger {
             let frames: [&str; 6] = ["⠦", "⠇", "⠋", "⠙", "⠸", "⠴"];
             let mut i = 1;
 
-            while status.load(Ordering::SeqCst) {
+            while *status.read().unwrap() {
                 if i == frames.len() {
                     i = 0;
                 }
@@ -284,17 +316,26 @@ impl Logger {
                 i = i + 1;
             }
         }));
+
+        self
     }
 
 
 
     /// Stops the loading animation and clears the line so you can print something else
-    /// when loading is done, maybe a success message. No other methods can be chained
-    /// to this one. 
-    /// 
-    /// Panics if `.start_loading()` wasn't called first.
-    pub fn stop_loading(&mut self) {
-        self.is_loading.store(false, Ordering::SeqCst);
+    /// when loading is done, maybe a success message. All other methods (success, warning, error, etc.)
+    /// call this one automatically when called so you can use one of those directly 
+    /// for less clutter.
+    pub fn done(&mut self) -> &mut Logger {
+        if !*self.is_loading.read().unwrap() {
+            return self;
+        }
+
+        let mut status = self.is_loading.write().unwrap();
+        *status = false;
+
+        drop(status); // Release the lock so a mutable can be returned
+
         self.loading_handle
             .take().expect("Called stop on a non-existing thread, make sure you ran .start_loading() first!")
             .join().expect("Could not join spawned thread");
@@ -302,6 +343,8 @@ impl Logger {
         let clearing_length = self.loading_message.len() + 5;
         print!("\r{}\r", " ".repeat(clearing_length));
         io::stdout().flush().unwrap();
+
+        self
     }
 
 
@@ -338,11 +381,11 @@ mod tests {
 
     #[test]
     fn test_timestamp() {
-        let logger = Logger::new(false);
+        let mut logger = Logger::new(false);
         assert_eq!(logger.with_timestamp, false);
         logger.info("It doesn't have a timestamp");
 
-        let logger = Logger::new(true);
+        let mut logger = Logger::new(true);
         assert_eq!(logger.with_timestamp, true);
         logger.info("It has a timestamp");
     }
@@ -350,39 +393,22 @@ mod tests {
     #[test]
     fn test_loading() {
         let mut logger = Logger::new(false);
-        logger.start_loading("Loading in the middle of a test is not good!");
+        logger.loading("Loading in the middle of a test is not good!");
         // Long thing here
-        logger.stop_loading();
-        logger.success("Done loading!");
+        logger.done().success("Done loading!");
 
 
         logger.info("About to load again");
 
-        logger.start_loading("Loading something else");
-        logger.stop_loading();
-        
         logger
-            .success("Done loading")
-            .info("A bit after loading is finished");
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_stop_loading() {
-        let mut logger = Logger::new(false);
-        // Stop loading without starting first
-        logger.stop_loading();
-    }
-
-    #[test]
-    fn test_macro() {
-        let logger = Logger::new(false);
-        logger.log("Ayyy fuckin lmao");
+            .loading("Loading something else")
+            .done()
+            .error("Done loading instantly lol");
     }
 
     #[test]
     fn it_works() {
-        let logger = Logger::new(true);
+        let mut logger = Logger::new(true);
 
         logger
             .info("Somebody")
