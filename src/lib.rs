@@ -109,30 +109,31 @@ impl Display for LogIcon {
 
 
 // Only works in Logger!
-// TODO: This can probably be done a lot better too!
 macro_rules! output {
-    ($text:expr, $icon:expr, $e:ident, $self:ident) => (
-        let timestamp = $self.timestamp();
-        let message = format!("{} {}{}", $icon, timestamp, $text);
-
-        if $self.same_line {
-            eprint!("{}", message);
-            $self.same_line = false;
-        } else {
-            eprintln!("{}", message);
+    
+    ($text:expr, $self:ident) => (
+        match $self.same_line {
+            true => print!("{}{}", $self.timestamp(), $text),
+            false => println!("{}{}", $self.timestamp(), $text)
         }
     );
+
     ($text:expr, $icon:expr, $self:ident) => (
-        let timestamp = $self.timestamp();
-        let message = format!("{} {}{}", $icon, timestamp, $text);
-
-        if $self.same_line {
-            print!("{}", message);
-            $self.same_line = false;
-        } else {
-            println!("{}", message);
-        }
+        match $self.same_line {
+            true => print!("{} {}{}", $icon, $self.timestamp(), $text),
+            false => println!("{} {}{}", $icon, $self.timestamp(), $text)
+        } 
+        $self.same_line = false;
     );
+
+    ($text:expr, $icon:expr, $self:ident, $e:ident) => (
+        match $self.same_line {
+            true => eprint!("{} {}{}", $icon, $self.timestamp(), $text),
+            false => eprintln!("{} {}{}", $icon, $self.timestamp(), $text)
+        }
+        $self.same_line = false;
+    );
+
 }
 
 
@@ -176,7 +177,7 @@ impl Logger {
     /// logger.log("Basic and boring."); // Basic and boring.
     /// ```
     pub fn log<T: Display>(&mut self, message: T) -> &mut Logger {
-        output!(message, LogIcon::Empty, self);
+        output!(message, self);
         self
     }
 
@@ -232,7 +233,7 @@ impl Logger {
         self.done();
         
         let icon = format!("{}", LogIcon::Warning);
-        output!(message, icon.yellow(), self);
+        output!(message, icon.yellow(), self, true);
 
         self
     }
@@ -251,7 +252,7 @@ impl Logger {
         self.done();
         
         let icon = format!("{}", LogIcon::Cross);
-        output!(message, icon.red(), true, self);
+        output!(message, icon.red(), self, true);
 
         self
     }
@@ -456,7 +457,6 @@ mod tests {
 
 
         logger.info("About to load again");
-
         logger
             .loading("Loading something else")
             .done()
