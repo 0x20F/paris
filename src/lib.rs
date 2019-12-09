@@ -2,7 +2,6 @@ use std::fmt::{ Display, Formatter, Result };
 use std::thread;
 use std::time::Duration;
 use std::sync::{ Arc, RwLock };
-use std::sync::atomic::{ AtomicBool, Ordering };
 use std::io::prelude::*;
 use std::io;
 
@@ -60,7 +59,16 @@ pub enum LogIcon {
     /// ```
     /// // You get it...
     /// ```
-    Heart
+    Heart,
+
+    /// Nada
+    /// # Example
+    /// ```
+    /// # use paris::LogIcon;
+    /// println!("{}There's nothing at the start of this", LogIcon::Empty);
+    /// // There's nothing at the start of this
+    /// ```
+    Empty
 }
 
 
@@ -70,7 +78,7 @@ impl Display for LogIcon {
     /// are supported. See [this github repo](https://github.com/sindresorhus/figures) 
     /// for all replacements
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        let (mut t, mut c, mut i, mut w, mut h) = ("✔", "✖", "ℹ", "⚠", "♥"); 
+        let (mut t, mut c, mut i, mut w, mut h, mut e) = ("✔", "✖", "ℹ", "⚠", "♥", ""); 
 
         if cfg!(windows) {
             t = "√";
@@ -78,6 +86,7 @@ impl Display for LogIcon {
             i = "i";
             w = "‼";
             h = "♥";
+            e = "";
         }
 
         match *self {
@@ -85,7 +94,8 @@ impl Display for LogIcon {
             LogIcon::Cross      => write!(f, "{}", c),
             LogIcon::Info       => write!(f, "{}", i),
             LogIcon::Warning    => write!(f, "{}", w),
-            LogIcon::Heart      => write!(f, "{}", h)
+            LogIcon::Heart      => write!(f, "{}", h),
+            LogIcon::Empty      => write!(f, "{}", e)
         }
     }
 }
@@ -95,11 +105,44 @@ impl Display for LogIcon {
 
 
 
+
+
+
+// Only works in Logger!
+// TODO: This can probably be done a lot better too!
+macro_rules! output {
+    ($text:expr, $icon:expr, $e:ident, $self:ident) => (
+        let timestamp = $self.timestamp();
+        let message = format!("{} {}{}", $icon, timestamp, $text);
+
+        if $self.same_line {
+            eprint!("{}", message);
+            $self.same_line = false;
+        } else {
+            eprintln!("{}", message);
+        }
+    );
+    ($text:expr, $icon:expr, $self:ident) => (
+        let timestamp = $self.timestamp();
+        let message = format!("{} {}{}", $icon, timestamp, $text);
+
+        if $self.same_line {
+            print!("{}", message);
+            $self.same_line = false;
+        } else {
+            println!("{}", message);
+        }
+    );
+}
+
+
+
 pub struct Logger {
     is_loading: Arc<RwLock<bool>>,
     loading_message: String, // TODO: Use Option<>
     loading_handle: Option<thread::JoinHandle<()>>,
-    with_timestamp: bool
+    with_timestamp: bool,
+    same_line: bool
 }
 
 impl Logger {
@@ -112,10 +155,11 @@ impl Logger {
     /// ```
     pub fn new(timestamp: bool) -> Logger {
         Logger {
-            is_loading: Arc::new(RwLock::new(false)),
-            loading_message: String::from(""),
-            loading_handle: None,
-            with_timestamp: if timestamp { true } else { false }
+            is_loading      : Arc::new(RwLock::new(false)),
+            loading_message : String::from(""),
+            loading_handle  : None,
+            with_timestamp  : if timestamp { true } else { false },
+            same_line       : false
         }
     }
 
@@ -132,11 +176,7 @@ impl Logger {
     /// logger.log("Basic and boring."); // Basic and boring.
     /// ```
     pub fn log<T: Display>(&mut self, message: T) -> &mut Logger {
-        self.done();
-
-        let timestamp = self.timestamp();
-
-        println!("{}{}", timestamp, message);
+        output!(message, LogIcon::Empty, self);
         self
     }
 
@@ -152,11 +192,10 @@ impl Logger {
     /// ```
     pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
         self.done();
-        
-        let icon = format!("{}", LogIcon::Info);
-        let timestamp = self.timestamp();
 
-        println!("{} {}{}", icon.cyan(), timestamp, message);
+        let icon = format!("{}", LogIcon::Info);
+        output!(message, icon.cyan(), self);
+        
         self
     }
 
@@ -174,9 +213,8 @@ impl Logger {
         self.done();
         
         let icon = format!("{}", LogIcon::Tick);
-        let timestamp = self.timestamp();
+        output!(message, icon.green(), self);
 
-        println!("{} {}{}", icon.green(), timestamp, message);
         self
     }
 
@@ -194,9 +232,8 @@ impl Logger {
         self.done();
         
         let icon = format!("{}", LogIcon::Warning);
-        let timestamp = self.timestamp();
+        output!(message, icon.yellow(), self);
 
-        println!("{} {}{}", icon.yellow(), timestamp, message);
         self
     }
 
@@ -214,9 +251,8 @@ impl Logger {
         self.done();
         
         let icon = format!("{}", LogIcon::Cross);
-        let timestamp = self.timestamp();
+        output!(message, icon.red(), true, self);
 
-        eprintln!("{} {}{}", icon.red(), timestamp, message);
         self
     }
 
@@ -349,6 +385,25 @@ impl Logger {
 
 
 
+    /// Forces the next statement to not output a newline
+    /// 
+    /// # Example
+    /// ```
+    /// # use paris::Logger;
+    /// # let mut logger = Logger::new(false);
+    /// 
+    /// logger
+    ///     .same().log("This is on one line")
+    ///     .indent(4)
+    ///     .log("This is on the same line!");
+    /// ```
+    pub fn same(&mut self) -> &mut Logger {
+        self.same_line = true;
+        self
+    }
+
+
+
     /// Gets current timestamp in "00:00:00 AM/PM" format
     fn timestamp(&self) -> ColoredString {
         if !self.with_timestamp {
@@ -404,6 +459,19 @@ mod tests {
             .loading("Loading something else")
             .done()
             .error("Done loading instantly lol");
+    }
+
+    #[test]
+    fn test_same() {
+        let mut logger = Logger::new(false);
+        logger
+            .same().success("This is on one line")
+            .indent(1)
+            .info("This is on the same line!!!")
+            .error("But this one isn't");
+
+        logger.same();
+        assert!(logger.same_line);
     }
 
     #[test]
