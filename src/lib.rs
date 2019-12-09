@@ -404,6 +404,8 @@ impl Logger {
 
 
 
+
+    
     /// Gets current timestamp in "00:00:00 AM/PM" format
     fn timestamp(&self) -> ColoredString {
         if !self.with_timestamp {
