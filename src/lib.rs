@@ -99,7 +99,7 @@ pub struct Logger {
     is_loading: Arc<AtomicBool>,
     loading_message: String, // TODO: Use Option<>
     loading_handle: Option<thread::JoinHandle<()>>,
-    with_timestamp: bool,
+    with_timestamp: bool
 }
 
 impl Logger {
@@ -121,8 +121,7 @@ impl Logger {
 
 
 
-    /// Prints to stdout with no bells and whistles. I does however
-    /// add a timestamp if enabled.
+    /// Prints to stdout with no newlines or other fancy things.
     /// 
     /// # Example
     /// ```
@@ -132,9 +131,7 @@ impl Logger {
     /// logger.log("Basic and boring."); // Basic and boring.
     /// ```
     pub fn log<T: Display>(&self, message: T) -> &Logger {
-        let timestamp = self.timestamp();
-
-        println!("{}{}", timestamp, message);
+        print!("{}", message);
         self
     }
 
@@ -309,8 +306,6 @@ impl Logger {
 
 
 
-
-
     /// Gets current timestamp in "00:00:00 AM/PM" format
     fn timestamp(&self) -> ColoredString {
         if !self.with_timestamp {
@@ -377,6 +372,12 @@ mod tests {
         let mut logger = Logger::new(false);
         // Stop loading without starting first
         logger.stop_loading();
+    }
+
+    #[test]
+    fn test_macro() {
+        let logger = Logger::new(false);
+        logger.log("Ayyy fuckin lmao");
     }
 
     #[test]
