@@ -373,7 +373,7 @@ impl Logger {
         drop(status); // Release the lock so a mutable can be returned
 
         self.loading_handle
-            .take().expect("Called stop on a non-existing thread, make sure you ran .start_loading() first!")
+            .take().expect("Called stop on a non-existing thread")
             .join().expect("Could not join spawned thread");
 
         let clearing_length = self.loading_message.len() + 5;
