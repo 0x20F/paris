@@ -436,7 +436,6 @@ mod tests {
         let mut logger = Logger::new(true);
         assert_eq!(logger.with_timestamp, true);
         logger.info("It has a timestamp");
-        assert!(false);
     }
 
     #[test]
