@@ -59,16 +59,7 @@ pub enum LogIcon {
     /// ```
     /// // You get it...
     /// ```
-    Heart,
-
-    /// Nada
-    /// # Example
-    /// ```
-    /// # use paris::LogIcon;
-    /// println!("{}There's nothing at the start of this", LogIcon::Empty);
-    /// // There's nothing at the start of this
-    /// ```
-    Empty
+    Heart
 }
 
 
@@ -78,7 +69,7 @@ impl Display for LogIcon {
     /// are supported. See [this github repo](https://github.com/sindresorhus/figures) 
     /// for all replacements
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        let (mut t, mut c, mut i, mut w, mut h, mut e) = ("✔", "✖", "ℹ", "⚠", "♥", ""); 
+        let (mut t, mut c, mut i, mut w, mut h) = ("✔", "✖", "ℹ", "⚠", "♥");
 
         if cfg!(windows) {
             t = "√";
@@ -86,7 +77,6 @@ impl Display for LogIcon {
             i = "i";
             w = "‼";
             h = "♥";
-            e = "";
         }
 
         match *self {
@@ -94,8 +84,7 @@ impl Display for LogIcon {
             LogIcon::Cross      => write!(f, "{}", c),
             LogIcon::Info       => write!(f, "{}", i),
             LogIcon::Warning    => write!(f, "{}", w),
-            LogIcon::Heart      => write!(f, "{}", h),
-            LogIcon::Empty      => write!(f, "{}", e)
+            LogIcon::Heart      => write!(f, "{}", h)
         }
     }
 }
