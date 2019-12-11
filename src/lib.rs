@@ -406,10 +406,11 @@ impl Logger {
         let (is_pm, hour) = now.hour12();
 
         format!(
-            "{:02}:{:02}:{:02} {} > ", 
+            "{:02}:{:02}:{:02}.{:03} {} > ",
             hour,
             now.minute(),
             now.second(),
+            now.nanosecond() / 1_000_000,
             if is_pm { "PM" } else { "AM" }
         ).bold()
     }
@@ -435,6 +436,7 @@ mod tests {
         let mut logger = Logger::new(true);
         assert_eq!(logger.with_timestamp, true);
         logger.info("It has a timestamp");
+        assert!(false);
     }
 
     #[test]
