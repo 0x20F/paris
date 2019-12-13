@@ -302,7 +302,7 @@ impl Logger {
     ///     .success("Done counting, only took 1 million years");
     /// ```
     /// 
-    /// That's on way of doing it, but having to always call `.done()` doesn't
+    /// That's one way of doing it, but having to always call `.done()` doesn't
     /// look that tidy. Well you don't have to, unless you want. All other functions
     /// (success, info, error, etc.) call `.done()` just in case a loading thread is running
     /// already. A cleaner example would be:
