@@ -1,5 +1,5 @@
-use paris::Logger;
-use paris::LogIcon;
+use logger::Logger;
+use logger::LogIcon;
 
 
 #[test]

@@ -18,7 +18,7 @@ pub enum LogIcon {
     /// 
     /// # Example
     /// ```
-    /// # use paris::LogIcon;
+    /// # use logger::LogIcon;
     /// println!("{} Everything went well", LogIcon::Tick); 
     /// // ✔ Everything went well
     /// ```
@@ -28,7 +28,7 @@ pub enum LogIcon {
     /// 
     /// # Example
     /// ```
-    /// # use paris::LogIcon;
+    /// # use logger::LogIcon;
     /// println!("{} Oops, try again!", LogIcon::Cross); 
     /// // ✖ Oops, try again!
     /// ```
@@ -38,7 +38,7 @@ pub enum LogIcon {
     /// 
     /// # Example
     /// ```
-    /// # use paris::LogIcon;
+    /// # use logger::LogIcon;
     /// println!("{} In Switzerland it is illegal to own just one guinea pig", LogIcon::Info); 
     /// // ℹ In Switzerland it is illegal to own just one guinea pig.
     /// ```
@@ -48,7 +48,7 @@ pub enum LogIcon {
     /// 
     /// # Example
     /// ```
-    /// # use paris::LogIcon;
+    /// # use logger::LogIcon;
     /// println!("{} Things are starting to catch fire!", LogIcon::Warning);
     /// // ⚠ Things are starting to catch fire!
     /// ```
@@ -140,7 +140,7 @@ impl Logger {
     /// 
     /// # Example
     /// ```
-    /// use paris::Logger;
+    /// use logger::Logger;
     /// let logger = Logger::new(true); // Passing true will add timestamps to all logs
     /// ```
     pub fn new(timestamp: bool) -> Logger {
@@ -160,7 +160,7 @@ impl Logger {
     /// 
     /// # Example
     /// ```
-    /// # use paris::Logger;
+    /// # use logger::Logger;
     /// let mut logger = Logger::new(false);
     /// 
     /// logger.log("Basic and boring."); // Basic and boring.
@@ -176,7 +176,7 @@ impl Logger {
     /// 
     /// # Example
     /// ```
-    /// # use paris::Logger;
+    /// # use logger::Logger;
     /// # let mut logger = Logger::new(false);
     /// logger.info("This is some info");
     /// ```
@@ -195,7 +195,7 @@ impl Logger {
     /// 
     /// # Example
     /// ```
-    /// # use paris::Logger;
+    /// # use logger::Logger;
     /// # let mut logger = Logger::new(false);
     /// logger.success("Everything went great!");
     /// ```
@@ -214,7 +214,7 @@ impl Logger {
     /// 
     /// # Example
     /// ```
-    /// # use paris::Logger;
+    /// # use logger::Logger;
     /// # let mut logger = Logger::new(false);
     /// logger.warning("This is a warning");
     /// ```
@@ -233,7 +233,7 @@ impl Logger {
     /// 
     /// # Example
     /// ```
-    /// # use paris::Logger;
+    /// # use logger::Logger;
     /// # let mut logger = Logger::new(false);
     /// logger.error("Something broke, here's the error");
     /// ```
@@ -252,7 +252,7 @@ impl Logger {
     /// 
     /// # Example
     /// ```
-    /// # use paris::Logger;
+    /// # use logger::Logger;
     /// # let mut logger = Logger::new(false);
     /// logger
     ///     .newline(5)
@@ -272,7 +272,7 @@ impl Logger {
     /// 
     /// # Example
     /// ```
-    /// # use paris::Logger;
+    /// # use logger::Logger;
     /// # let mut logger = Logger::new(false);
     /// logger
     ///     .indent(1)
@@ -291,7 +291,7 @@ impl Logger {
     /// 
     /// # Example
     /// ```
-    /// # use paris::Logger;
+    /// # use logger::Logger;
     /// let mut logger = Logger::new(false);
     /// logger.loading("Counting to 52!");
     /// 
@@ -307,7 +307,7 @@ impl Logger {
     /// (success, info, error, etc.) call `.done()` just in case a loading thread is running
     /// already. A cleaner example would be:
     /// ```
-    /// # use paris::Logger;
+    /// # use logger::Logger;
     /// let mut logger = Logger::new(false);
     /// logger.loading("Counting to 52! again");
     /// 
@@ -379,7 +379,7 @@ impl Logger {
     /// 
     /// # Example
     /// ```
-    /// # use paris::Logger;
+    /// # use logger::Logger;
     /// # let mut logger = Logger::new(false);
     /// 
     /// logger
