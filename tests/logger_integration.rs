@@ -33,7 +33,7 @@ fn error() {
 #[test]
 fn warning() {
     let mut logger = Logger::new(true);
-    logger.warning("This is a warning, watch it");
+    logger.warn("This is a warning, watch it");
 }
 
 

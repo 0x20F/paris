@@ -216,9 +216,9 @@ impl Logger {
     /// ```
     /// # use logger::Logger;
     /// # let mut logger = Logger::new(false);
-    /// logger.warning("This is a warning");
+    /// logger.warn("This is a warning");
     /// ```
-    pub fn warning<T: Display>(&mut self, message: T) -> &mut Logger {
+    pub fn warn<T: Display>(&mut self, message: T) -> &mut Logger {
         self.done();
         
         let icon = format!("{}", LogIcon::Warning);
@@ -276,7 +276,7 @@ impl Logger {
     /// # let mut logger = Logger::new(false);
     /// logger
     ///     .indent(1)
-    ///     .warning("Indented warning eh? Stands out a bit")
+    ///     .warn("Indented warning eh? Stands out a bit")
     ///     .newline(5);
     /// ```
     pub fn indent(&mut self, amount: usize) -> &mut Logger {
@@ -473,7 +473,7 @@ mod tests {
         logger
             .info("Somebody")
             .error("Once")
-            .warning("Told")
+            .warn("Told")
             .success("Me")
             .newline(5)
             .log("A basic log eh")
