@@ -7,7 +7,7 @@ edition = "2018"
 documentation = "https://github.com/SirTheViking/logger"
 homepage = "https://github.com/SirTheViking/logger"
 repository = "https://github.com/SirTheViking/logger"
-readme = "https://github.com/SirTheViking/logger/blob/master/README.md"
+readme = "README.md"
 
 keywords = ["log", "logger", "simple", "terminal", "cli"]
 categories = ["command-line-interface", "command-line-utilities"]
