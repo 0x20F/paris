@@ -428,7 +428,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_timestamp() {
+    fn timestamp() {
         let mut logger = Logger::new(false);
         assert_eq!(logger.with_timestamp, false);
         logger.info("It doesn't have a timestamp");
@@ -439,7 +439,7 @@ mod tests {
     }
 
     #[test]
-    fn test_loading() {
+    fn loading() {
         let mut logger = Logger::new(false);
         logger.loading("Loading in the middle of a test is not good!");
         // Long thing here
@@ -454,7 +454,7 @@ mod tests {
     }
 
     #[test]
-    fn test_same() {
+    fn same() {
         let mut logger = Logger::new(false);
         logger
             .same().success("This is on one line")
