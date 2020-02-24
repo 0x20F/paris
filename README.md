@@ -2,7 +2,7 @@
 * *"parse"* function to build custom combinations and styles
 
 
-# A logger for CLI applications | [crates.io](https://crates.io/crates/paris) | [![Build Status](https://travis-ci.com/SirTheViking/paris.svg?branch=master)](https://travis-ci.com/SirTheViking/paris)
+# A logger for CLI applications | [crates.io](https://crates.io/crates/paris) | ![Build](https://github.com/SirTheViking/logger/workflows/Logger%20integration%20tests/badge.svg)
 
 #### Basic example
 ```rust
