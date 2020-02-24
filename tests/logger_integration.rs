@@ -1,5 +1,5 @@
-use simple_logger::Logger;
-use simple_logger::LogIcon;
+use paris::Logger;
+use paris::LogIcon;
 
 
 #[test]
