@@ -8,7 +8,7 @@ documentation = "https://github.com/SirTheViking/logger"
 homepage = "https://github.com/SirTheViking/logger"
 repository = "https://github.com/SirTheViking/logger"
 
-keywords = ["log", "logging", "logger", "simple", "terminal", "cli"]
+keywords = ["log", "logger", "simple", "terminal", "cli"]
 categories = ["command-line-interface", "command-line-utilities"]
 
 description = "A simple logger for your CLI apps or other things you want in the terminal"
