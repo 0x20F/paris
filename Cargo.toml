@@ -16,6 +16,11 @@ description = "A simple logger for your CLI apps or other things you want in the
 license = "GPL-3.0-or-later"
 maintenance = { status = "passively-maintained" }
 
+exclude = [
+    "tests/*",
+    ".github/*"
+]
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
