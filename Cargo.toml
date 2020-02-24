@@ -1,12 +1,13 @@
 [package]
 name = "paris"
-version = "1.0.1"
+version = "1.0.2"
 authors = ["Poly <alexhexan22@gmail.com>"]
 edition = "2018"
 
 documentation = "https://github.com/SirTheViking/logger"
 homepage = "https://github.com/SirTheViking/logger"
 repository = "https://github.com/SirTheViking/logger"
+readme = "https://github.com/SirTheViking/logger/blob/master/README.md"
 
 keywords = ["log", "logger", "simple", "terminal", "cli"]
 categories = ["command-line-interface", "command-line-utilities"]
