@@ -4,7 +4,7 @@ version = "1.0.3"
 authors = ["Poly <alexhexan22@gmail.com>"]
 edition = "2018"
 
-documentation = "https://docs.rs/paris/1.0.3/paris"
+documentation = "https://docs.rs/paris"
 homepage = "https://github.com/SirTheViking/logger"
 repository = "https://github.com/SirTheViking/logger"
 readme = "README.md"
