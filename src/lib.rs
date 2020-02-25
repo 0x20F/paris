@@ -375,6 +375,8 @@ impl Logger {
 
 
 
+    /// Output to stdout, add timestamps or on the same line
+    /// depending on whatever was called before
     fn stdout<T>(&mut self, message: T) -> &mut Logger
         where T: Display
     {
@@ -387,6 +389,11 @@ impl Logger {
 
 
 
+    /// Output to stdout, add timestamps or write on the same line
+    /// and add an icon to the text
+    ///
+    /// This needs to be replaced, just use the parser method when its done
+    /// and call it inside the stdout function
     fn stdout_icon<T>(&mut self, message: T, icon: ColoredString) -> &mut Logger
         where T: Display
     {
@@ -399,6 +406,12 @@ impl Logger {
 
 
 
+    /// Output to stderr, add timestamps or write on the same line
+    /// and add an icon to the text
+    ///
+    /// This needs to be replaced too, there should only be a
+    /// stdout function and a stderr function, use the parsing function
+    /// to add icons when it's implemented
     fn stderr_icon<T>(&mut self, message: T, icon: ColoredString) -> &mut Logger
         where T: Display
     {
@@ -411,15 +424,17 @@ impl Logger {
 
 
 
+    /// Sets line ending to something specific
+    /// mostly \n for now
     fn set_line_ending<T: Into<String>>(&mut self, ending: T) {
         self.line_ending = ending.into();
     }
 
 
 
+    /// Return line ending based on whats already set
+    /// set it back to newline if its not already
     fn get_line_ending(&mut self) -> String {
-        // Return line ending based on whats already set
-        // set it back to newline if its not already
         let newline = String::from("\n");
         let empty = String::from("");
 
