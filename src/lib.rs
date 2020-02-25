@@ -147,7 +147,9 @@ impl Logger {
             is_loading      : Arc::new(RwLock::new(false)),
             loading_message : String::from(""),
             loading_handle  : None,
+
             with_timestamp  : if timestamp { true } else { false },
+
             line_ending     : String::from("\n")
         }
     }
@@ -165,8 +167,7 @@ impl Logger {
     /// logger.log("Basic and boring."); // Basic and boring.
     /// ```
     pub fn log<T: Display>(&mut self, message: T) -> &mut Logger {
-        self.stdout(message);
-        self
+        self.stdout(message)
     }
 
 
@@ -182,9 +183,7 @@ impl Logger {
     pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
         let icon = LogIcon::Info.to_string().cyan();
 
-        self.stdout_icon(message, icon);
-
-        self
+        self.stdout_icon(message, icon)
     }
 
 
@@ -200,9 +199,7 @@ impl Logger {
     pub fn success<T: Display>(&mut self, message: T) -> &mut Logger {
         let icon = LogIcon::Tick.to_string().green();
 
-        self.stdout_icon(message, icon);
-
-        self
+        self.stdout_icon(message, icon)
     }
 
 
@@ -218,9 +215,7 @@ impl Logger {
     pub fn warn<T: Display>(&mut self, message: T) -> &mut Logger {
         let icon = LogIcon::Warning.to_string().yellow();
 
-        self.stdout_icon(message, icon);
-
-        self
+        self.stdout_icon(message, icon)
     }
 
     
@@ -236,9 +231,7 @@ impl Logger {
     pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
         let icon = LogIcon::Cross.to_string().red();
 
-        self.stderr_icon(message, icon);
-
-        self
+        self.stderr_icon(message, icon)
     }
 
 
@@ -383,7 +376,7 @@ impl Logger {
     ///     .log("This is on the same line!");
     /// ```
     pub fn same(&mut self) -> &mut Logger {
-        self.line_ending = "".to_string();
+        self.line_ending = String::from("");
         self
     }
 
