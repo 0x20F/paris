@@ -96,36 +96,6 @@ impl Display for LogIcon {
 
 
 
-// Only works in Logger!
-macro_rules! output {
-    
-    ($text:expr, $self:ident) => (
-        match $self.same_line {
-            true => print!("{}{}", $self.timestamp(), $text),
-            false => println!("{}{}", $self.timestamp(), $text)
-        }
-    );
-
-    ($text:expr, $icon:expr, $self:ident) => (
-        match $self.same_line {
-            true => print!("{} {}{}", $icon, $self.timestamp(), $text),
-            false => println!("{} {}{}", $icon, $self.timestamp(), $text)
-        } 
-        $self.same_line = false;
-    );
-
-    ($text:expr, $icon:expr, $self:ident, $e:ident) => (
-        match $self.same_line {
-            true => eprint!("{} {}{}", $icon, $self.timestamp(), $text),
-            false => eprintln!("{} {}{}", $icon, $self.timestamp(), $text)
-        }
-        $self.same_line = false;
-    );
-
-}
-
-
-
 pub struct Logger {
     is_loading: Arc<RwLock<bool>>,
     loading_message: String, // TODO: Use Option<>
