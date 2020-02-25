@@ -9,7 +9,6 @@ use chrono::{ Timelike, Utc };
 use colored::*;
 
 
-
 /// Contains definitions for icons that can be
 /// used in the terminal. See [this github repo](https://github.com/sindresorhus/figures) 
 /// for an entire list. Use this in combination with printing macros.
@@ -132,7 +131,7 @@ pub struct Logger {
     loading_message: String, // TODO: Use Option<>
     loading_handle: Option<thread::JoinHandle<()>>,
     with_timestamp: bool,
-    same_line: bool
+    line_ending: String
 }
 
 impl Logger {
@@ -149,7 +148,7 @@ impl Logger {
             loading_message : String::from(""),
             loading_handle  : None,
             with_timestamp  : if timestamp { true } else { false },
-            same_line       : false
+            line_ending     : String::from("\n")
         }
     }
 
@@ -166,7 +165,7 @@ impl Logger {
     /// logger.log("Basic and boring."); // Basic and boring.
     /// ```
     pub fn log<T: Display>(&mut self, message: T) -> &mut Logger {
-        output!(message, self);
+        self.stdout(message);
         self
     }
 
@@ -181,11 +180,10 @@ impl Logger {
     /// logger.info("This is some info");
     /// ```
     pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
-        self.done();
+        let icon = LogIcon::Info.to_string().cyan();
 
-        let icon = format!("{}", LogIcon::Info);
-        output!(message, icon.cyan(), self);
-        
+        self.stdout_icon(message, icon);
+
         self
     }
 
@@ -200,10 +198,9 @@ impl Logger {
     /// logger.success("Everything went great!");
     /// ```
     pub fn success<T: Display>(&mut self, message: T) -> &mut Logger {
-        self.done();
-        
-        let icon = format!("{}", LogIcon::Tick);
-        output!(message, icon.green(), self);
+        let icon = LogIcon::Tick.to_string().green();
+
+        self.stdout_icon(message, icon);
 
         self
     }
@@ -219,10 +216,9 @@ impl Logger {
     /// logger.warn("This is a warning");
     /// ```
     pub fn warn<T: Display>(&mut self, message: T) -> &mut Logger {
-        self.done();
-        
-        let icon = format!("{}", LogIcon::Warning);
-        output!(message, icon.yellow(), self, true);
+        let icon = LogIcon::Warning.to_string().yellow();
+
+        self.stdout_icon(message, icon);
 
         self
     }
@@ -238,10 +234,9 @@ impl Logger {
     /// logger.error("Something broke, here's the error");
     /// ```
     pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
-        self.done();
-        
-        let icon = format!("{}", LogIcon::Cross);
-        output!(message, icon.red(), self, true);
+        let icon = LogIcon::Cross.to_string().red();
+
+        self.stderr_icon(message, icon);
 
         self
     }
@@ -388,7 +383,7 @@ impl Logger {
     ///     .log("This is on the same line!");
     /// ```
     pub fn same(&mut self) -> &mut Logger {
-        self.same_line = true;
+        self.line_ending = "".to_string();
         self
     }
 
@@ -413,6 +408,51 @@ impl Logger {
             now.nanosecond() / 1_000_000,
             if is_pm { "PM" } else { "AM" }
         ).bold()
+    }
+
+
+
+    fn stdout<T>(&mut self, message: T) -> &mut Logger
+        where T: Display
+    {
+        self.done();
+        let timestamp = self.timestamp();
+        print!("{}{}{}", timestamp, message, &self.line_ending);
+
+        self.set_line_ending("\n");
+        self
+    }
+
+
+
+    fn stdout_icon<T>(&mut self, message: T, icon: ColoredString) -> &mut Logger
+        where T: Display
+    {
+        self.done();
+        let timestamp = self.timestamp();
+        print!("{} {}{}{}", icon, timestamp, message, &self.line_ending);
+
+        self.set_line_ending("\n");
+        self
+    }
+
+
+
+    fn stderr_icon<T>(&mut self, message: T, icon: ColoredString) -> &mut Logger
+        where T: Display
+    {
+        self.done();
+        let timestamp = self.timestamp();
+        eprint!("{} {}{}{}", icon, timestamp, message, &self.line_ending);
+
+        self.set_line_ending("\n");
+        self
+    }
+
+
+
+    fn set_line_ending<T: Into<String>>(&mut self, ending: T) {
+        self.line_ending = ending.into();
     }
 }
 
@@ -463,7 +503,7 @@ mod tests {
             .error("But this one isn't");
 
         logger.same();
-        assert!(logger.same_line);
+        assert_eq!(logger.line_ending, "".to_string());
     }
 
     #[test]
