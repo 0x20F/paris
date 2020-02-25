@@ -4,7 +4,7 @@ version = "1.0.3"
 authors = ["Poly <alexhexan22@gmail.com>"]
 edition = "2018"
 
-documentation = "https://docs.rs/paris/1.0.2/paris/struct.Logger.html"
+documentation = "https://docs.rs/paris/1.0.3/paris"
 homepage = "https://github.com/SirTheViking/logger"
 repository = "https://github.com/SirTheViking/logger"
 readme = "README.md"
@@ -15,12 +15,14 @@ categories = ["command-line-interface", "command-line-utilities"]
 description = "A simple logger for your CLI apps or other things you want in the terminal"
 
 license = "GPL-3.0-or-later"
-maintenance = { status = "passively-maintained" }
 
 exclude = [
     "tests/*",
     ".github/*"
 ]
+
+[badges]
+maintenance = { status = "actively-developed" }
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
