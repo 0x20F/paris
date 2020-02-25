@@ -1,30 +1,43 @@
-name: Integration Tests
+name: CI
 
-on: [push]
+on: [pull_request, push]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
+  test:
+    name: Test
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { os: "ubuntu-latest", target: "i686-unknown-linux-gnu", toolchain: "stable" }
+          - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", toolchain: "stable" }
+          - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", toolchain: "beta"}
+          - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", toolchain: "nightly"}
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install latest stable rust build
+      - name: Install ${{ matrix.config.toolchain }} toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          profile: minimal
+          toolchain: ${{ matrix.config.toolchain }}
+          target: ${{ matrix.config.target }}
           override: true
-
-      - name: Run cargo check
+          components: clippy
+          
+          
+      - name: Run cargo tests
         uses: actions-rs/cargo@v1
+        continue-on-error: ${{ matrix.config.toolchain == 'nightly' }}
         with:
-          command: check
+          command: test
 
-      - name: Build
-        run: cargo build --verbose
-
-      - name: Run tests
-        run: cargo test --verbose
+      - name: Run cargo clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
 
 
