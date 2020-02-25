@@ -346,7 +346,7 @@ impl Logger {
     ///     .log("This is on the same line!");
     /// ```
     pub fn same(&mut self) -> &mut Logger {
-        self.line_ending = String::from("");
+        self.set_line_ending("");
         self
     }
 
@@ -380,9 +380,8 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        print!("{}{}{}", timestamp, message, &self.line_ending);
+        print!("{}{}{}", timestamp, message, self.get_line_ending());
 
-        self.set_line_ending("\n");
         self
     }
 
@@ -393,9 +392,8 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        print!("{} {}{}{}", icon, timestamp, message, &self.line_ending);
+        print!("{} {}{}{}", icon, timestamp, message, self.get_line_ending());
 
-        self.set_line_ending("\n");
         self
     }
 
@@ -406,9 +404,8 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        eprint!("{} {}{}{}", icon, timestamp, message, &self.line_ending);
+        eprint!("{} {}{}{}", icon, timestamp, message, self.get_line_ending());
 
-        self.set_line_ending("\n");
         self
     }
 
@@ -416,6 +413,22 @@ impl Logger {
 
     fn set_line_ending<T: Into<String>>(&mut self, ending: T) {
         self.line_ending = ending.into();
+    }
+
+
+
+    fn get_line_ending(&mut self) -> String {
+        // Return line ending based on whats already set
+        // set it back to newline if its not already
+        let newline = String::from("\n");
+        let empty = String::from("");
+
+        if self.line_ending != newline {
+            self.set_line_ending(newline);
+            return empty;
+        }
+
+        return newline;
     }
 }
 
@@ -466,7 +479,7 @@ mod tests {
             .error("But this one isn't");
 
         logger.same();
-        assert_eq!(logger.line_ending, "".to_string());
+        assert_eq!(logger.line_ending, String::from(""));
     }
 
     #[test]
