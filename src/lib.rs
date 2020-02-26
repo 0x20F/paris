@@ -4,7 +4,7 @@ extern crate regex;
 
 pub mod icons;
 
-use std::fmt::{ Display, Formatter, Result };
+use std::fmt::Display;
 use std::thread;
 use std::time::Duration;
 use std::sync::{ Arc, RwLock };
