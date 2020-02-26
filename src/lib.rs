@@ -301,7 +301,7 @@ impl Logger {
                     i = 0;
                 }
 
-                print!("\r{} {}", frames[i].cyan(), thread_message);
+                print!("\r{} {}", frames[i].cyan(), Logger::parse_string(&thread_message));
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
