@@ -373,7 +373,7 @@ impl Logger {
         let (is_pm, hour) = now.hour12();
 
         format!(
-            "{:02}:{:02}:{:02}.{:03} {} > ",
+            "{:02}:{:02}:{:02}.{:03} {}: ",
             hour,
             now.minute(),
             now.second(),
