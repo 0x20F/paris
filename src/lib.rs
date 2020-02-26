@@ -68,22 +68,28 @@ impl Display for LogIcon {
     /// are supported. See [this github repo](https://github.com/sindresorhus/figures) 
     /// for all replacements
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        let (mut t, mut c, mut i, mut w, mut h) = ("✔", "✖", "ℹ", "⚠", "♥");
+        let (
+            mut tick,
+            mut cross,
+            mut info,
+            mut warn,
+            mut heart
+        ) = ("✔", "✖", "ℹ", "⚠", "♥");
 
         if cfg!(windows) {
-            t = "√";
-            c = "×";
-            i = "i";
-            w = "‼";
-            h = "♥";
+            tick = "√";
+            cross = "×";
+            info = "i";
+            warn = "‼";
+            heart = "♥";
         }
 
         match *self {
-            LogIcon::Tick       => write!(f, "{}", t),
-            LogIcon::Cross      => write!(f, "{}", c),
-            LogIcon::Info       => write!(f, "{}", i),
-            LogIcon::Warning    => write!(f, "{}", w),
-            LogIcon::Heart      => write!(f, "{}", h)
+            LogIcon::Tick       => write!(f, "{}", tick),
+            LogIcon::Cross      => write!(f, "{}", cross),
+            LogIcon::Info       => write!(f, "{}", info),
+            LogIcon::Warning    => write!(f, "{}", warn),
+            LogIcon::Heart      => write!(f, "{}", heart)
         }
     }
 }
@@ -112,13 +118,13 @@ impl Logger {
     /// use paris::Logger;
     /// let logger = Logger::new(true); // Passing true will add timestamps to all logs
     /// ```
-    pub fn new(timestamp: bool) -> Logger {
+    pub fn new(include_timestamp: bool) -> Logger {
         Logger {
             is_loading      : Arc::new(RwLock::new(false)),
             loading_message : String::from(""),
             loading_handle  : None,
 
-            with_timestamp  : if timestamp { true } else { false },
+            with_timestamp  : include_timestamp,
 
             line_ending     : String::from("\n")
         }
@@ -280,7 +286,8 @@ impl Logger {
         drop(status); // Release the lock so a mutable can be returned
 
         let status = self.is_loading.clone();
-        let thread_message = message.to_string().clone();
+        let thread_message = message.to_string();
+
         self.loading_message = message.to_string();
 
         self.loading_handle = Some(thread::spawn(move || {
@@ -297,7 +304,7 @@ impl Logger {
 
                 thread::sleep(Duration::from_millis(100));
                 
-                i = i + 1;
+                i += 1;
             }
         }));
 
@@ -443,7 +450,7 @@ impl Logger {
             return empty;
         }
 
-        return newline;
+        newline
     }
 }
 
