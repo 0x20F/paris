@@ -443,7 +443,7 @@ impl Logger {
     {
         lazy_static!(
             static ref TAG: Regex =
-                Regex::new(r"(?P<tag><(?:(?:[a-zA-Z]*+)|/(?:[a-zA-Z]*+))>)")
+                Regex::new(r"<(?:(?:[a-zA-Z]*+)|/(?:[a-zA-Z]*+))>")
                 .unwrap();
         );
 
@@ -458,11 +458,11 @@ impl Logger {
         let mut output = String::with_capacity(input.len());
 
         for mat in TAG.captures_iter(&input) {
-            match &mat["tag"] {
-                "<info>" => output = input.replace(&mat["tag"], &LogIcon::Info.to_string()),
-                "<cross>" => output = input.replace(&mat["tag"], &LogIcon::Cross.to_string()),
-                "<tick>" => output = input.replace(&mat["tag"], &LogIcon::Tick.to_string()),
-                "<warn>" => output = input.replace(&mat["tag"], &LogIcon::Warning.to_string()),
+            match &mat[0] {
+                "<info>" => output = input.replace(&mat[0], &LogIcon::Info.to_string()),
+                "<cross>" => output = input.replace(&mat[0], &LogIcon::Cross.to_string()),
+                "<tick>" => output = input.replace(&mat[0], &LogIcon::Tick.to_string()),
+                "<warn>" => output = input.replace(&mat[0], &LogIcon::Warning.to_string()),
                 _ => ()
             }
         }
