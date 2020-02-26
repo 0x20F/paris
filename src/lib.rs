@@ -1,3 +1,7 @@
+#[macro_use]
+extern crate lazy_static;
+extern crate regex;
+
 use std::fmt::{ Display, Formatter, Result };
 use std::thread;
 use std::time::Duration;
@@ -7,6 +11,8 @@ use std::io;
 
 use chrono::{ Timelike, Utc };
 use colored::*;
+use std::borrow::Cow;
+use regex::Regex;
 
 
 /// Contains definitions for icons that can be
@@ -157,9 +163,8 @@ impl Logger {
     /// logger.info("This is some info");
     /// ```
     pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
-        let icon = LogIcon::Info.to_string().cyan();
-
-        self.stdout_icon(message, icon)
+        // let icon = LogIcon::Info.to_string().cyan();
+        self.stdout(format!("<info> {}", message))
     }
 
 
@@ -173,9 +178,8 @@ impl Logger {
     /// logger.success("Everything went great!");
     /// ```
     pub fn success<T: Display>(&mut self, message: T) -> &mut Logger {
-        let icon = LogIcon::Tick.to_string().green();
-
-        self.stdout_icon(message, icon)
+        //let icon = LogIcon::Tick.to_string().green();
+        self.stdout(format!("<tick> {}", message))
     }
 
 
@@ -189,9 +193,8 @@ impl Logger {
     /// logger.warn("This is a warning");
     /// ```
     pub fn warn<T: Display>(&mut self, message: T) -> &mut Logger {
-        let icon = LogIcon::Warning.to_string().yellow();
-
-        self.stdout_icon(message, icon)
+        //let icon = LogIcon::Warning.to_string().yellow();
+        self.stdout(format!("<warn> {}", message))
     }
 
     
@@ -205,9 +208,8 @@ impl Logger {
     /// logger.error("Something broke, here's the error");
     /// ```
     pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
-        let icon = LogIcon::Cross.to_string().red();
-
-        self.stderr_icon(message, icon)
+        //let icon = LogIcon::Cross.to_string().red();
+        self.stderr(format!("<cross> {}", message))
     }
 
 
@@ -383,12 +385,13 @@ impl Logger {
 
 
     /// Output to stdout, add timestamps or on the same line
-    /// depending on whatever was called before
     fn stdout<T>(&mut self, message: T) -> &mut Logger
         where T: Display
     {
         self.done();
         let timestamp = self.timestamp();
+        let message = Logger::parse_string(message.to_string());
+
         print!("{}{}{}", timestamp, message, self.get_line_ending());
 
         self
@@ -396,35 +399,15 @@ impl Logger {
 
 
 
-    /// Output to stdout, add timestamps or write on the same line
-    /// and add an icon to the text
-    ///
-    /// This needs to be replaced, just use the parser method when its done
-    /// and call it inside the stdout function
-    fn stdout_icon<T>(&mut self, message: T, icon: ColoredString) -> &mut Logger
-        where T: Display
-    {
-        self.done();
-        let timestamp = self.timestamp();
-        print!("{} {}{}{}", icon, timestamp, message, self.get_line_ending());
-
-        self
-    }
-
-
-
     /// Output to stderr, add timestamps or write on the same line
-    /// and add an icon to the text
-    ///
-    /// This needs to be replaced too, there should only be a
-    /// stdout function and a stderr function, use the parsing function
-    /// to add icons when it's implemented
-    fn stderr_icon<T>(&mut self, message: T, icon: ColoredString) -> &mut Logger
+    fn stderr<T>(&mut self, message: T) -> &mut Logger
         where T: Display
     {
         self.done();
         let timestamp = self.timestamp();
-        eprint!("{} {}{}{}", icon, timestamp, message, self.get_line_ending());
+        let message = Logger::parse_string(message.to_string());
+
+        eprint!("{}{}{}", timestamp, message, self.get_line_ending());
 
         self
     }
@@ -451,6 +434,40 @@ impl Logger {
         }
 
         newline
+    }
+
+
+
+    fn parse_string<'a, S>(input: S) -> Cow<'a, str>
+        where S: Into<Cow<'a, str>>
+    {
+        lazy_static!(
+            static ref TAG: Regex =
+                Regex::new(r"(?P<tag><(?:(?:[a-zA-Z]*+)|/(?:[a-zA-Z]*+))>)")
+                .unwrap();
+        );
+
+        let input = input.into();
+
+        // Nothing to escape was found
+        if TAG.find(&input).is_none() {
+            return input;
+        }
+
+
+        let mut output = String::with_capacity(input.len());
+
+        for mat in TAG.captures_iter(&input) {
+            match &mat["tag"] {
+                "<info>" => output = input.replace(&mat["tag"], &LogIcon::Info.to_string()),
+                "<cross>" => output = input.replace(&mat["tag"], &LogIcon::Cross.to_string()),
+                "<tick>" => output = input.replace(&mat["tag"], &LogIcon::Tick.to_string()),
+                "<warn>" => output = input.replace(&mat["tag"], &LogIcon::Warning.to_string()),
+                _ => ()
+            }
+        }
+
+        Cow::Owned(output)
     }
 }
 
@@ -502,6 +519,17 @@ mod tests {
 
         logger.same();
         assert_eq!(logger.line_ending, String::from(""));
+    }
+
+    #[test]
+    fn parse() {
+        let s = String::from("</> <i> This is a string yooo <i> with icons");
+
+        let parsed = Logger::parse_string(s);
+
+        println!("parsed is '{}'", parsed);
+
+        //assert!(!parsed.contains("<i>"));
     }
 
     #[test]
