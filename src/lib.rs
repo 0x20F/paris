@@ -459,6 +459,8 @@ impl Logger {
 
         for mat in TAG.captures_iter(&input) {
             match &mat[0] {
+                // Add colors above the icons
+
                 "<info>" => output = input.replace(&mat[0], &LogIcon::Info.to_string()),
                 "<cross>" => output = input.replace(&mat[0], &LogIcon::Cross.to_string()),
                 "<tick>" => output = input.replace(&mat[0], &LogIcon::Tick.to_string()),
