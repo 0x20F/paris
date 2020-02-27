@@ -282,8 +282,8 @@ impl Logger {
     /// Gets current timestamp in "00:00:00 AM/PM" format
     fn timestamp(&mut self) -> String {
         if !self.with_timestamp || self.skip_timestamp {
-            return String::from("");
             self.skip_timestamp = false;
+            return String::from("");
         }
 
         let now = Utc::now();
