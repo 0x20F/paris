@@ -2,81 +2,88 @@
 * *"parse"* function to build custom combinations and styles
 
 
-# A logger for CLI applications | [crates.io](https://crates.io/crates/paris) | ![CI](https://github.com/SirTheViking/logger/workflows/CI/badge.svg)
+# Paris | [crates.io](https://crates.io/crates/paris) | ![CI](https://github.com/SirTheViking/logger/workflows/CI/badge.svg)
+Simple way to output beautiful text in your
+CLI applications. Only limit is your imagination.
 
-#### Basic example
+
+## How to use
 ```rust
-use logger::Logger;
+use paris::Logger;
 
-let logger = Logger::new(false);
+// false to exclude timestamps
+let mut log = Logger::new(false);
 
-logger.info("This is a very basic example");
-// ℹ This is a very basic example
+log.info("It's that simple!");
 ```
 
-#### API
 
-The crate is built so that everything can be chained as many times as you need.
-Maybe you want to start a very intensive task, show a loading animation
-and as soon as that task is finished show a success message and then another
-loading animation:
+## Simple methods
 ```rust
-use logger::Logger;
+// You can have icons at the start of your message!
+log.info("Will add ℹ at the start");
+log.error("Will add ✖ at the start");
+```
+See [the Logger struct](./struct.Logger.html) for all methods
 
-let logger = Logger::new(false);
 
-logger.loading("Doing a lot of things now...");
-
-// Do the things
-
-logger
-    .success("The things I did went well!")
-    .loading("But now I'm doing more things");
-
-// Do more things
-
-logger.error("Something broke this time...");
-``` 
-
-If you want a timestamp with all your logs you can pass `true` to the
-constructor
+## Chaining
+All methods can be chained together to build more intricate
+log/message combinations, in hopes of minimizing the chaos
+that every log string becomes when you have to concatenate
+a bunch of strings and add tabs and newlines everywhere.
 ```rust
-let logger = Logger::new(true); // true means "add timestamp"
+log.info("this is some info")
+   .indent(4).warn("this is now indented by 4")
+   .newline(5)
+   .success("and this is 5 lines under all other messages");
 ```
 
-Here's a list of all the functions (they're not that many)
 
+## Customisation
+Outputting text is cool. Outputting text with a colored icon
+at the start is even cooler! But this crate is all about
+customisation, about making the logs feel like home, if you will.
+Included in the crate are a variety of keys you can use
+to colorize your logs just the way you want them to be.
 ```rust
-logger.info("message");     // ℹ message
+log.info("I can write normal text or use tags to <red>color it</>");
+log.warn("Every function can contain <on green><black>tags</>");
 
-logger.error("message");    // ✖ message
-
-logger.warn("message");     // ⚠ message
-
-logger.success("message");  // ✔ message
-
-logger.log("message");      // message
-
-logger.done(); // Just stops the loading animation
-
-logger
-    .indent(3)
-    .info("Indent just adds specified amount of tabs");
-// \t\t\t ℹ Indent just adds specified amount of tabs
-
-logger.newline(2).info("Newline is like .indent but with newlines");
-// \n\n ℹ Newline is like .indent but with newlines
-
-logger.same().log(".same() forces the next log to not have a newline after it");
-
+log.info("If you don't write them <bleu>correctly</>, you just get the default colors");
 ```
 
-To start a loading animation you can run `.loading()` and to end that
-animation you can run any other function (except for `.same()`) and the 
-text that was visible when loading will be replaced with your new log
+There's a key for all colors supported by the terminal `(white, black, red, blue, magenta, etc.)`
+If you add the word `on` to any of those colors, it becomes the
+background color instead `(on red, on blue, on green)`.
 ```rust
-logger.loading("Loading animation!!");
-
-// will replace "Loading animation!!" with a success message
-logger.success("Loading was a success.");
+// How useful...
+log.info("<on red> This has red background </>");
 ```
+
+Maybe you'd like to use your terminals brighter colors, if that's the case
+you just have to add `bright` to your tag. Makes sense.
+```rust
+log.info("<blue><on bright red> This text is blue on a bright red background</> it's a pain");
+```
+
+###### Scroll down for a full list of keys if you're not feeling confident in your ability to name colors. It happens.
+
+You've probably seen the `</>` tag in the above logs. It's not there to
+_"close the previously opened tag"_ no no. You can open as many tags as you want
+and only use `</>` it's just the _"reset color to default"_ tag, You might
+decide you don't ever want to use it. It's up to you.
+
+
+## Color keys
+To use a key just add the color name surrounded by `<`, `>` to your log string. Include spaces
+or use underlines instead if you wish.
+
+#### Foreground
+`black`, `red`, `green`, `yellow`, `blue`, `cyan`, `magenta`, `white`
+
+#### Background
+`on black`, `on red`, `on green`, `on yellow`, `on blue`, `on cyan`, `on magenta`, `on white`
+
+#### Styles
+`` 
