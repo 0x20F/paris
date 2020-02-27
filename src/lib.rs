@@ -1,8 +1,8 @@
 #[macro_use]
 extern crate lazy_static;
-extern crate regex;
 
 pub mod icons;
+pub mod colors;
 
 use std::fmt::Display;
 use std::thread;
@@ -13,6 +13,7 @@ use std::io;
 use std::borrow::Cow;
 
 use chrono::{ Timelike, Utc };
+use colors::Colors;
 use colored::*;
 use regex::Regex;
 use icons::LogIcon;
@@ -351,12 +352,12 @@ impl Logger {
 
 
 
-    fn parse_string<'a, S>(input: S) -> Cow<'a, str>
-        where S: Into<Cow<'a, str>>
+    fn parse_string<S>(input: S) -> String
+        where S: Into<String>
     {
         lazy_static!(
             static ref TAG: Regex =
-                Regex::new(r"<(?:(?:[a-zA-Z]*+)|/(?:[a-zA-Z]*+))>")
+                Regex::new(r"<((?:[a-zA-Z-_ ]*+)|/(?:[a-zA-Z-_ ]*+))>")
                 .unwrap();
         );
 
@@ -367,22 +368,16 @@ impl Logger {
             return input;
         }
 
-
-        let mut output = String::with_capacity(input.len());
+        let mut output = input.clone();
 
         for mat in TAG.captures_iter(&input) {
-            match &mat[0] {
-                // Add colors above the icons
+            let key = &mat[0];
+            let color = &mat[1];
 
-                "<info>" => output = input.replace(&mat[0], &LogIcon::Info.to_string()),
-                "<cross>" => output = input.replace(&mat[0], &LogIcon::Cross.to_string()),
-                "<tick>" => output = input.replace(&mat[0], &LogIcon::Tick.to_string()),
-                "<warn>" => output = input.replace(&mat[0], &LogIcon::Warning.to_string()),
-                _ => ()
-            }
+            output = output.replace(key, &Colors::get(color));
         }
 
-        Cow::Owned(output)
+        output
     }
 }
 
@@ -438,11 +433,11 @@ mod tests {
 
     #[test]
     fn parse() {
-        let s = String::from("</> <i> This is a string yooo <i> with icons");
+        let s = "<bg red><cyan>This <green>is <yellow>a <magenta>string<red> yooo</> with <blue>icons</>";
 
         let parsed = Logger::parse_string(s);
 
-        println!("parsed is '{}'", parsed);
+        println!("{}", parsed);
 
         //assert!(!parsed.contains("<i>"));
     }
