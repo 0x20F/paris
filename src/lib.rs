@@ -12,7 +12,7 @@ use std::io::prelude::*;
 use std::io;
 
 use chrono::{ Timelike, Utc };
-use colors::Colors;
+use colors::Parser;
 
 
 
@@ -217,7 +217,7 @@ impl Logger {
                     &thread_message
                 );
 
-                print!("{}", Colors::parse_string(message));
+                print!("{}", Parser::parse_color_string(message));
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
@@ -308,7 +308,7 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        let message = Colors::parse_string(message.to_string());
+        let message = Parser::parse_color_string(message.to_string());
 
         print!("{}{}{}", timestamp, message, self.get_line_ending());
 
@@ -323,7 +323,7 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        let message = Colors::parse_string(message.to_string());
+        let message = Parser::parse_color_string(message.to_string());
 
         eprint!("{}{}{}", timestamp, message, self.get_line_ending());
 
@@ -409,7 +409,7 @@ mod tests {
     fn parse() {
         let s = "<cyan>This <green>is <yellow>a <magenta>string<red> yooo</> with <blue>icons</>";
 
-        let parsed = Colors::parse_string(s);
+        let parsed = Parser::parse_color_string(s);
 
         println!("{}", parsed);
 

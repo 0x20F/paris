@@ -3,7 +3,7 @@ use regex::Regex;
 
 
 
-pub struct Colors {}
+struct Colors {}
 
 
 impl Colors {
@@ -27,16 +27,44 @@ impl Colors {
 
 
 
-    pub fn parse_string<S>(input: S) -> String
+    fn get_color(key: &str) -> Color {
+        let color: Color = key.into();
+
+        color
+    }
+
+
+
+    fn escape(code: &str) -> String {
+        let mut res = String::from("\x1B[");
+
+        res.push_str(code);
+
+        res.push('m');
+        res
+    }
+}
+
+
+
+pub struct Parser {}
+
+
+impl Parser {
+
+    pub fn parse_color_string<S>(string: S) -> String
         where S: Into<String>
     {
+        Parser::replace_colors(string.into())
+    }
+
+
+    fn replace_colors(input: String) -> String {
         lazy_static!(
             static ref TAG: Regex =
                 Regex::new(r"<((?:[a-zA-Z-_ ]*+)|/(?:[a-zA-Z-_ ]*+))>")
                 .unwrap();
         );
-
-        let input = input.into();
 
         // Nothing to escape was found
         if TAG.find(&input).is_none() {
@@ -53,24 +81,5 @@ impl Colors {
         }
 
         output
-    }
-
-
-
-    fn get_color(key: &str) -> Color {
-        let color: Color = key.into();
-
-        color
-    }
-
-
-
-    fn escape(code: &str) -> String {
-        let mut res = String::from("\x1B[");
-
-        res.push_str(code);
-
-        res.push('m');
-        res
     }
 }
