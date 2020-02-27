@@ -1,41 +1,27 @@
 use colored::Color;
+use std::fmt::{Display, Error};
+
 
 
 pub struct Colors {}
 
 
 impl Colors {
-    pub fn get(color: &str) -> String {
-        if color == "/" {
+    pub fn get(key: &str) -> String {
+        let reset_key = "/";
+
+        if key == reset_key {
             return String::from("\x1B[0m");
         }
 
-        if color.starts_with("bg") {
-            let color = color.split_whitespace().last();
+        let color: Color = key.split_whitespace().last().unwrap().into();
+        let mut res = String::from("\x1B[");
 
-            Colors::bg(color.unwrap())
+        if key.starts_with("bg") {
+            res.push_str(color.to_bg_str());
         } else {
-            Colors::fg(color)
+            res.push_str(color.to_fg_str());
         }
-    }
-
-
-    pub fn fg(color: &str) -> String {
-        let color: Color = color.into();
-
-        let mut res = String::from("\x1B[");
-        res.push_str(color.to_fg_str());
-
-        res.push('m');
-        res
-    }
-
-
-    pub fn bg(color: &str) -> String {
-        let color: Color = color.into();
-
-        let mut res = String::from("\x1B[");
-        res.push_str(color.to_bg_str());
 
         res.push('m');
         res
