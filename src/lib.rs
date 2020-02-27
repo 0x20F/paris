@@ -24,6 +24,7 @@ pub struct Logger {
     loading_message: String, // TODO: Use Option<>
     loading_handle: Option<thread::JoinHandle<()>>,
     with_timestamp: bool,
+    skip_timestamp: bool,
     line_ending: String
 }
 
@@ -42,6 +43,7 @@ impl Logger {
             loading_handle  : None,
 
             with_timestamp  : include_timestamp,
+            skip_timestamp  : false,
 
             line_ending     : String::from("\n")
         }
@@ -155,6 +157,7 @@ impl Logger {
     pub fn indent(&mut self, amount: usize) -> &mut Logger {
         self.done();
         print!("{}", "\t".repeat(amount));
+        self.skip_timestamp();
         self
     }
 
@@ -269,6 +272,7 @@ impl Logger {
     /// ```
     pub fn same(&mut self) -> &mut Logger {
         self.set_line_ending("");
+        self.skip_timestamp();
         self
     }
 
@@ -277,9 +281,10 @@ impl Logger {
 
     
     /// Gets current timestamp in "00:00:00 AM/PM" format
-    fn timestamp(&self) -> String {
-        if !self.with_timestamp {
+    fn timestamp(&mut self) -> String {
+        if !self.with_timestamp || self.skip_timestamp {
             return String::from("");
+            self.skip_timestamp = false;
         }
 
         let now = Utc::now();
@@ -325,6 +330,12 @@ impl Logger {
         eprint!("{}{}{}", timestamp, message, self.get_line_ending());
 
         self
+    }
+
+
+    /// Toggle a flag
+    fn skip_timestamp(&mut self) {
+        self.skip_timestamp = true;
     }
 
 
