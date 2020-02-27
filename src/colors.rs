@@ -91,3 +91,24 @@ impl Parser {
         output
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse() {
+        let s = "<cyan>This <green>is <yellow>a <magenta>string<red> yooo</> with <blue>icons</>";
+
+        let parsed = Parser::parse_color_string(s);
+
+        println!("{}", parsed);
+
+        assert!(!parsed.contains("<cyan>"));
+        assert!(!parsed.contains("<yellow>"));
+        assert!(!parsed.contains("<red>"));
+        assert!(!parsed.contains("<blue>"));
+        assert!(!parsed.contains("</>"));
+    }
+}

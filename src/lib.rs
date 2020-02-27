@@ -413,21 +413,6 @@ mod tests {
     }
 
     #[test]
-    fn parse() {
-        let s = "<cyan>This <green>is <yellow>a <magenta>string<red> yooo</> with <blue>icons</>";
-
-        let parsed = Parser::parse_color_string(s);
-
-        println!("{}", parsed);
-
-        assert!(!parsed.contains("<cyan>"));
-        assert!(!parsed.contains("<yellow>"));
-        assert!(!parsed.contains("<red>"));
-        assert!(!parsed.contains("<blue>"));
-        assert!(!parsed.contains("</>"));
-    }
-
-    #[test]
     fn it_works() {
         let mut logger = Logger::new(true);
 
