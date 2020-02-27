@@ -12,6 +12,8 @@
 //!
 //!  # Simple methods
 //!
+//!     # use paris::Logger;
+//!     # let mut log = Logger::new(false);
 //!     // You can have icons at the start of your message!
 //!     log.info("Will add ℹ at the start");
 //!     log.error("Will add ✖ at the start");
@@ -25,6 +27,8 @@
 //! that every log string becomes when you have to concatenate
 //! a bunch of strings and add tabs and newlines everywhere.
 //!
+//!     # use paris::Logger;
+//!     # let mut log = Logger::new(false);
 //!     log.info("this is some info")
 //!        .indent(4).warn("this is now indented by 4")
 //!        .newline(5)
@@ -37,6 +41,8 @@
 //! Included in the crate are a variety of keys you can use
 //! to colorize your logs just the way you want them to be.
 //!
+//!     # use paris::Logger;
+//!     # let mut log = Logger::new(false);
 //!     log.info("I can write normal text or use tags to <red>color it</>");
 //!     log.warn("Every function can contain <on green><black>tags</>");
 //!
@@ -46,12 +52,16 @@
 //! If you add the word `on` to any of those colors, it becomes the
 //! background color instead `(on red, on blue, on green)`.
 //!
+//!     # use paris::Logger;
+//!     # let mut log = Logger::new(false);
 //!     // How useful...
 //!     log.info("<on red> This has red background </>");
 //!
 //! Maybe you'd like to use your terminals brighter colors, if that's the case
 //! you just have to add `bright` to your tag. Makes sense.
 //!
+//!     # use paris::Logger;
+//!     # let mut log = Logger::new(false);
 //!     log.info("<blue><on bright red> This text is blue on a bright red background</> it's a pain");
 //!
 //! See [the README](https://github.com/SirTheViking/logger/blob/master/README.md) for a full list of keys
