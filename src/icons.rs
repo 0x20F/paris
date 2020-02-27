@@ -1,4 +1,15 @@
+//! Contains icons that can be used when
+//! outputting to the terminal. All icons are printable
+//! and can be converted to strings.
+//!
+//! There are no tags that can be used
+//! in log strings on the other hand. So you can't
+//! write `<info>` in a string and expect it to
+//! be replaced with the info icon.
+//! Not at the moment at least.
 use std::fmt::{ Display, Formatter, Result };
+
+
 
 
 /// Contains definitions for icons that can be
