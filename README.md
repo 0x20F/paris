@@ -25,7 +25,7 @@ log.info("It's that simple!");
 log.info("Will add ℹ at the start");
 log.error("Will add ✖ at the start");
 ```
-See [the Logger struct](./struct.Logger.html) for all methods
+See [the Logger struct](https://docs.rs/paris/) for all methods
 
 
 ## Chaining
