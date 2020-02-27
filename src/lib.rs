@@ -157,7 +157,6 @@ impl Logger {
     pub fn indent(&mut self, amount: usize) -> &mut Logger {
         self.done();
         print!("{}", "\t".repeat(amount));
-        self.skip_timestamp();
         self
     }
 
