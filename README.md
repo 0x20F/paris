@@ -78,8 +78,17 @@ or use underlines instead if you wish.
 #### Foreground
 `black`, `red`, `green`, `yellow`, `blue`, `cyan`, `magenta`, `white`
 
+##### Bright
+`bright black`, `bright red`, `bright green`, `bright yellow`, `bright blue`, `bright cyan`, `bright magenta`,
+ `bright white`
+
+
 #### Background
 `on black`, `on red`, `on green`, `on yellow`, `on blue`, `on cyan`, `on magenta`, `on white`
+
+##### Bright
+`on bright black`, `on bright red`, `on bright green`, `on bright yellow`, `on bright blue`, `on bright cyan`, 
+`on bright magenta`, `on bright white`
 
 #### Styles (Not Implemented Yet)
 `bold`, `underline`, `dimmed`, `italic`, `strikethrough`,  
