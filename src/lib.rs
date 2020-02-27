@@ -13,6 +13,7 @@ use std::io;
 
 use chrono::{ Timelike, Utc };
 use colors::Parser;
+use icons::LogIcon;
 
 
 
@@ -73,8 +74,7 @@ impl Logger {
     /// logger.info("This is some info");
     /// ```
     pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
-        // let icon = LogIcon::Info.to_string().cyan();
-        self.stdout(format!("<info> {}", message))
+        self.stdout(format!("<cyan>{}</> {}", LogIcon::Info, message))
     }
 
 
@@ -88,8 +88,7 @@ impl Logger {
     /// logger.success("Everything went great!");
     /// ```
     pub fn success<T: Display>(&mut self, message: T) -> &mut Logger {
-        //let icon = LogIcon::Tick.to_string().green();
-        self.stdout(format!("<tick> {}", message))
+        self.stdout(format!("<green>{}</> {}", LogIcon::Tick, message))
     }
 
 
@@ -103,8 +102,7 @@ impl Logger {
     /// logger.warn("This is a warning");
     /// ```
     pub fn warn<T: Display>(&mut self, message: T) -> &mut Logger {
-        //let icon = LogIcon::Warning.to_string().yellow();
-        self.stdout(format!("<warn> {}", message))
+        self.stdout(format!("<yellow>{}</> {}", LogIcon::Warning, message))
     }
 
     
@@ -118,8 +116,7 @@ impl Logger {
     /// logger.error("Something broke, here's the error");
     /// ```
     pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
-        //let icon = LogIcon::Cross.to_string().red();
-        self.stderr(format!("<cross> {}", message))
+        self.stderr(format!("<red>{}</> {}", LogIcon::Cross, message))
     }
 
 
