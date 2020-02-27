@@ -1,4 +1,4 @@
-# Paris | [crates.io](https://crates.io/crates/paris) | ![CI](https://github.com/SirTheViking/logger/workflows/CI/badge.svg)
+# Paris | ![CI](https://github.com/SirTheViking/logger/workflows/CI/badge.svg) ![crates.io](https://img.shields.io/crates/v/paris.svg)
 Simple way to output beautiful text in your
 CLI applications. Only limit is your imagination.
 
