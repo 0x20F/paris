@@ -67,7 +67,7 @@ log.info("<blue><on bright red> This text is blue on a bright red background</> 
 
 You've probably seen the `</>` tag in the above logs. It's not there to
 _"close the previously opened tag"_ no no. You can open as many tags as you want
-and only use `</>` it's just the _"reset color to default"_ tag, You might
+and only use `</>` once, it's just the _"reset color to default"_ tag, You might
 decide you don't ever want to use it. It's up to you.
 
 
