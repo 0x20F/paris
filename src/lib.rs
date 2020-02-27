@@ -10,13 +10,9 @@ use std::time::Duration;
 use std::sync::{ Arc, RwLock };
 use std::io::prelude::*;
 use std::io;
-use std::borrow::Cow;
 
 use chrono::{ Timelike, Utc };
 use colors::Colors;
-use colored::*;
-use regex::Regex;
-use icons::LogIcon;
 
 
 
@@ -215,7 +211,13 @@ impl Logger {
                     i = 0;
                 }
 
-                print!("\r{} {}", frames[i].cyan(), Logger::parse_string(&thread_message));
+                let message = format!(
+                    "\r<cyan>{}</> {}",
+                    frames[i],
+                    &thread_message
+                );
+
+                print!("{}", Colors::parse_string(message));
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
@@ -278,22 +280,24 @@ impl Logger {
 
     
     /// Gets current timestamp in "00:00:00 AM/PM" format
-    fn timestamp(&self) -> ColoredString {
+    fn timestamp(&self) -> String {
         if !self.with_timestamp {
-            return String::from("").normal();
+            return String::from("");
         }
 
         let now = Utc::now();
         let (is_pm, hour) = now.hour12();
 
-        format!(
+        let stamp = format!(
             "{:02}:{:02}:{:02}.{:03} {}: ",
             hour,
             now.minute(),
             now.second(),
             now.nanosecond() / 1_000_000,
             if is_pm { "PM" } else { "AM" }
-        ).bold()
+        );
+
+        stamp
     }
 
 
@@ -304,7 +308,7 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        let message = Logger::parse_string(message.to_string());
+        let message = Colors::parse_string(message.to_string());
 
         print!("{}{}{}", timestamp, message, self.get_line_ending());
 
@@ -319,7 +323,7 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        let message = Logger::parse_string(message.to_string());
+        let message = Colors::parse_string(message.to_string());
 
         eprint!("{}{}{}", timestamp, message, self.get_line_ending());
 
@@ -348,36 +352,6 @@ impl Logger {
         }
 
         newline
-    }
-
-
-
-    fn parse_string<S>(input: S) -> String
-        where S: Into<String>
-    {
-        lazy_static!(
-            static ref TAG: Regex =
-                Regex::new(r"<((?:[a-zA-Z-_ ]*+)|/(?:[a-zA-Z-_ ]*+))>")
-                .unwrap();
-        );
-
-        let input = input.into();
-
-        // Nothing to escape was found
-        if TAG.find(&input).is_none() {
-            return input;
-        }
-
-        let mut output = input.clone();
-
-        for mat in TAG.captures_iter(&input) {
-            let key = &mat[0];
-            let color = &mat[1];
-
-            output = output.replace(key, &Colors::get(color));
-        }
-
-        output
     }
 }
 
@@ -433,9 +407,9 @@ mod tests {
 
     #[test]
     fn parse() {
-        let s = "<bg red><cyan>This <green>is <yellow>a <magenta>string<red> yooo</> with <blue>icons</>";
+        let s = "<cyan>This <green>is <yellow>a <magenta>string<red> yooo</> with <blue>icons</>";
 
-        let parsed = Logger::parse_string(s);
+        let parsed = Colors::parse_string(s);
 
         println!("{}", parsed);
 
