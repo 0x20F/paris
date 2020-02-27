@@ -2,7 +2,9 @@ use colored::Color;
 use regex::Regex;
 
 
-
+/// Extends the functionality of colored::Color
+/// so it can convert directly to ansi escaped codes
+/// and properly parse based on my custom keys
 trait ToAnsi {
     fn get(key: &str) -> String;
     fn escape(code: &str) -> String;
@@ -10,6 +12,16 @@ trait ToAnsi {
 
 
 impl ToAnsi for Color {
+
+    ///
+    /// Convert a str to an Ansi color code based
+    /// on the key standard that the colored lib has.
+    /// With some of my own additions.
+    ///
+    /// # Example
+    /// If "red" is passed, it'll become the red foreground
+    /// color code. If "on red" is passed, it'll become the
+    /// red background color code.
     fn get(key: &str) -> String {
         let is_bg = key.starts_with("on");
         let is_reset = key == "/";
@@ -29,6 +41,8 @@ impl ToAnsi for Color {
 
 
 
+    /// Add the required escape and terminator characters to
+    /// an ansi color code.
     fn escape(code: &str) -> String {
         let mut res = String::from("\x1B[");
 
@@ -49,11 +63,11 @@ impl Parser {
     pub fn parse_color_string<S>(string: S) -> String
         where S: Into<String>
     {
-        Parser::replace_colors(string.into())
+        Parser::replace_keys(string.into())
     }
 
 
-    fn replace_colors(input: String) -> String {
+    fn replace_keys(input: String) -> String {
         lazy_static!(
             static ref TAG: Regex =
                 Regex::new(r"<((?:[a-zA-Z-_ ]*+)|/(?:[a-zA-Z-_ ]*+))>")

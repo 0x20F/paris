@@ -2,7 +2,7 @@
 extern crate lazy_static;
 
 pub mod icons;
-pub mod colors;
+mod colors;
 
 use std::fmt::Display;
 use std::thread;
