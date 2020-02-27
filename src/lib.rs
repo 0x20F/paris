@@ -420,7 +420,11 @@ mod tests {
 
         println!("{}", parsed);
 
-        //assert!(!parsed.contains("<i>"));
+        assert!(!parsed.contains("<cyan>"));
+        assert!(!parsed.contains("<yellow>"));
+        assert!(!parsed.contains("<red>"));
+        assert!(!parsed.contains("<blue>"));
+        assert!(!parsed.contains("</>"));
     }
 
     #[test]

@@ -27,6 +27,8 @@ impl ToAnsi for Color {
         Color::escape(color.to_fg_str())
     }
 
+
+
     fn escape(code: &str) -> String {
         let mut res = String::from("\x1B[");
 
