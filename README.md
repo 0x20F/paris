@@ -1,7 +1,3 @@
-### TODO:
-* *"parse"* function to build custom combinations and styles
-
-
 # Paris | [crates.io](https://crates.io/crates/paris) | ![CI](https://github.com/SirTheViking/logger/workflows/CI/badge.svg)
 Simple way to output beautiful text in your
 CLI applications. Only limit is your imagination.
@@ -85,5 +81,5 @@ or use underlines instead if you wish.
 #### Background
 `on black`, `on red`, `on green`, `on yellow`, `on blue`, `on cyan`, `on magenta`, `on white`
 
-#### Styles
-`` 
+#### Styles (Not Implemented Yet)
+`bold`, `underline`, `dimmed`, `italic`, `strikethrough`,  
