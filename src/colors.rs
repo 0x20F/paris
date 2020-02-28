@@ -83,14 +83,37 @@ impl Parser {
 
         for mat in TAG.captures_iter(&input) {
             let key = &mat[0];
-            let color = &mat[1];
+            let color = Parser::cleanup_color(&mat[1]);
 
-            output = output.replace(key, &Color::get(color));
+            output = output.replace(key, &Color::get(&color));
         }
 
         output
     }
+
+
+    fn cleanup_color(key: &str) -> String {
+        if key.contains(' ') {
+            return key.to_string();
+        }
+
+        let res: String = key.chars()
+            .map(|c| match c {
+                '_' => ' ',
+                '-' => ' ',
+                _ => c
+            }).collect();
+
+        println!("Res is: {}", res);
+
+        res
+    }
 }
+
+
+
+
+
 
 
 #[cfg(test)]
@@ -99,7 +122,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let s = "<cyan>This <green>is <yellow>a <magenta>string<red> yooo</> with <blue>icons</>";
+        let s = "<cyan>This <bright-green>is <yellow>a <magenta>string<red> yooo</> with <blue>icons</>";
 
         let parsed = Parser::parse_color_string(s);
 
@@ -109,6 +132,7 @@ mod tests {
         assert!(!parsed.contains("<yellow>"));
         assert!(!parsed.contains("<red>"));
         assert!(!parsed.contains("<blue>"));
+        assert!(!parsed.contains("<bright-green>"));
         assert!(!parsed.contains("</>"));
     }
 }
