@@ -104,8 +104,6 @@ impl Parser {
                 _ => c
             }).collect();
 
-        println!("Res is: {}", res);
-
         res
     }
 }
