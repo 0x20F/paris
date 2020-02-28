@@ -78,7 +78,7 @@ decide you don't ever want to use it. It's up to you.
 
 ## Color keys
 To use a key just add the color name surrounded by `<`, `>` to your log string. Include spaces
-or use underlines instead if you wish.
+or use underlines(`_`) or dashes(`-`) instead if you wish.
 
 #### Foreground
 `black`, `red`, `green`, `yellow`, `blue`, `cyan`, `magenta`, `white`
