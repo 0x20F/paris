@@ -20,7 +20,8 @@ pub enum LogIcon {
     ///
     /// # Example
     /// ```
-    /// # use paris::icons::LogIcon;
+    /// use paris::LogIcon;
+    ///
     /// println!("{} Everything went well", LogIcon::Tick);
     /// // ✔ Everything went well
     /// ```
@@ -30,7 +31,7 @@ pub enum LogIcon {
     ///
     /// # Example
     /// ```
-    /// # use paris::icons::LogIcon;
+    /// # use paris::LogIcon;
     /// println!("{} Oops, try again!", LogIcon::Cross);
     /// // ✖ Oops, try again!
     /// ```
@@ -40,7 +41,7 @@ pub enum LogIcon {
     ///
     /// # Example
     /// ```
-    /// # use paris::icons::LogIcon;
+    /// # use paris::LogIcon;
     /// println!("{} In Switzerland it is illegal to own just one guinea pig", LogIcon::Info);
     /// // ℹ In Switzerland it is illegal to own just one guinea pig.
     /// ```
@@ -50,7 +51,7 @@ pub enum LogIcon {
     ///
     /// # Example
     /// ```
-    /// # use paris::icons::LogIcon;
+    /// # use paris::LogIcon;
     /// println!("{} Things are starting to catch fire!", LogIcon::Warning);
     /// // ⚠ Things are starting to catch fire!
     /// ```

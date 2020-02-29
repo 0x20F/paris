@@ -76,7 +76,7 @@
 #[macro_use]
 extern crate lazy_static;
 
-pub mod icons;
+mod icons;
 mod formatter;
 
 use std::fmt::Display;
@@ -88,7 +88,8 @@ use std::io;
 
 use chrono::{ Timelike, Utc };
 use formatter::Formatter;
-use icons::LogIcon;
+
+pub use icons::LogIcon;
 
 
 
