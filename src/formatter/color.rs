@@ -33,7 +33,7 @@ impl ToAnsi for Color {
             return Color::escape("0");
         }
 
-        let color: Color = key.trim_start_matches("on ").into();
+        let color = Color::from(key.trim_start_matches("on "));
 
         if is_bg {
             return color.escape_bg();
