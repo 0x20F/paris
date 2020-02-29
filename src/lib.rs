@@ -453,6 +453,7 @@ impl Logger {
 mod tests {
     use super::*;
 
+
     #[test]
     fn timestamp() {
         let mut logger = Logger::new(false);
@@ -463,6 +464,7 @@ mod tests {
         assert_eq!(logger.with_timestamp, true);
         logger.info("It has a timestamp");
     }
+
 
     #[test]
     fn loading() {
@@ -479,6 +481,7 @@ mod tests {
             .error("Done loading instantly lol");
     }
 
+
     #[test]
     fn same() {
         let mut logger = Logger::new(false);
@@ -494,6 +497,7 @@ mod tests {
         logger.info("Reset the line");
         assert_eq!(logger.line_ending, String::from("\n"));
     }
+
 
     #[test]
     fn it_works() {
