@@ -84,4 +84,14 @@ mod tests {
         assert!(!parsed.contains("<bright-green>"));
         assert!(!parsed.contains("</>"));
     }
+
+
+    #[test]
+    fn cleanup_color() {
+        let color = "on_bright-green";
+
+        let clean = Formatter::cleanup_color(color);
+
+        assert_eq!("on bright green", clean);
+    }
 }
