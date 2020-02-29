@@ -77,7 +77,7 @@
 extern crate lazy_static;
 
 pub mod icons;
-mod colors;
+mod formatter;
 
 use std::fmt::Display;
 use std::thread;
@@ -87,7 +87,7 @@ use std::io::prelude::*;
 use std::io;
 
 use chrono::{ Timelike, Utc };
-use colors::Parser;
+use formatter::Formatter;
 use icons::LogIcon;
 
 
@@ -295,7 +295,7 @@ impl Logger {
                     &thread_message
                 );
 
-                print!("{}", Parser::parse_color_string(message));
+                print!("{}", Formatter::color_string(message));
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
@@ -388,7 +388,7 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        let message = Parser::parse_color_string(message.to_string());
+        let message = Formatter::color_string(message.to_string());
 
         print!("{}{}{}", timestamp, message, self.get_line_ending());
 
@@ -403,7 +403,7 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        let message = Parser::parse_color_string(message.to_string());
+        let message = Formatter::color_string(message.to_string());
 
         eprint!("{}{}{}", timestamp, message, self.get_line_ending());
 
