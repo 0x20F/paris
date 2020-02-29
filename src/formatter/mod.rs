@@ -70,7 +70,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parse() {
+    fn format_color_string() {
         let s = "<cyan>This <bright-green>is <yellow>a <magenta>string<red> yooo</> with <blue>icons</>";
 
         let parsed = Formatter::color_string(s);

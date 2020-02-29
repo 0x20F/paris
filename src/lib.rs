@@ -489,6 +489,9 @@ mod tests {
 
         logger.same();
         assert_eq!(logger.line_ending, String::from(""));
+
+        logger.info("Reset the line");
+        assert_eq!(logger.line_ending, String::from("\n"));
     }
 
     #[test]
