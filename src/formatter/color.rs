@@ -6,7 +6,7 @@ use colored::*;
 /// so it can convert directly to ansi escaped codes
 /// and properly parse based on my custom keys
 pub trait ToAnsi {
-    fn get(key: &str) -> String;
+    fn from_key(key: &str) -> String;
 
     fn escape(code: &str) -> String;
 
@@ -17,7 +17,6 @@ pub trait ToAnsi {
 
 impl ToAnsi for Color {
 
-    ///
     /// Convert a str to an Ansi color code based
     /// on the key standard that the colored lib has.
     /// With some of my own additions.
@@ -26,7 +25,7 @@ impl ToAnsi for Color {
     /// If "red" is passed, it'll become the red foreground
     /// color code. If "on red" is passed, it'll become the
     /// red background color code.
-    fn get(key: &str) -> String {
+    fn from_key(key: &str) -> String {
         let is_bg = key.starts_with("on");
         let is_reset = key == "/";
 
@@ -83,7 +82,7 @@ mod tests {
     fn get_reset() {
         let reset = String::from("\x1B[0m");
 
-        let color = Color::get("/");
+        let color = Color::from_key("/");
 
         assert_eq!(reset, color);
     }
@@ -93,7 +92,7 @@ mod tests {
     fn get_bg_color() {
         let red = String::from("\x1B[41m");
 
-        let color = Color::get("on red");
+        let color = Color::from_key("on red");
 
         assert_eq!(red, color);
     }
@@ -103,7 +102,7 @@ mod tests {
     fn get_fg_color() {
         let red = String::from("\x1B[31m");
 
-        let color = Color::get("red");
+        let color = Color::from_key("red");
 
         assert_eq!(red, color);
     }

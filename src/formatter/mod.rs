@@ -36,7 +36,7 @@ impl Formatter {
             let key = &mat[0];
             let color = Formatter::cleanup_color(&mat[1]);
 
-            output = output.replace(key, &Color::get(&color));
+            output = output.replace(key, &Color::from_key(&color));
         }
 
         output
