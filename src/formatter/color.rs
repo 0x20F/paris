@@ -7,7 +7,11 @@ use colored::*;
 /// and properly parse based on my custom keys
 pub trait ToAnsi {
     fn get(key: &str) -> String;
+
     fn escape(code: &str) -> String;
+
+    fn escape_bg(&self) -> String;
+    fn escape_fg(&self) -> String;
 }
 
 
@@ -33,10 +37,10 @@ impl ToAnsi for Color {
         let color: Color = key.trim_start_matches("on ").into();
 
         if is_bg {
-            return Color::escape(color.to_bg_str());
+            return color.escape_bg();
         }
 
-        Color::escape(color.to_fg_str())
+        color.escape_fg()
     }
 
 
@@ -50,5 +54,77 @@ impl ToAnsi for Color {
 
         res.push('m');
         res
+    }
+
+
+
+    fn escape_bg(&self) -> String {
+        Color::escape(self.to_bg_str())
+    }
+
+
+
+    fn escape_fg(&self) -> String {
+        Color::escape(self.to_fg_str())
+    }
+}
+
+
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+
+    #[test]
+    fn get_reset() {
+        let reset = String::from("\x1B[0m");
+
+        let color = Color::get("/");
+
+        assert_eq!(reset, color);
+    }
+
+
+    #[test]
+    fn get_bg_color() {
+        let red = String::from("\x1B[41m");
+
+        let color = Color::get("on red");
+
+        assert_eq!(red, color);
+    }
+
+
+    #[test]
+    fn get_fg_color() {
+        let red = String::from("\x1B[31m");
+
+        let color = Color::get("red");
+
+        assert_eq!(red, color);
+    }
+
+
+    #[test]
+    fn escape_bg() {
+        let red = String::from("\x1B[41m");
+
+        let color = Color::Red.escape_bg();
+
+        assert_eq!(red, color);
+    }
+
+
+    #[test]
+    fn escape_fg() {
+        let red = String::from("\x1B[31m");
+
+        let color = Color::Red.escape_fg();
+
+        assert_eq!(red, color);
     }
 }
