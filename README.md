@@ -95,5 +95,5 @@ or use underlines(`_`) or dashes(`-`) instead if you wish.
 `on bright black`, `on bright red`, `on bright green`, `on bright yellow`, `on bright blue`, `on bright cyan`, 
 `on bright magenta`, `on bright white`
 
-#### Styles (Not Implemented Yet)
-`bold`, `underline`, `dimmed`, `italic`, `strikethrough`,  
+#### Styles
+`bold`, `underline`, `dimmed`, `italic` 
