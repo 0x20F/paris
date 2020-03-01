@@ -1,4 +1,4 @@
-# Paris | ![CI](https://github.com/SirTheViking/logger/workflows/CI/badge.svg) ![crates.io](https://img.shields.io/crates/v/paris.svg) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+# Paris | ![build](https://github.com/SirTheViking/logger/workflows/build/badge.svg) ![crates.io](https://img.shields.io/crates/v/paris.svg) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 Simple way to output beautiful text in your
 CLI applications. Only limit is your imagination.
 
