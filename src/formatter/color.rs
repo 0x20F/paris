@@ -1,5 +1,5 @@
 use super::ansi::ToAnsi;
-use colored::*;
+use colored::Color;
 
 
 
