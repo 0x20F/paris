@@ -3,6 +3,7 @@ mod style;
 mod ansi;
 
 use colored::Color;
+use style::Style;
 use ansi::ToAnsi;
 use regex::Regex;
 
@@ -35,7 +36,15 @@ impl Formatter {
             let key = &mat[0];
             let color = Formatter::cleanup_key(&mat[1]);
 
-            output = output.replace(key, &Color::from_key(&color));
+            let replacement;
+
+            if Formatter::is_style(&color) {
+                replacement = Style::from_key(&color);
+            } else {
+                replacement = Color::from_key(&color);
+            }
+
+            output = output.replace(key, &replacement);
         }
 
         output
@@ -55,6 +64,16 @@ impl Formatter {
             }).collect();
 
         res
+    }
+
+
+    fn is_style(key: &str) -> bool {
+        let s = Style::from(key);
+
+        match s {
+            Style::None => false,
+            _ => true
+        }
     }
 }
 
@@ -76,8 +95,11 @@ mod tests {
                 let k = format!("<{}>", $key);
                 let c = format!("\x1B[{}m", $code);
 
-                let s = format!("has this color -> {}", k);
+                let s = format!("has: {:<20} -> {}Test string", $key, k);
                 let parsed = Formatter::colorize_string(s);
+
+                // Just to see all the cool colors
+                println!("{}", parsed);
 
                 assert!(!parsed.contains(&k));
                 assert!(parsed.contains(&c));
@@ -96,6 +118,10 @@ mod tests {
     replacement!(bright_background, "on bright magenta", 105);
 
     // Style checks
+    replacement!(bold, "bold", 1);
+    replacement!(dimmed, "dimmed", 2);
+    replacement!(italic, "italic", 3);
+    replacement!(underline, "underline", 4);
 
     // Reset check
     replacement!(reset, "/", 0);
