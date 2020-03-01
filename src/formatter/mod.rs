@@ -52,6 +52,8 @@ impl Formatter {
 
 
     fn cleanup_key(key: &str) -> String {
+        // If key already contains space, its already
+        // intended or a typo
         if key.contains(' ') {
             return key.to_string();
         }
@@ -89,13 +91,15 @@ mod tests {
 
 
     macro_rules! replacement {
-        ($name:ident, $key:expr, $code:expr) => {
+        ($key:ident, $code:expr) => {
             #[test]
-            fn $name() {
-                let k = format!("<{}>", $key);
+            fn $key() {
+                let n = stringify!($key);
+
+                let k = format!("<{}>", n);
                 let c = format!("\x1B[{}m", $code);
 
-                let s = format!("has: {:<20} -> {}Test string", $key, k);
+                let s = format!("has: {:<20} -> {}Test string", n, k);
                 let parsed = Formatter::colorize_string(s);
 
                 // Just to see all the cool colors
@@ -107,24 +111,56 @@ mod tests {
         };
     }
 
-    // Foreground checks
-    replacement!(cyan, "cyan", 36);
-    replacement!(red, "red", 31);
-    replacement!(blue, "blue", 34);
+    // Color checks
+    replacement!(black, 30);
+    replacement!(red, 31);
+    replacement!(green, 32);
+    replacement!(yellow, 33);
+    replacement!(blue, 34);
+    replacement!(magenta, 35);
+    replacement!(cyan, 36);
+    replacement!(white, 37);
 
-    // Background checks
-    replacement!(bright, "bright green", 92);
-    replacement!(background, "on red", 41);
-    replacement!(bright_background, "on bright magenta", 105);
+    // Bright color checks
+    replacement!(bright_black, 90);
+    replacement!(bright_red, 91);
+    replacement!(bright_green, 92);
+    replacement!(bright_yellow, 93);
+    replacement!(bright_blue, 94);
+    replacement!(bright_magenta, 95);
+    replacement!(bright_cyan, 96);
+    replacement!(bright_white, 97);
+
+    // Background normal
+    replacement!(on_black, 40);
+    replacement!(on_red, 41);
+    replacement!(on_green, 42);
+    replacement!(on_yellow, 43);
+
+    // Background bright
+    replacement!(on_bright_black, 100);
+    replacement!(on_bright_red, 101);
+    replacement!(on_bright_green, 102);
+    replacement!(on_bright_yellow, 103);
 
     // Style checks
-    replacement!(bold, "bold", 1);
-    replacement!(dimmed, "dimmed", 2);
-    replacement!(italic, "italic", 3);
-    replacement!(underline, "underline", 4);
+    replacement!(bold, 1);
+    replacement!(dimmed, 2);
+    replacement!(italic, 3);
+    replacement!(underline, 4);
 
     // Reset check
-    replacement!(reset, "/", 0);
+    #[test]
+    fn reset() {
+        let k = "</>";
+        let c = format!("\x1B[{}m", 0);
+
+        let s = format!("{}Test string", k);
+        let parsed = Formatter::colorize_string(s);
+
+        assert!(!parsed.contains(&k));
+        assert!(parsed.contains(&c));
+    }
 
 
     #[test]
