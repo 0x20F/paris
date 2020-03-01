@@ -1,18 +1,6 @@
+use super::ansi::ToAnsi;
 use colored::*;
 
-
-
-/// Extends the functionality of colored::Color
-/// so it can convert directly to ansi escaped codes
-/// and properly parse based on my custom keys
-pub trait ToAnsi {
-    fn from_key(key: &str) -> String;
-
-    fn escape(code: &str) -> String;
-
-    fn escape_bg(&self) -> String;
-    fn escape_fg(&self) -> String;
-}
 
 
 impl ToAnsi for Color {
@@ -36,35 +24,10 @@ impl ToAnsi for Color {
         let color = Color::from(key.trim_start_matches("on "));
 
         if is_bg {
-            return color.escape_bg();
+            return Color::escape(color.to_bg_str());
         }
 
-        color.escape_fg()
-    }
-
-
-
-    /// Add the required escape and terminator characters to
-    /// an ansi color code.
-    fn escape(code: &str) -> String {
-        let mut res = String::from("\x1B[");
-
-        res.push_str(code);
-
-        res.push('m');
-        res
-    }
-
-
-
-    fn escape_bg(&self) -> String {
-        Color::escape(self.to_bg_str())
-    }
-
-
-
-    fn escape_fg(&self) -> String {
-        Color::escape(self.to_fg_str())
+        Color::escape(color.to_fg_str())
     }
 }
 
@@ -78,52 +41,20 @@ mod tests {
     use super::*;
 
 
-    #[test]
-    fn get_reset() {
-        let reset = String::from("\x1B[0m");
+    macro_rules! color_test {
+        ($name:ident, $key:expr, $value:expr) => {
+            #[test]
+            fn $name() {
+                let v = String::from(format!("\x1B[{}m", $value));
+                let c = Color::from_key($key);
 
-        let color = Color::from_key("/");
-
-        assert_eq!(reset, color);
+                assert_eq!(c, v);
+            }
+        };
     }
 
 
-    #[test]
-    fn get_bg_color() {
-        let red = String::from("\x1B[41m");
-
-        let color = Color::from_key("on red");
-
-        assert_eq!(red, color);
-    }
-
-
-    #[test]
-    fn get_fg_color() {
-        let red = String::from("\x1B[31m");
-
-        let color = Color::from_key("red");
-
-        assert_eq!(red, color);
-    }
-
-
-    #[test]
-    fn escape_bg() {
-        let red = String::from("\x1B[41m");
-
-        let color = Color::Red.escape_bg();
-
-        assert_eq!(red, color);
-    }
-
-
-    #[test]
-    fn escape_fg() {
-        let red = String::from("\x1B[31m");
-
-        let color = Color::Red.escape_fg();
-
-        assert_eq!(red, color);
-    }
+    color_test!(reset, "/", 0);
+    color_test!(background, "on red", 41);
+    color_test!(foreground, "red", 31);
 }
