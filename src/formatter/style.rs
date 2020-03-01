@@ -7,7 +7,7 @@ pub enum Style {
     Italic,
     Underline,
     Dimmed,
-    Clear
+    None
 }
 
 
@@ -19,7 +19,7 @@ impl Style {
             Style::Dimmed => "2",
             Style::Italic => "3",
             Style::Underline => "4",
-            Style::Clear => ""
+            Style::None => ""
         }
     }
 }
@@ -38,7 +38,7 @@ impl ToAnsi for Style {
 
 impl<'a> From<&'a str> for Style {
     fn from(s: &'a str) -> Self {
-        s.parse().unwrap_or(Style::Clear)
+        s.parse().unwrap_or(Style::None)
     }
 }
 
@@ -46,7 +46,7 @@ impl<'a> From<&'a str> for Style {
 
 impl From<String> for Style {
     fn from(s: String) -> Self {
-        s.parse().unwrap_or(Style::Clear)
+        s.parse().unwrap_or(Style::None)
     }
 }
 
