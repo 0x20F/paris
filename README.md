@@ -6,7 +6,7 @@ CLI applications. Only limit is your imagination.
 ## How to use
 ```toml
 [dependencies]
-paris = "1.1"
+paris = "1"
 ```
 
 ```rust
