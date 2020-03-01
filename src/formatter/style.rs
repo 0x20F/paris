@@ -30,7 +30,7 @@ impl ToAnsi for Style {
     fn from_key(key: &str) -> String {
         let s = Style::from(key);
 
-        return Style::escape(s.to_str())
+        Style::escape(s.to_str())
     }
 }
 
