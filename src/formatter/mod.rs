@@ -36,13 +36,11 @@ impl Formatter {
             let key = &mat[0];
             let color = Formatter::cleanup_key(&mat[1]);
 
-            let replacement;
-
-            if Formatter::is_style(&color) {
-                replacement = Style::from_key(&color);
+            let replacement = if Formatter::is_style(&color) {
+                Style::from_key(&color)
             } else {
-                replacement = Color::from_key(&color);
-            }
+                Color::from_key(&color)
+            };
 
             output = output.replace(key, &replacement);
         }
