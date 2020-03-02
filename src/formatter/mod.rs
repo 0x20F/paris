@@ -37,17 +37,15 @@ impl Formatter {
 
 
             let s = Style::from_key(&color);
-
-            if s.is_some() {
-                output = output.replace(key, &s.unwrap());
+            if let Some(c) = s {
+                output = output.replace(key, &c);
                 continue;
             }
 
 
             let c = Color::from_key(&color);
-
-            if c.is_some() {
-                output = output.replace(key, &c.unwrap());
+            if let Some(c) = c {
+                output = output.replace(key, &c);
                 continue;
             }
         }
