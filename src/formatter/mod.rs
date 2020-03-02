@@ -2,7 +2,7 @@ mod color;
 mod style;
 mod ansi;
 
-use colored::Color;
+use color::Color;
 use style::Style;
 use ansi::ToAnsi;
 use regex::Regex;
