@@ -19,7 +19,9 @@ pub enum Color {
     BrightMagenta,
     BrightCyan,
     BrightWhite,
-    None
+    Reset,
+    None // So we can check if its a color or not
+    // In case there's HTML in the logs
 }
 
 
@@ -43,6 +45,7 @@ impl Color {
             Color::BrightMagenta => 95,
             Color::BrightCyan => 96,
             Color::BrightWhite => 97,
+            Color::Reset => 0,
             Color::None => 0
         }
     }
@@ -66,6 +69,7 @@ impl Color {
             Color::BrightMagenta => 105,
             Color::BrightCyan => 106,
             Color::BrightWhite => 107,
+            Color::Reset => 0,
             Color::None => 0
         }
     }
@@ -104,6 +108,7 @@ impl FromStr for Color {
             "bright magenta" => Ok(Color::BrightMagenta),
             "bright cyan" => Ok(Color::BrightCyan),
             "bright white" => Ok(Color::BrightWhite),
+            "/" => Ok(Color::Reset),
             _ => Err(())
         }
     }
