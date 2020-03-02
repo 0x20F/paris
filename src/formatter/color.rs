@@ -119,11 +119,6 @@ impl ToAnsi for Color {
     /// red background color code.
     fn from_key(key: &str) -> String {
         let is_bg = key.starts_with("on");
-        let is_reset = key == "/";
-
-        if is_reset {
-            return Color::escape(0);
-        }
 
         let color = Color::from(key.trim_start_matches("on "));
 
