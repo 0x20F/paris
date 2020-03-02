@@ -34,14 +34,6 @@ impl<'a> From<&'a str> for Style {
 
 
 
-impl From<String> for Style {
-    fn from(s: String) -> Self {
-        s.parse().unwrap_or(Style::None)
-    }
-}
-
-
-
 impl FromStr for Style {
     type Err = ();
 
