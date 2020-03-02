@@ -296,7 +296,7 @@ impl Logger {
                     &thread_message
                 );
 
-                print!("{}", Formatter::colorise_string(message));
+                print!("{}", Formatter::colorize_string(message));
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
@@ -389,7 +389,7 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        let message = Formatter::colorise_string(message.to_string());
+        let message = Formatter::colorize_string(message.to_string());
 
         print!("{}{}{}", timestamp, message, self.get_line_ending());
 
@@ -404,7 +404,7 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        let message = Formatter::colorise_string(message.to_string());
+        let message = Formatter::colorize_string(message.to_string());
 
         eprint!("{}{}{}", timestamp, message, self.get_line_ending());
 
