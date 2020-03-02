@@ -6,7 +6,7 @@ pub trait ToAnsi {
 
     /// Add the required escape and terminator characters to
     /// an ansi code.
-    fn escape(code: &str) -> String {
+    fn escape(code: u8) -> String {
         format!("\x1B[{}m", code)
     }
 }

@@ -13,13 +13,13 @@ pub enum Style {
 
 
 impl Style {
-    pub fn to_str<'a>(&self) -> &'a str {
+    pub fn get_value(&self) -> u8 {
         match self {
-            Style::Bold => "1",
-            Style::Dimmed => "2",
-            Style::Italic => "3",
-            Style::Underline => "4",
-            Style::None => ""
+            Style::Bold => 1,
+            Style::Dimmed => 2,
+            Style::Italic => 3,
+            Style::Underline => 4,
+            Style::None => 0
         }
     }
 }
@@ -30,7 +30,7 @@ impl ToAnsi for Style {
     fn from_key(key: &str) -> String {
         let s = Style::from(key);
 
-        Style::escape(s.to_str())
+        Style::escape(s.get_value())
     }
 }
 
