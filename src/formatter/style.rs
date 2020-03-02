@@ -26,16 +26,6 @@ impl Style {
 
 
 
-impl ToAnsi for Style {
-    fn from_key(key: &str) -> String {
-        let s = Style::from(key);
-
-        Style::escape(s.get_value())
-    }
-}
-
-
-
 impl<'a> From<&'a str> for Style {
     fn from(s: &'a str) -> Self {
         s.parse().unwrap_or(Style::None)
@@ -65,5 +55,15 @@ impl FromStr for Style {
             "dimmed" => Ok(Style::Dimmed),
             _ => Err(())
         }
+    }
+}
+
+
+
+impl ToAnsi for Style {
+    fn from_key(key: &str) -> String {
+        let s = Style::from(key);
+
+        Style::escape(s.get_value())
     }
 }

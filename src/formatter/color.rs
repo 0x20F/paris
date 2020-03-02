@@ -23,6 +23,7 @@ pub enum Color {
 }
 
 
+
 impl Color {
     pub fn get_fg_value(&self) -> u8 {
         match *self {
@@ -71,11 +72,13 @@ impl Color {
 }
 
 
+
 impl<'a> From<&'a str> for Color {
     fn from(s: &str) -> Self {
         s.parse().unwrap_or(Color::None)
     }
 }
+
 
 
 impl FromStr for Color {
@@ -105,6 +108,7 @@ impl FromStr for Color {
         }
     }
 }
+
 
 
 impl ToAnsi for Color {
