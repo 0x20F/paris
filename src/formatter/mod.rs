@@ -6,7 +6,7 @@ use color::Color;
 use style::Style;
 use ansi::ToAnsi;
 use regex::Regex;
-
+use std::ptr::replace;
 
 
 pub struct Formatter {}
@@ -38,8 +38,10 @@ impl Formatter {
 
             let replacement = if Formatter::is_style(&color) {
                 Style::from_key(&color)
-            } else {
+            } else if Formatter::is_color(&color) {
                 Color::from_key(&color)
+            } else {
+                continue
             };
 
             output = output.replace(key, &replacement);
@@ -72,6 +74,19 @@ impl Formatter {
 
         match s {
             Style::None => false,
+            _ => true
+        }
+    }
+
+
+    fn is_color(key: &str) -> bool {
+        // For now, but this is ugly
+        let key = key.replace("on ", "");
+
+        let c = Color::from(key.as_str());
+
+        match c {
+            Color::None => false,
             _ => true
         }
     }
@@ -160,6 +175,14 @@ mod tests {
         assert!(parsed.contains(&c));
     }
 
+    #[test]
+    fn normal_tags() {
+        let s = String::from("<html> This is normal stuff </html>");
+        let parsed = Formatter::colorize_string(s);
+
+        // Make sure its still in there
+        assert!(parsed.contains("<html>"));
+    }
 
     #[test]
     fn cleanup_key() {
