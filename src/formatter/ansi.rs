@@ -7,11 +7,6 @@ pub trait ToAnsi {
     /// Add the required escape and terminator characters to
     /// an ansi code.
     fn escape(code: &str) -> String {
-        let mut res = String::from("\x1B[");
-
-        res.push_str(code);
-
-        res.push('m');
-        res
+        format!("\x1B[{}m", code)
     }
 }
