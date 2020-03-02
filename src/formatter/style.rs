@@ -53,9 +53,12 @@ impl FromStr for Style {
 
 
 impl ToAnsi for Style {
-    fn from_key(key: &str) -> String {
+    fn from_key(key: &str) -> Option<String> {
         let s = Style::from(key);
 
-        Style::escape(s.get_value())
+        match s {
+            Style::None => None,
+            _ => Some(Style::escape(s.get_value()))
+        }
     }
 }

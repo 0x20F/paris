@@ -126,16 +126,21 @@ impl ToAnsi for Color {
     /// If "red" is passed, it'll become the red foreground
     /// color code. If "on red" is passed, it'll become the
     /// red background color code.
-    fn from_key(key: &str) -> String {
+    fn from_key(key: &str) -> Option<String> {
         let is_bg = key.starts_with("on");
 
         let color = Color::from(key.trim_start_matches("on "));
 
-        if is_bg {
-            return Color::escape(color.get_bg_value());
-        }
+        match color {
+            Color::None => None,
+            _ => {
+                if is_bg {
+                    return Some(Color::escape(color.get_bg_value()));
+                }
 
-        Color::escape(color.get_fg_value())
+                Some(Color::escape(color.get_fg_value()))
+            }
+        }
     }
 }
 
@@ -154,7 +159,7 @@ mod tests {
             #[test]
             fn $name() {
                 let v = String::from(format!("\x1B[{}m", $value));
-                let c = Color::from_key($key);
+                let c = Color::from_key($key).unwrap();
 
                 assert_eq!(c, v);
             }

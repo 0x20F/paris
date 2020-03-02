@@ -6,7 +6,7 @@ pub fn colorize_with_tags_benchmark(c: &mut Criterion) {
     c.bench_function(
         "logger formatting with tags",
         |b| b.iter(|| {
-            Formatter::colorize_string("<cyan><wrong>normal \
+            Formatter::colorise_string("<cyan><wrong>normal \
             text</> <on black> <green> <html> <more text as tag> \
             </what> this should be a very very long string so everything can burn\
             and test whatever, <heres a wrong tag> <on blue> heres something\
@@ -21,7 +21,7 @@ pub fn colorize_without_tags_benchmark(c: &mut Criterion) {
     c.bench_function(
         "logger formatting no tags",
         |b| b.iter(|| {
-            Formatter::colorize_string("cyan wrong normal \
+            Formatter::colorise_string("cyan wrong normal \
             text / on black green html more text as tag \
             /what this should be a very very long string so everything can burn\
             and test whatever, heres a wrong tag on blue heres something\
