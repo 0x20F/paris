@@ -6,7 +6,6 @@ use color::Color;
 use style::Style;
 use ansi::ToAnsi;
 use regex::Regex;
-use std::ptr::replace;
 
 
 pub struct Formatter {}

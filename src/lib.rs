@@ -87,9 +87,9 @@ use std::io::prelude::*;
 use std::io;
 
 use chrono::{ Timelike, Utc };
-use formatter::Formatter;
 
 pub use icons::LogIcon;
+pub use formatter::Formatter;
 
 
 
