@@ -64,8 +64,11 @@ pub enum LogIcon {
     Heart,
 
 
-
-    None // So there's a fallback
+    /// No icon. Empty string. Nada.
+    /// This is here to return something
+    /// for the parser when it doesn't match
+    /// any given keys
+    None
 }
 
 
