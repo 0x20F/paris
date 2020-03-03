@@ -36,15 +36,15 @@ impl Formatter {
             let color = Formatter::cleanup_key(&mat[1]);
 
 
-            let s = Style::from_key(&color);
-            if let Some(c) = s {
+            let c = Color::from_key(&color);
+            if let Some(c) = c {
                 output = output.replace(key, &c);
                 continue;
             }
 
 
-            let c = Color::from_key(&color);
-            if let Some(c) = c {
+            let s = Style::from_key(&color);
+            if let Some(c) = s {
                 output = output.replace(key, &c);
                 continue;
             }
