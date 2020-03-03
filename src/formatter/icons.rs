@@ -8,6 +8,7 @@
 //! be replaced with the info icon.
 use std::str::FromStr;
 use std::fmt::{ Display, Formatter, Result as DisplayResult };
+use crate::formatter::from_key::FromKey;
 
 
 /// Contains definitions for icons that can be
@@ -126,6 +127,19 @@ impl FromStr for LogIcon {
             "tick" => Ok(LogIcon::Tick),
             "heart" => Ok(LogIcon::Heart),
             _ => Err(())
+        }
+    }
+}
+
+
+
+impl FromKey for LogIcon {
+    fn from_key(key: &str) -> Option<String> {
+        let i = LogIcon::from(key);
+
+        match i {
+            LogIcon::None => None,
+            _ => Some(i.to_string())
         }
     }
 }

@@ -1,12 +1,11 @@
-/// Extends the functionality of color or style enums
-/// so they can convert directly to ansi escaped codes
-/// and properly parse based on my custom keys
-pub trait ToAnsi {
-    fn from_key(key: &str) -> Option<String>;
+/// Escape whatever's being sent
+/// in here to an ansi code
+pub struct Ansi {}
 
+impl Ansi {
     /// Add the required escape and terminator characters to
     /// an ansi code.
-    fn escape(code: u8) -> String {
+    pub fn escape(code: u8) -> String {
         format!("\x1B[{}m", code)
     }
 }
