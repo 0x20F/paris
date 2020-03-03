@@ -8,7 +8,7 @@
 //! be replaced with the info icon.
 use std::str::FromStr;
 use std::fmt::{ Display, Formatter, Result as DisplayResult };
-use crate::formatter::from_key::FromKey;
+use super::concerns::FromKey;
 
 
 /// Contains definitions for icons that can be

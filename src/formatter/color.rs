@@ -1,5 +1,4 @@
-use crate::formatter::ansi::Ansi;
-use crate::formatter::from_key::FromKey;
+use super::concerns::{ Ansi, FromKey };
 use std::str::FromStr;
 
 

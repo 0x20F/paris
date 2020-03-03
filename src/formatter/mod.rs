@@ -1,15 +1,13 @@
 mod color;
 mod style;
 mod icons;
-mod ansi;
-mod from_key;
+mod concerns;
 
 use color::Color;
 use style::Style;
 use regex::Regex;
 
-use from_key::FromKey;
-
+use concerns::FromKey;
 pub use icons::LogIcon;
 
 

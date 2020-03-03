@@ -9,3 +9,8 @@ impl Ansi {
         format!("\x1B[{}m", code)
     }
 }
+
+
+pub trait FromKey {
+    fn from_key(key: &str) -> Option<String>;
+}
