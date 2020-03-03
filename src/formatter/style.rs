@@ -1,4 +1,4 @@
-use super::ansi::ToAnsi;
+use crate::formatter::ansi::ToAnsi;
 use std::str::FromStr;
 
 
