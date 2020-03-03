@@ -7,6 +7,8 @@
 //! write `<info>` in a string and expect it to
 //! be replaced with the info icon.
 use std::str::FromStr;
+use crate::formatter::ansi::ToAnsi;
+use std::fmt::{ Display, Formatter, Result as DisplayResult };
 
 
 /// Contains definitions for icons that can be
@@ -94,6 +96,14 @@ impl LogIcon {
             LogIcon::Heart => "♥",
             LogIcon::None => ""
         }
+    }
+}
+
+
+
+impl Display for LogIcon {
+    fn fmt(&self, f: &mut Formatter<'_>) -> DisplayResult {
+        write!(f, "{}", self.to_str())
     }
 }
 
