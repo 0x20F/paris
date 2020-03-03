@@ -2,6 +2,8 @@
 Simple way to output beautiful text in your
 CLI applications. Only limit is your imagination.
 
+![example](https://github.com/SirTheViking/logger/blob/master/example/paris_example.gif)
+
 
 ## How to use
 ```toml
