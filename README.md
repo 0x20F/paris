@@ -97,3 +97,6 @@ or use underlines(`_`) or dashes(`-`) instead if you wish.
 
 #### Styles
 `bold`, `underline`, `dimmed`, `italic` 
+
+#### Icons
+`info`, `cross`, `warn`, `tick`, `heart`
