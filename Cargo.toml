@@ -17,6 +17,7 @@ description = "A simple logger for your CLI apps or other things you want in the
 license = "GPL-3.0-or-later"
 
 exclude = [
+    "example/*",
     "tests/*",
     ".github/*"
 ]
