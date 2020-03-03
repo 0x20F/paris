@@ -370,7 +370,7 @@ impl Logger {
         let (is_pm, hour) = now.hour12();
 
         let stamp = format!(
-            "{:02}:{:02}:{:02}.{:03} {}: ",
+            "<dimmed>{:02}:{:02}:{:02}.{:03} {}: </>",
             hour,
             now.minute(),
             now.second(),
@@ -389,9 +389,9 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        let message = Formatter::colorize_string(message.to_string());
+        let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
 
-        print!("{}{}{}", timestamp, message, self.get_line_ending());
+        print!("{}", Formatter::colorize_string(message));
 
         self
     }
@@ -404,9 +404,9 @@ impl Logger {
     {
         self.done();
         let timestamp = self.timestamp();
-        let message = Formatter::colorize_string(message.to_string());
+        let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
 
-        eprint!("{}{}{}", timestamp, message, self.get_line_ending());
+        eprint!("{}", Formatter::colorize_string(message));
 
         self
     }
