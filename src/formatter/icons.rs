@@ -7,7 +7,6 @@
 //! write `<info>` in a string and expect it to
 //! be replaced with the info icon.
 use std::str::FromStr;
-use crate::formatter::ansi::ToAnsi;
 use std::fmt::{ Display, Formatter, Result as DisplayResult };
 
 
