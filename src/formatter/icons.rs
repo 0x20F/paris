@@ -142,3 +142,31 @@ impl FromStr for LogIcon {
         }
     }
 }
+
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    macro_rules! icon_test {
+        ($name:ident, $value:expr) => {
+            #[test]
+            fn $name() {
+                let v = String::from(stringify!($name));
+                let c = LogIcon::from_key(&v).unwrap();
+
+                assert_eq!(c, $value);
+            }
+        };
+    }
+
+
+    icon_test!(tick, "✔");
+    icon_test!(cross, "✖");
+    icon_test!(info, "ℹ");
+    icon_test!(warn, "⚠");
+    icon_test!(heart, "♥");
+}
