@@ -6,10 +6,7 @@
 //! in log strings on the other hand. So you can't
 //! write `<info>` in a string and expect it to
 //! be replaced with the info icon.
-//! Not at the moment at least.
-use std::fmt::{ Display, Formatter, Result };
-
-
+use std::str::FromStr;
 
 
 /// Contains definitions for icons that can be
@@ -62,38 +59,67 @@ pub enum LogIcon {
     /// ```
     /// // You get it...
     /// ```
-    Heart
+    Heart,
+
+
+
+    None // So there's a fallback
 }
 
 
-impl Display for LogIcon {
-    /// Match the enum value and print out the equivalent icon.
+
+impl LogIcon {
+    /// Match the enum value and return the equivalent icon.
     /// On Windows, icons will be replaced with other *things* that
     /// are supported. See [this github repo](https://github.com/sindresorhus/figures)
     /// for all replacements
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        let (
-            mut tick,
-            mut cross,
-            mut info,
-            mut warn,
-            mut heart
-        ) = ("✔", "✖", "ℹ", "⚠", "♥");
+    pub fn to_str<'a>(&self) -> &'a str {
 
         if cfg!(windows) {
-            tick = "√";
-            cross = "×";
-            info = "i";
-            warn = "‼";
-            heart = "♥";
+            return match self {
+                LogIcon::Info => "i",
+                LogIcon::Cross => "×",
+                LogIcon::Warning => "‼",
+                LogIcon::Tick => "√",
+                LogIcon::Heart => "♥",
+                LogIcon::None => ""
+            }
         }
 
-        match *self {
-            LogIcon::Tick       => write!(f, "{}", tick),
-            LogIcon::Cross      => write!(f, "{}", cross),
-            LogIcon::Info       => write!(f, "{}", info),
-            LogIcon::Warning    => write!(f, "{}", warn),
-            LogIcon::Heart      => write!(f, "{}", heart)
+        match self {
+            LogIcon::Info => "ℹ",
+            LogIcon::Cross => "✖",
+            LogIcon::Warning => "⚠",
+            LogIcon::Tick => "✔",
+            LogIcon::Heart => "♥",
+            LogIcon::None => ""
+        }
+    }
+}
+
+
+
+impl<'a> From<&'a str> for LogIcon {
+    fn from(s: &'a str) -> Self {
+        s.parse().unwrap_or(LogIcon::None)
+    }
+}
+
+
+
+impl FromStr for LogIcon {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let s = s.to_lowercase();
+
+        match s.as_ref() {
+            "info" => Ok(LogIcon::Info),
+            "cross" => Ok(LogIcon::Cross),
+            "warn" => Ok(LogIcon::Warning),
+            "tick" => Ok(LogIcon::Tick),
+            "heart" => Ok(LogIcon::Heart),
+            _ => Err(())
         }
     }
 }
