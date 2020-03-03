@@ -97,6 +97,16 @@ impl LogIcon {
             LogIcon::None => ""
         }
     }
+
+
+    pub fn from_key(key: &str) -> Option<String> {
+        let i = LogIcon::from(key);
+
+        match i {
+            LogIcon::None => None,
+            _ => Some(i.to_string())
+        }
+    }
 }
 
 
