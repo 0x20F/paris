@@ -8,11 +8,17 @@ use ansi::ToAnsi;
 use regex::Regex;
 
 
+/// A wrapper around a few functions to make
+/// finding and replacing keys inside a string easier.
 pub struct Formatter {}
 
 
 impl Formatter {
 
+    /// Finds all keys in the given input. Keys meaning
+    /// whatever the logger uses. Something that looks like `<key>`.
+    /// And replaces all those keys with their color, style
+    /// or icon equivalent.
     pub fn colorize_string<S>(input: S) -> String
         where S: Into<String>
     {
@@ -54,6 +60,9 @@ impl Formatter {
     }
 
 
+    /// Removes characters that can be used instead
+    /// of spaces from a key if the key doesn't already
+    /// contain spaces
     fn cleanup_key(key: &str) -> String {
         // If key already contains space, its already
         // intended or a typo
