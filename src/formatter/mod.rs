@@ -61,14 +61,12 @@ impl Formatter {
             return key.to_string();
         }
 
-        let res: String = key.chars()
+        key.chars()
             .map(|c| match c {
                 '_' => ' ',
                 '-' => ' ',
                 _ => c
-            }).collect();
-
-        res
+            }).collect()
     }
 }
 
