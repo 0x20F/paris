@@ -57,6 +57,13 @@ impl Formatter {
                 output = output.replace(key, &c);
                 continue;
             }
+
+
+            let i = LogIcon::from_key(&color);
+            if let Some(i) = i {
+                output = output.replace(key, &i);
+                continue;
+            }
         }
 
         output
