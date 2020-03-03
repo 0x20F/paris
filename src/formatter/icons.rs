@@ -71,22 +71,9 @@ pub enum LogIcon {
 
 impl LogIcon {
     /// Match the enum value and return the equivalent icon.
-    /// On Windows, icons will be replaced with other *things* that
-    /// are supported. See [this github repo](https://github.com/sindresorhus/figures)
-    /// for all replacements
+    /// See [this github repo](https://github.com/sindresorhus/figures)
+    /// for all icons
     pub fn to_str<'a>(&self) -> &'a str {
-
-        if cfg!(windows) {
-            return match self {
-                LogIcon::Info => "i",
-                LogIcon::Cross => "×",
-                LogIcon::Warning => "‼",
-                LogIcon::Tick => "√",
-                LogIcon::Heart => "♥",
-                LogIcon::None => ""
-            }
-        }
-
         match self {
             LogIcon::Info => "ℹ",
             LogIcon::Cross => "✖",
