@@ -1,11 +1,14 @@
 mod color;
 mod style;
+mod icons;
 mod ansi;
 
 use color::Color;
 use style::Style;
 use ansi::ToAnsi;
 use regex::Regex;
+
+pub use icons::LogIcon;
 
 
 /// A wrapper around a few functions to make
