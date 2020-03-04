@@ -1,4 +1,4 @@
-use super::ansi::ToAnsi;
+use super::concerns::{ Ansi, FromKey };
 use std::str::FromStr;
 
 
@@ -52,13 +52,13 @@ impl FromStr for Style {
 
 
 
-impl ToAnsi for Style {
+impl FromKey for Style {
     fn from_key(key: &str) -> Option<String> {
         let s = Style::from(key);
 
         match s {
             Style::None => None,
-            _ => Some(Style::escape(s.get_value()))
+            _ => Some(Ansi::escape(s.get_value()))
         }
     }
 }

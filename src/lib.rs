@@ -76,7 +76,6 @@
 #[macro_use]
 extern crate lazy_static;
 
-mod icons;
 mod formatter;
 
 use std::fmt::Display;
@@ -88,8 +87,7 @@ use std::io;
 
 use chrono::{ Timelike, Utc };
 
-pub use icons::LogIcon;
-pub use formatter::Formatter;
+pub use formatter::{ Formatter, LogIcon };
 
 
 
@@ -156,7 +154,7 @@ impl Logger {
     /// logger.info("This is some info");
     /// ```
     pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
-        self.stdout(format!("<cyan>{}</> {}", LogIcon::Info, message))
+        self.stdout(format!("<cyan><info></> {}", message))
     }
 
 
@@ -170,7 +168,7 @@ impl Logger {
     /// logger.success("Everything went great!");
     /// ```
     pub fn success<T: Display>(&mut self, message: T) -> &mut Logger {
-        self.stdout(format!("<green>{}</> {}", LogIcon::Tick, message))
+        self.stdout(format!("<green><tick></> {}", message))
     }
 
 
@@ -184,7 +182,7 @@ impl Logger {
     /// logger.warn("This is a warning");
     /// ```
     pub fn warn<T: Display>(&mut self, message: T) -> &mut Logger {
-        self.stdout(format!("<yellow>{}</> {}", LogIcon::Warning, message))
+        self.stdout(format!("<yellow><warn></> {}", message))
     }
 
     
@@ -198,7 +196,7 @@ impl Logger {
     /// logger.error("Something broke, here's the error");
     /// ```
     pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
-        self.stderr(format!("<red>{}</> {}", LogIcon::Cross, message))
+        self.stderr(format!("<red><cross></> {}", message))
     }
 
 

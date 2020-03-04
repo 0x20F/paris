@@ -1,4 +1,4 @@
-use super::ansi::ToAnsi;
+use super::concerns::{ Ansi, FromKey };
 use std::str::FromStr;
 
 
@@ -116,7 +116,7 @@ impl FromStr for Color {
 
 
 
-impl ToAnsi for Color {
+impl FromKey for Color {
 
     /// Convert a str to an Ansi color code based
     /// on the key standard that the colored lib has.
@@ -135,10 +135,10 @@ impl ToAnsi for Color {
             Color::None => None,
             _ => {
                 if is_bg {
-                    return Some(Color::escape(color.get_bg_value()));
+                    return Some(Ansi::escape(color.get_bg_value()));
                 }
 
-                Some(Color::escape(color.get_fg_value()))
+                Some(Ansi::escape(color.get_fg_value()))
             }
         }
     }

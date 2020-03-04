@@ -1,11 +1,14 @@
 mod color;
 mod style;
-mod ansi;
+mod icons;
+mod concerns;
 
 use color::Color;
 use style::Style;
-use ansi::ToAnsi;
 use regex::Regex;
+
+use concerns::FromKey;
+pub use icons::LogIcon;
 
 
 /// A wrapper around a few functions to make
@@ -52,6 +55,13 @@ impl Formatter {
             let s = Style::from_key(&color);
             if let Some(c) = s {
                 output = output.replace(key, &c);
+                continue;
+            }
+
+
+            let i = LogIcon::from_key(&color);
+            if let Some(i) = i {
+                output = output.replace(key, &i);
                 continue;
             }
         }
