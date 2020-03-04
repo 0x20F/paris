@@ -46,7 +46,7 @@
 //!     log.info("I can write normal text or use tags to <red>color it</>");
 //!     log.warn("Every function can contain <on green><black>tags</>");
 //!
-//!     log.info("If you don't write them <bleu>correctly</>, you just get the default colors");
+//!     log.info("If you don't write them <bleu>correctly</>, you just get an ugly looking tag");
 //!
 //! There's a key for all colors supported by the terminal `(white, black, red, blue, magenta, etc.)`
 //! If you add the word `on` to any of those colors, it becomes the
