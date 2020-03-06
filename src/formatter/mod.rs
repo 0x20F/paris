@@ -42,24 +42,24 @@ impl Formatter {
 
         for mat in TAG.captures_iter(&input) {
             let key = &mat[0];
-            let color = Formatter::cleanup_key(&mat[1]);
+            let color_key = Formatter::cleanup_key(&mat[1]);
 
 
-            let c = Color::from_key(&color);
+            let c = Color::from_key(&color_key);
             if let Some(c) = c {
                 output = output.replace(key, &c);
                 continue;
             }
 
 
-            let s = Style::from_key(&color);
+            let s = Style::from_key(&color_key);
             if let Some(c) = s {
                 output = output.replace(key, &c);
                 continue;
             }
 
 
-            let i = LogIcon::from_key(&color);
+            let i = LogIcon::from_key(&color_key);
             if let Some(i) = i {
                 output = output.replace(key, &i);
                 continue;
