@@ -2,13 +2,13 @@
 
 <p align="center">Simple way to output beautiful text in your CLI applications. Only limit is your imagination.</p>
 
-<hr>
-   <p align="center">
-      <img alt="Build status badge" src="https://github.com/0x20F/logger/workflows/build/badge.svg"/>
-      <img alt="Crates io badge" src="https://img.shields.io/crates/v/paris.svg"/>
-      <a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License badge" src="https://img.shields.io/badge/License-GPLv3-blue.svg"/></a>
-   </p>
-</hr>
+
+<p align="center">
+   <img alt="Build status badge" src="https://github.com/0x20F/logger/workflows/build/badge.svg"/>
+   <img alt="Crates io badge" src="https://img.shields.io/crates/v/paris.svg"/>
+   <a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License badge" src="https://img.shields.io/badge/License-GPLv3-blue.svg"/></a>
+</p>
+
 
 <p align="center">
    <img src="https://github.com/0x20F/logger/blob/master/example/paris_example.gif"/>
