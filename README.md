@@ -1,8 +1,18 @@
-# Paris | ![build](https://github.com/0x20F/logger/workflows/build/badge.svg) ![crates.io](https://img.shields.io/crates/v/paris.svg) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-Simple way to output beautiful text in your
-CLI applications. Only limit is your imagination.
+<h1 align="center">paris</h1>
 
-![example](https://github.com/0x20F/logger/blob/master/example/paris_example.gif)
+<p align="center">Simple way to output beautiful text in your CLI applications. Only limit is your imagination.</p>
+
+<hr>
+   <p align="center">
+      <img alt="Build status badge" src="https://github.com/0x20F/logger/workflows/build/badge.svg"/>
+      <img alt="Crates io badge" src="https://img.shields.io/crates/v/paris.svg"/>
+      <a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License badge" src="https://img.shields.io/badge/License-GPLv3-blue.svg"/></a>
+   </p>
+</hr>
+
+<p align="center">
+   <img src="https://github.com/0x20F/logger/blob/master/example/paris_example.gif"/>
+</p>
 
 
 ## How to use
