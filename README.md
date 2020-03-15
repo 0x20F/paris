@@ -31,7 +31,7 @@ log.info("It's that simple!");
 ```
 
 
-## Simple methods
+### Simple methods
 ```rust
 // You can have icons at the start of your message!
 log.info("Will add ℹ at the start");
@@ -40,7 +40,7 @@ log.error("Will add ✖ at the start");
 See [the Logger struct](https://docs.rs/paris/) for all methods
 
 
-## Chaining
+### Chaining
 All methods can be chained together to build more intricate
 log/message combinations, in hopes of minimizing the chaos
 that every log string becomes when you have to concatenate
@@ -53,7 +53,7 @@ log.info("this is some info")
 ```
 
 
-## Customisation
+### Customisation
 Outputting text is cool. Outputting text with a colored icon
 at the start is even cooler! But this crate is all about
 customisation, about making the logs feel like home, if you will.
