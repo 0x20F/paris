@@ -1,8 +1,18 @@
-# Paris | ![build](https://github.com/0x20F/logger/workflows/build/badge.svg) ![crates.io](https://img.shields.io/crates/v/paris.svg) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-Simple way to output beautiful text in your
-CLI applications. Only limit is your imagination.
+<h1 align="center">paris</h1>
 
-![example](https://github.com/0x20F/logger/blob/master/example/paris_example.gif)
+<p align="center">Simple way to output beautiful text in your CLI applications. Only limit is your imagination.</p>
+
+
+<p align="center">
+   <img alt="Build status badge" src="https://github.com/0x20F/logger/workflows/build/badge.svg"/>
+   <img alt="Crates io badge" src="https://img.shields.io/crates/v/paris.svg"/>
+   <a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License badge" src="https://img.shields.io/badge/License-GPLv3-blue.svg"/></a>
+</p>
+
+
+<p align="center">
+   <img src="https://github.com/0x20F/logger/blob/master/example/paris_example.gif"/>
+</p>
 
 
 ## How to use
@@ -21,7 +31,7 @@ log.info("It's that simple!");
 ```
 
 
-## Simple methods
+### Simple methods
 ```rust
 // You can have icons at the start of your message!
 log.info("Will add ℹ at the start");
@@ -30,7 +40,7 @@ log.error("Will add ✖ at the start");
 See [the Logger struct](https://docs.rs/paris/) for all methods
 
 
-## Chaining
+### Chaining
 All methods can be chained together to build more intricate
 log/message combinations, in hopes of minimizing the chaos
 that every log string becomes when you have to concatenate
@@ -43,7 +53,7 @@ log.info("this is some info")
 ```
 
 
-## Customisation
+### Customisation
 Outputting text is cool. Outputting text with a colored icon
 at the start is even cooler! But this crate is all about
 customisation, about making the logs feel like home, if you will.
