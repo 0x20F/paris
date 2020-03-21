@@ -41,13 +41,7 @@ impl Formatter {
         let mut output = input.clone();
 
         for key in Finder::new(&input) {
-            println!("Loop has ran");
-        }
-
-        for mat in TAG.captures_iter(&input) {
-            let key = &mat[0];
-            let color_key = Formatter::cleanup_key(&mat[1]);
-
+            let color_key = Formatter::cleanup_key(key);
 
             let c = Color::from_key(&color_key);
             if let Some(c) = c {
@@ -70,6 +64,10 @@ impl Formatter {
             }
         }
 
+        for mat in TAG.captures_iter(&input) {
+
+        }
+
         output
     }
 
@@ -78,6 +76,8 @@ impl Formatter {
     /// of spaces from a key if the key doesn't already
     /// contain spaces
     fn cleanup_key(key: &str) -> String {
+        let key = key.trim_matches(|c| c == '<' || c == '>');
+
         // If key already contains space, its already
         // intended or a typo
         if key.contains(' ') {
@@ -123,13 +123,13 @@ impl<'a> Iterator for Finder<'a> {
                     .map(|(idx, c)| idx + c.len_utf8())
                     .unwrap_or_default();
 
+                // +1 to get the last '>' that's excluded
                 key = Some(&self.input[i..(rest + 1)]);
                 self.input = &self.input[(rest + 1)..];
             }
             None => ()
         }
 
-        println!("{:?}", key);
         key
     }
 }
