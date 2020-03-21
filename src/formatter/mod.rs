@@ -40,6 +40,10 @@ impl Formatter {
 
         let mut output = input.clone();
 
+        for key in Finder::new(&input) {
+            println!("Loop has ran");
+        }
+
         for mat in TAG.captures_iter(&input) {
             let key = &mat[0];
             let color_key = Formatter::cleanup_key(&mat[1]);
@@ -89,6 +93,54 @@ impl Formatter {
     }
 }
 
+
+
+
+struct Finder<'a> {
+    input: &'a str,
+
+    // Key start and key end: <key_name>
+    start: &'a str,
+    end: &'a str
+}
+
+
+impl<'a> Finder<'a> {
+    pub fn new(input: &'a str) -> Self {
+        Self {
+            input,
+            start: "<",
+            end: ">"
+        }
+    }
+}
+
+
+impl<'a> Iterator for Finder<'a> {
+    type Item = &'a str;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let mut key = None;
+
+        match self.input.find("<") {
+            Some(i) => {
+                let rest = self.input.char_indices()
+                    .skip(i)
+                    .take_while(|(_, c)| *c != '>')
+                    .last()
+                    .map(|(idx, c)| idx + c.len_utf8())
+                    .unwrap_or_default();
+
+                key = Some(&self.input[i..(rest + 1)]);
+                self.input = &self.input[(rest + 1)..];
+            }
+            None => ()
+        }
+
+        println!("{:?}", key);
+        key
+    }
+}
 
 
 
