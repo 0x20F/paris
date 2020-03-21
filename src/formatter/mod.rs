@@ -5,9 +5,8 @@ mod concerns;
 
 use color::Color;
 use style::Style;
-use regex::Regex;
 
-use concerns::FromKey;
+use concerns::{ FromKey, KeyList };
 pub use icons::LogIcon;
 
 
@@ -25,25 +24,11 @@ impl Formatter {
     pub fn colorize_string<S>(input: S) -> String
         where S: Into<String>
     {
-        lazy_static!(
-            static ref TAG: Regex =
-                Regex::new(r"<((?:[a-zA-Z-_ ]*+)|/(?:[a-zA-Z-_ ]*+))>")
-                .unwrap();
-        );
-
         let input = input.into();
-
-        // Nothing to escape was found
-        if TAG.find(&input).is_none() {
-            return input;
-        }
-
         let mut output = input.clone();
 
-        for mat in TAG.captures_iter(&input) {
-            let key = &mat[0];
-            let color_key = Formatter::cleanup_key(&mat[1]);
-
+        for key in KeyList::new(&input) {
+            let color_key = Formatter::cleanup_key(key);
 
             let c = Color::from_key(&color_key);
             if let Some(c) = c {
@@ -74,6 +59,8 @@ impl Formatter {
     /// of spaces from a key if the key doesn't already
     /// contain spaces
     fn cleanup_key(key: &str) -> String {
+        let key = key.trim_matches(|c| c == '<' || c == '>');
+
         // If key already contains space, its already
         // intended or a typo
         if key.contains(' ') {
@@ -183,7 +170,7 @@ mod tests {
 
     #[test]
     fn cleanup_key() {
-        let color = "on_bright-green";
+        let color = "<on_bright-green>";
 
         let clean = Formatter::cleanup_key(color);
 
