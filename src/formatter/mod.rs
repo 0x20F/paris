@@ -97,7 +97,7 @@ impl<'a> Iterator for Finder<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let mut key = None;
 
-        match self.input.find("<") {
+        match self.input.find('<') {
             Some(i) => {
                 let rest = self.input.char_indices()
                     .skip(i)
