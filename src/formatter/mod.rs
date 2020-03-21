@@ -98,20 +98,12 @@ impl Formatter {
 
 struct Finder<'a> {
     input: &'a str,
-
-    // Key start and key end: <key_name>
-    start: &'a str,
-    end: &'a str
 }
 
 
 impl<'a> Finder<'a> {
     pub fn new(input: &'a str) -> Self {
-        Self {
-            input,
-            start: "<",
-            end: ">"
-        }
+        Self { input }
     }
 }
 
