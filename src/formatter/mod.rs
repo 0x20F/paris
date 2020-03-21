@@ -170,7 +170,7 @@ mod tests {
 
     #[test]
     fn cleanup_key() {
-        let color = "on_bright-green";
+        let color = "<on_bright-green>";
 
         let clean = Formatter::cleanup_key(color);
 
