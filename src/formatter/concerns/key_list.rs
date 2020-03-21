@@ -32,3 +32,21 @@ impl<'a> Iterator for KeyList<'a> {
         key
     }
 }
+
+
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn find_keys() {
+        let input = "<black> <red> one two <three>";
+        let key_count = KeyList::new(&input).count();
+
+        assert_eq!(key_count, 3);
+    }
+}
