@@ -5,7 +5,6 @@ mod concerns;
 
 use color::Color;
 use style::Style;
-use regex::Regex;
 
 use concerns::FromKey;
 pub use icons::LogIcon;
@@ -25,19 +24,7 @@ impl Formatter {
     pub fn colorize_string<S>(input: S) -> String
         where S: Into<String>
     {
-        lazy_static!(
-            static ref TAG: Regex =
-                Regex::new(r"<((?:[a-zA-Z-_ ]*+)|/(?:[a-zA-Z-_ ]*+))>")
-                .unwrap();
-        );
-
         let input = input.into();
-
-        // Nothing to escape was found
-        if TAG.find(&input).is_none() {
-            return input;
-        }
-
         let mut output = input.clone();
 
         for key in Finder::new(&input) {
@@ -62,10 +49,6 @@ impl Formatter {
                 output = output.replace(key, &i);
                 continue;
             }
-        }
-
-        for mat in TAG.captures_iter(&input) {
-
         }
 
         output
