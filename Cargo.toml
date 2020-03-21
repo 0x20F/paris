@@ -33,13 +33,3 @@ maintenance = { status = "actively-developed" }
 
 [dependencies]
 chrono = "0.4.10"
-
-
-
-[dev-dependencies]
-criterion = "0.3"
-
-
-[[bench]]
-name = "formatting"
-harness = false
