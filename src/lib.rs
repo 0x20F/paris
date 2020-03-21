@@ -73,9 +73,6 @@
 //! decide you don't ever want to use it. It's up to you.
 #![warn(missing_docs)]
 
-#[macro_use]
-extern crate lazy_static;
-
 mod formatter;
 
 use std::fmt::Display;
