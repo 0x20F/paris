@@ -102,6 +102,20 @@ pub struct Logger {
 
 
 
+impl Default for Logger {
+    fn default() -> Self {
+        Self {
+            is_loading      : Arc::new(RwLock::new(false)),
+            loading_message : String::from(""),
+            loading_handle  : None,
+
+            line_ending     : String::from("\n")
+        }
+    }
+}
+
+
+
 impl Logger {
     /// Initializes a new logger
     /// 
@@ -110,14 +124,8 @@ impl Logger {
     /// use paris::Logger;
     /// let logger = Logger::new();
     /// ```
-    pub fn new() -> Logger {
-        Logger {
-            is_loading      : Arc::new(RwLock::new(false)),
-            loading_message : String::from(""),
-            loading_handle  : None,
-
-            line_ending     : String::from("\n")
-        }
+    pub fn new() -> Self {
+        Self::default()
     }
 
 
