@@ -5,7 +5,6 @@
 //!
 //!     use paris::Logger;
 //!
-//!     // false to exclude timestamps
 //!     let mut log = Logger::new();
 //!
 //!     log.info("It's that simple!");
@@ -109,7 +108,7 @@ impl Logger {
     /// # Example
     /// ```
     /// use paris::Logger;
-    /// let logger = Logger::new(); // Passing true will add timestamps to all logs
+    /// let logger = Logger::new();
     /// ```
     pub fn new() -> Logger {
         Logger {
