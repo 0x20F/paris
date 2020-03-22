@@ -73,6 +73,9 @@
 //! decide you don't ever want to use it. It's up to you.
 #![warn(missing_docs)]
 
+#[cfg(feature = "timestamps")]
+extern crate chrono;
+
 mod formatter;
 
 use std::fmt::Display;
@@ -82,6 +85,7 @@ use std::sync::{ Arc, RwLock };
 use std::io::prelude::*;
 use std::io;
 
+#[cfg(feature = "timestamps")]
 use chrono::{ Timelike, Utc };
 
 pub use formatter::{ Formatter, LogIcon };
@@ -346,15 +350,19 @@ impl Logger {
     /// ```
     pub fn same(&mut self) -> &mut Logger {
         self.set_line_ending("");
+
+        #[cfg(feature = "timestamps")]
         self.skip_timestamp();
+
         self
     }
 
 
 
 
-    
+
     /// Gets current timestamp in "00:00:00 AM/PM" format
+    #[cfg(feature = "timestamps")]
     fn timestamp(&mut self) -> String {
         if !self.with_timestamp || self.skip_timestamp {
             self.skip_timestamp = false;
@@ -383,8 +391,13 @@ impl Logger {
         where T: Display
     {
         self.done();
-        let timestamp = self.timestamp();
-        let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
+
+        let mut message = format!("{}{}", message, self.get_line_ending());
+
+        #[cfg(feature = "timestamps")] {
+            let timestamp = self.timestamp();
+            message = format!("{}{}", timestamp, message);
+        }
 
         print!("{}", Formatter::colorize_string(message));
 
@@ -398,8 +411,13 @@ impl Logger {
         where T: Display
     {
         self.done();
-        let timestamp = self.timestamp();
-        let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
+
+        let mut message = format!("{}{}", message, self.get_line_ending());
+
+        #[cfg(feature = "timestamps")] {
+            let timestamp = self.timestamp();
+            message = format!("{}{}", timestamp, message);
+        }
 
         eprint!("{}", Formatter::colorize_string(message));
 
