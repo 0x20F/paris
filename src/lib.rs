@@ -5,15 +5,14 @@
 //!
 //!     use paris::Logger;
 //!
-//!     // false to exclude timestamps
-//!     let mut log = Logger::new(false);
+//!     let mut log = Logger::new();
 //!
 //!     log.info("It's that simple!");
 //!
 //!  # Simple methods
 //!
 //!     # use paris::Logger;
-//!     # let mut log = Logger::new(false);
+//!     # let mut log = Logger::new();
 //!     // You can have icons at the start of your message!
 //!     log.info("Will add ℹ at the start");
 //!     log.error("Will add ✖ at the start");
@@ -28,7 +27,7 @@
 //! a bunch of strings and add tabs and newlines everywhere.
 //!
 //!     # use paris::Logger;
-//!     # let mut log = Logger::new(false);
+//!     # let mut log = Logger::new();
 //!     log.info("this is some info")
 //!        .indent(4).warn("this is now indented by 4")
 //!        .newline(5)
@@ -42,7 +41,7 @@
 //! to colorize your logs just the way you want them to be.
 //!
 //!     # use paris::Logger;
-//!     # let mut log = Logger::new(false);
+//!     # let mut log = Logger::new();
 //!     log.info("I can write normal text or use tags to <red>color it</>");
 //!     log.warn("Every function can contain <on green><black>tags</>");
 //!
@@ -53,7 +52,7 @@
 //! background color instead `(on red, on blue, on green)`.
 //!
 //!     # use paris::Logger;
-//!     # let mut log = Logger::new(false);
+//!     # let mut log = Logger::new();
 //!     // How useful...
 //!     log.info("<on red> This has red background </>");
 //!
@@ -61,7 +60,7 @@
 //! you just have to add `bright` to your tag. Makes sense.
 //!
 //!     # use paris::Logger;
-//!     # let mut log = Logger::new(false);
+//!     # let mut log = Logger::new();
 //!     log.info("<blue><on bright red> This text is blue on a bright red background</> it's a pain");
 //!
 //! See [the README](https://github.com/SirTheViking/logger/blob/master/README.md) for a full list of keys
@@ -73,6 +72,11 @@
 //! decide you don't ever want to use it. It's up to you.
 #![warn(missing_docs)]
 
+#[cfg(feature = "timestamps")]
+mod timestamp;
+
+
+
 mod formatter;
 
 use std::fmt::Display;
@@ -81,8 +85,6 @@ use std::time::Duration;
 use std::sync::{ Arc, RwLock };
 use std::io::prelude::*;
 use std::io;
-
-use chrono::{ Timelike, Utc };
 
 pub use formatter::{ Formatter, LogIcon };
 
@@ -95,10 +97,21 @@ pub struct Logger {
     loading_message: String,
     loading_handle: Option<thread::JoinHandle<()>>,
 
-    with_timestamp: bool,
-    skip_timestamp: bool,
-
     line_ending: String
+}
+
+
+
+impl Default for Logger {
+    fn default() -> Self {
+        Self {
+            is_loading      : Arc::new(RwLock::new(false)),
+            loading_message : String::from(""),
+            loading_handle  : None,
+
+            line_ending     : String::from("\n")
+        }
+    }
 }
 
 
@@ -109,19 +122,10 @@ impl Logger {
     /// # Example
     /// ```
     /// use paris::Logger;
-    /// let logger = Logger::new(true); // Passing true will add timestamps to all logs
+    /// let logger = Logger::new();
     /// ```
-    pub fn new(include_timestamp: bool) -> Logger {
-        Logger {
-            is_loading      : Arc::new(RwLock::new(false)),
-            loading_message : String::from(""),
-            loading_handle  : None,
-
-            with_timestamp  : include_timestamp,
-            skip_timestamp  : false,
-
-            line_ending     : String::from("\n")
-        }
+    pub fn new() -> Self {
+        Self::default()
     }
 
 
@@ -132,7 +136,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// let mut logger = Logger::new(false);
+    /// let mut logger = Logger::new();
     /// 
     /// logger.log("Basic and boring."); // Basic and boring.
     /// ```
@@ -147,7 +151,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let mut logger = Logger::new(false);
+    /// # let mut logger = Logger::new();
     /// logger.info("This is some info");
     /// ```
     pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
@@ -161,7 +165,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let mut logger = Logger::new(false);
+    /// # let mut logger = Logger::new();
     /// logger.success("Everything went great!");
     /// ```
     pub fn success<T: Display>(&mut self, message: T) -> &mut Logger {
@@ -175,7 +179,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let mut logger = Logger::new(false);
+    /// # let mut logger = Logger::new();
     /// logger.warn("This is a warning");
     /// ```
     pub fn warn<T: Display>(&mut self, message: T) -> &mut Logger {
@@ -189,7 +193,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let mut logger = Logger::new(false);
+    /// # let mut logger = Logger::new();
     /// logger.error("Something broke, here's the error");
     /// ```
     pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
@@ -203,7 +207,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let mut logger = Logger::new(false);
+    /// # let mut logger = Logger::new();
     /// logger
     ///     .newline(5)
     ///     .info("Some newlines before info")
@@ -223,7 +227,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let mut logger = Logger::new(false);
+    /// # let mut logger = Logger::new();
     /// logger
     ///     .indent(1)
     ///     .warn("Indented warning eh? Stands out a bit")
@@ -242,7 +246,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// let mut logger = Logger::new(false);
+    /// let mut logger = Logger::new();
     /// logger.loading("Counting to 52!");
     /// 
     /// // counting happens here (somehow)
@@ -258,7 +262,7 @@ impl Logger {
     /// already. A cleaner example would be:
     /// ```
     /// # use paris::Logger;
-    /// let mut logger = Logger::new(false);
+    /// let mut logger = Logger::new();
     /// logger.loading("Counting to 52! again");
     /// 
     /// // ....
@@ -337,7 +341,7 @@ impl Logger {
     /// # Example
     /// ```
     /// # use paris::Logger;
-    /// # let mut logger = Logger::new(false);
+    /// # let mut logger = Logger::new();
     /// 
     /// logger
     ///     .same().log("This is on one line")
@@ -346,34 +350,8 @@ impl Logger {
     /// ```
     pub fn same(&mut self) -> &mut Logger {
         self.set_line_ending("");
-        self.skip_timestamp();
+
         self
-    }
-
-
-
-
-    
-    /// Gets current timestamp in "00:00:00 AM/PM" format
-    fn timestamp(&mut self) -> String {
-        if !self.with_timestamp || self.skip_timestamp {
-            self.skip_timestamp = false;
-            return String::from("");
-        }
-
-        let now = Utc::now();
-        let (is_pm, hour) = now.hour12();
-
-        let stamp = format!(
-            "<dimmed>{:02}:{:02}:{:02}.{:03} {}: </>",
-            hour,
-            now.minute(),
-            now.second(),
-            now.nanosecond() / 1_000_000,
-            if is_pm { "PM" } else { "AM" }
-        );
-
-        stamp
     }
 
 
@@ -383,10 +361,17 @@ impl Logger {
         where T: Display
     {
         self.done();
-        let timestamp = self.timestamp();
-        let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
 
-        print!("{}", Formatter::colorize_string(message));
+        #[cfg(feature = "timestamps")] {
+            let timestamp = timestamp::now();
+            let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
+            print!("{}", Formatter::colorize_string(message));
+        }
+
+        #[cfg(not(feature = "timestamps"))] {
+            let message = format!("{}{}", message, self.get_line_ending());
+            print!("{}", Formatter::colorize_string(message));
+        }
 
         self
     }
@@ -398,18 +383,19 @@ impl Logger {
         where T: Display
     {
         self.done();
-        let timestamp = self.timestamp();
-        let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
 
-        eprint!("{}", Formatter::colorize_string(message));
+        #[cfg(feature = "timestamps")] {
+            let timestamp = timestamp::now();
+            let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
+            eprint!("{}", Formatter::colorize_string(message));
+        }
+
+        #[cfg(not(feature = "timestamps"))] {
+            let message = format!("{}{}", message, self.get_line_ending());
+            eprint!("{}", Formatter::colorize_string(message));
+        }
 
         self
-    }
-
-
-    /// Toggle a flag
-    fn skip_timestamp(&mut self) {
-        self.skip_timestamp = true;
     }
 
 
@@ -450,20 +436,8 @@ mod tests {
 
 
     #[test]
-    fn timestamp() {
-        let mut logger = Logger::new(false);
-        assert_eq!(logger.with_timestamp, false);
-        logger.info("It doesn't have a timestamp");
-
-        let mut logger = Logger::new(true);
-        assert_eq!(logger.with_timestamp, true);
-        logger.info("It has a timestamp");
-    }
-
-
-    #[test]
     fn loading() {
-        let mut logger = Logger::new(false);
+        let mut logger = Logger::new();
         logger.loading("Loading in the middle of a test is not good!");
         // Long thing here
         logger.done().success("Done loading!");
@@ -479,7 +453,7 @@ mod tests {
 
     #[test]
     fn same() {
-        let mut logger = Logger::new(false);
+        let mut logger = Logger::new();
         logger
             .same().success("This is on one line")
             .indent(1)
@@ -496,7 +470,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let mut logger = Logger::new(true);
+        let mut logger = Logger::new();
 
         logger
             .info("Somebody")
@@ -507,7 +481,5 @@ mod tests {
             .log("A basic log eh")
             .indent(2)
             .info("If it didn't crash it's fine");
-
-        assert_eq!(logger.with_timestamp, true);
     }
 }
