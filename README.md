@@ -18,7 +18,7 @@
 ## How to use
 ```toml
 [dependencies]
-paris = "1"
+paris = "1.3"
 ```
 
 ```rust
@@ -36,7 +36,16 @@ log.info("It's that simple!");
 log.info("Will add ℹ at the start");
 log.error("Will add ✖ at the start");
 ```
+
 See [the Logger struct](https://docs.rs/paris/) for all methods
+
+##### Optional features
+If you'd like timestamps with all your logs you'll
+have to enable the feature when adding the crate as a dependency
+```toml
+[dependencies]
+paris = { version = "1.3", features = ["timestamps"] }
+```
 
 
 ### Chaining
