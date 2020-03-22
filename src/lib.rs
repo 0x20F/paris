@@ -74,7 +74,9 @@
 #![warn(missing_docs)]
 
 #[cfg(feature = "timestamps")]
-extern crate chrono;
+mod timestamp;
+
+
 
 mod formatter;
 
@@ -84,9 +86,6 @@ use std::time::Duration;
 use std::sync::{ Arc, RwLock };
 use std::io::prelude::*;
 use std::io;
-
-#[cfg(feature = "timestamps")]
-use chrono::{ Timelike, Utc };
 
 pub use formatter::{ Formatter, LogIcon };
 
@@ -98,11 +97,6 @@ pub struct Logger {
     is_loading: Arc<RwLock<bool>>,
     loading_message: String,
     loading_handle: Option<thread::JoinHandle<()>>,
-
-    #[cfg(feature = "timestamps")]
-    with_timestamp: bool,
-    #[cfg(feature = "timestamps")]
-    skip_timestamp: bool,
 
     line_ending: String
 }
@@ -122,11 +116,6 @@ impl Logger {
             is_loading      : Arc::new(RwLock::new(false)),
             loading_message : String::from(""),
             loading_handle  : None,
-
-            #[cfg(feature = "timestamps")]
-            with_timestamp  : true,
-            #[cfg(feature = "timestamps")]
-            skip_timestamp  : false,
 
             line_ending     : String::from("\n")
         }
@@ -355,43 +344,7 @@ impl Logger {
     pub fn same(&mut self) -> &mut Logger {
         self.set_line_ending("");
 
-        #[cfg(feature = "timestamps")]
-        self.skip_timestamp();
-
         self
-    }
-
-
-
-
-
-    /// Gets current timestamp in "00:00:00 AM/PM" format
-    #[cfg(feature = "timestamps")]
-    fn timestamp(&mut self) -> String {
-        if !self.with_timestamp {
-            return String::from("");
-        }
-
-        #[cfg(feature = "timestamps")] {
-            if self.skip_timestamp {
-                self.skip_timestamp = false;
-                return String::from("");
-            }
-        }
-
-        let now = Utc::now();
-        let (is_pm, hour) = now.hour12();
-
-        let stamp = format!(
-            "<dimmed>{:02}:{:02}:{:02}.{:03} {}: </>",
-            hour,
-            now.minute(),
-            now.second(),
-            now.nanosecond() / 1_000_000,
-            if is_pm { "PM" } else { "AM" }
-        );
-
-        stamp
     }
 
 
@@ -402,14 +355,16 @@ impl Logger {
     {
         self.done();
 
-        let message = format!("{}{}", message, self.get_line_ending());
-
         #[cfg(feature = "timestamps")] {
-            let timestamp = self.timestamp();
-            let message = format!("{}{}", timestamp, message);
+            let timestamp = timestamp::now();
+            let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
+            print!("{}", Formatter::colorize_string(message));
         }
 
-        print!("{}", Formatter::colorize_string(message));
+        #[cfg(not(feature = "timestamps"))] {
+            let message = format!("{}{}", message, self.get_line_ending());
+            print!("{}", Formatter::colorize_string(message));
+        }
 
         self
     }
@@ -422,23 +377,18 @@ impl Logger {
     {
         self.done();
 
-        let message = format!("{}{}", message, self.get_line_ending());
-
         #[cfg(feature = "timestamps")] {
-            let timestamp = self.timestamp();
-            let message = format!("{}{}", timestamp, message);
+            let timestamp = timestamp::now();
+            let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
+            eprint!("{}", Formatter::colorize_string(message));
         }
 
-        eprint!("{}", Formatter::colorize_string(message));
+        #[cfg(not(feature = "timestamps"))] {
+            let message = format!("{}{}", message, self.get_line_ending());
+            eprint!("{}", Formatter::colorize_string(message));
+        }
 
         self
-    }
-
-
-    /// Toggle a flag
-    #[cfg(feature = "timestamps")]
-    fn skip_timestamp(&mut self) {
-        self.skip_timestamp = true;
     }
 
 
@@ -476,19 +426,6 @@ impl Logger {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-
-    #[test]
-    #[cfg(feature = "timestamps")]
-    fn timestamp() {
-        let mut logger = Logger::new();
-        assert_eq!(logger.with_timestamp, false);
-        logger.info("It doesn't have a timestamp");
-
-        let mut logger = Logger::new();
-        assert_eq!(logger.with_timestamp, true);
-        logger.info("It has a timestamp");
-    }
 
 
     #[test]
