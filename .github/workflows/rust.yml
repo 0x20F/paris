@@ -28,11 +28,18 @@ jobs:
           components: clippy
           
           
-      - name: Run cargo tests
+      - name: Run cargo tests normally
         uses: actions-rs/cargo@v1
         continue-on-error: ${{ matrix.config.toolchain == 'nightly' }}
         with:
           command: test
+
+      - name: Run tests with timestamps feature enabled
+        uses: actions-rs/cargo@v1
+        continue-on-error: ${{ matrix.config.toolchain == 'nightly' }}
+        with:
+          command: test
+          args: --features timestamps
 
       - name: Run cargo clippy
         uses: actions-rs/clippy-check@v1
