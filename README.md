@@ -25,7 +25,7 @@ paris = "1"
 use paris::Logger;
 
 // false to exclude timestamps
-let mut log = Logger::new(false);
+let mut log = Logger::new();
 
 log.info("It's that simple!");
 ```
