@@ -125,10 +125,10 @@ or use underlines(`_`) or dashes(`-`) instead if you wish.
 `on bright magenta`, `on bright white`
 
 #### Styles
+`bold`(`b`), `underline`(`u`), `dimmed`(`d`), `italic`(`i`)
+
 Styles are a bit different, they all have their usual keys, the long and painful to write ones. But they 
 also have shorthand keys (in parenthesis).
-
-`bold`(`b`), `underline`(`u`), `dimmed`(`d`), `italic`(`i`)
 
 And while they all may reset using one of the reset keys above, if you're looking to turn off a specific
 style you've opened, you can just use the exact same key but with a slash `/` in front of it.
