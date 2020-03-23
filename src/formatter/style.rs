@@ -4,9 +4,17 @@ use std::str::FromStr;
 
 pub enum Style {
     Bold,
+    BoldReset,
+
     Italic,
+    ItalicReset,
+
     Underline,
+    UnderlineReset,
+
     Dimmed,
+    DimmedReset,
+
     None
 }
 
@@ -16,9 +24,17 @@ impl Style {
     pub fn get_value(&self) -> u8 {
         match self {
             Style::Bold => 1,
+            Style::BoldReset => 22,
+
             Style::Dimmed => 2,
+            Style::DimmedReset => 22,
+
             Style::Italic => 3,
+            Style::ItalicReset => 23,
+
             Style::Underline => 4,
+            Style::UnderlineReset => 24,
+
             Style::None => 0
         }
     }
@@ -41,10 +57,18 @@ impl FromStr for Style {
         let src = s.to_lowercase();
 
         match src.as_ref() {
-            "bold" => Ok(Style::Bold),
-            "italic" => Ok(Style::Italic),
-            "underline" => Ok(Style::Underline),
-            "dimmed" => Ok(Style::Dimmed),
+            "bold" | "b" => Ok(Style::Bold),
+            "/bold" | "/b" => Ok(Style::BoldReset),
+
+            "dimmed" | "d" => Ok(Style::Dimmed),
+            "/dimmed"| "/d" => Ok(Style::DimmedReset),
+
+            "italic" | "i" => Ok(Style::Italic),
+            "/italic" | "/i" => Ok(Style::ItalicReset),
+
+            "underline" | "u" => Ok(Style::Underline),
+            "/underline" | "/u" => Ok(Style::UnderlineReset),
+
             _ => Err(())
         }
     }

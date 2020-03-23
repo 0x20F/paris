@@ -91,10 +91,18 @@ log.info("<blue><on bright red> This text is blue on a bright red background</> 
 
 ###### Scroll down for a full list of keys if you're not feeling confident in your ability to name colors. It happens.
 
+
+### Resetting
 You've probably seen the `</>` tag in the above logs. It's not there to
 _"close the previously opened tag"_ no no. You can open as many tags as you want
-and only use `</>` once, it's just the _"reset color to default"_ tag, You might
+and only use `</>` once, it's just the _"reset everything to default"_ tag, You might
 decide you don't ever want to use it. It's up to you.
+
+However, resetting everything to default might not be what you want. Most of the time
+it'll be enough, but for those times when it isn't there are a few other tags such as:
+
+* `<///>` only resets the background
+* `<//>` only reset the foreground
 
 
 ## Color keys
@@ -117,7 +125,15 @@ or use underlines(`_`) or dashes(`-`) instead if you wish.
 `on bright magenta`, `on bright white`
 
 #### Styles
-`bold`, `underline`, `dimmed`, `italic` 
+`bold`(`b`), `underline`(`u`), `dimmed`(`d`), `italic`(`i`)
+
+Styles are a bit different, they all have their usual keys, the long and painful to write ones. But they 
+also have shorthand keys (in parenthesis).
+
+And while they all may reset using one of the reset keys above, if you're looking to turn off a specific
+style you've opened, you can just use the exact same key but with a slash `/` in front of it.
+
+Example: `<bold>` gets closed by `</bold>` 
 
 #### Icons
 `info`, `cross`, `warn`, `tick`, `heart`

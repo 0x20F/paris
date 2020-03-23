@@ -10,7 +10,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: "ubuntu-latest", target: "i686-unknown-linux-gnu", toolchain: "stable" }
           - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", toolchain: "stable" }
           - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", toolchain: "beta"}
           - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", toolchain: "nightly"}
