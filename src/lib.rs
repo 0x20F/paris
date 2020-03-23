@@ -66,10 +66,17 @@
 //! See [the README](https://github.com/SirTheViking/logger/blob/master/README.md) for a full list of keys
 //! if you're not feeling confident in your ability to name colors. It happens.
 //!
+//! ### Resetting
 //! You've probably seen the `</>` tag in the above logs. It's not there to
 //! _"close the previously opened tag"_ no no. You can open as many tags as you want
-//! and only use `</>` once, it's just the _"reset color to default"_ tag, You might
+//! and only use `</>` once, it's just the _"reset everything to default"_ tag, You might
 //! decide you don't ever want to use it. It's up to you.
+
+//! However, resetting everything to default might not be what you want. Most of the time
+//! it'll be enough, but for those times when it isn't there are a few other tags such as:
+
+//! * `<///>` only resets the background
+//! * `<//>` only reset the foreground
 #![warn(missing_docs)]
 
 #[cfg(feature = "timestamps")]

@@ -99,8 +99,8 @@ decide you don't ever want to use it. It's up to you.
 However, resetting everything to default might not be what you want. Most of the time
 it'll be enough, but for those times when it isn't there are a few other tags such as:
 
-* `<///>` only resets background
-* `<//>` only reset foreground
+* `<///>` only resets the background
+* `<//>` only reset the foreground
 
 
 ## Color keys
