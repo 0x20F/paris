@@ -58,16 +58,16 @@ impl FromStr for Style {
 
         match src.as_ref() {
             "bold" | "b" => Ok(Style::Bold),
-            "/b" => Ok(Style::BoldReset),
+            "/bold" | "/b" => Ok(Style::BoldReset),
 
             "dimmed" | "d" => Ok(Style::Dimmed),
-            "/d" => Ok(Style::DimmedReset),
+            "/dimmed"| "/d" => Ok(Style::DimmedReset),
 
             "italic" | "i" => Ok(Style::Italic),
-            "/i" => Ok(Style::ItalicReset),
+            "/italic" | "/i" => Ok(Style::ItalicReset),
 
             "underline" | "u" => Ok(Style::Underline),
-            "/u" => Ok(Style::UnderlineReset),
+            "/underline" | "/u" => Ok(Style::UnderlineReset),
 
             _ => Err(())
         }
