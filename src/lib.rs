@@ -99,6 +99,18 @@ pub use formatter::{ Formatter, LogIcon };
 
 
 
+
+macro_rules! info {
+    ($($arg:tt)*) => {
+        println!("{}", Formatter::colorize_string(format!($($arg)*)))
+    }
+}
+
+
+
+
+
+
 #[allow(missing_docs)]
 pub struct Logger {
     is_loading: Arc<RwLock<bool>>,
@@ -418,7 +430,14 @@ impl Logger {
 
 #[cfg(test)]
 mod tests {
+
     use super::*;
+
+
+    #[test]
+    fn macros() {
+        info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
+    }
 
 
     #[test]
