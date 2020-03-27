@@ -1,6 +1,9 @@
 use paris::Logger;
 use paris::LogIcon;
 
+#[cfg(feature = "macros")]
+use paris::{ info, success, error, warn };
+
 
 #[test]
 fn log() {
@@ -13,6 +16,9 @@ fn log() {
 fn info() {
     let mut logger = Logger::new();
     logger.info("This is some info, it should work");
+
+    #[cfg(feature = "macros")]
+    info!("This is some info from a macro");
 }
 
 
@@ -20,6 +26,9 @@ fn info() {
 fn success() {
     let mut logger = Logger::new();
     logger.success("You did it and nothing broke!!");
+
+    #[cfg(feature = "macros")]
+    success!("This is some success from a macro");
 }
 
 
@@ -27,6 +36,9 @@ fn success() {
 fn error() {
     let mut logger = Logger::new();
     logger.error("This is an error, but test should still work");
+
+    #[cfg(feature = "macros")]
+    error!("This is an error from the macro");
 }
 
 
@@ -34,6 +46,9 @@ fn error() {
 fn warning() {
     let mut logger = Logger::new();
     logger.warn("This is a warning, watch it");
+
+    #[cfg(feature = "macros")]
+    warn!("This is a warning from the macro!");
 }
 
 
