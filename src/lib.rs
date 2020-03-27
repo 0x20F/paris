@@ -11,12 +11,18 @@
 //!
 //! ### Simple api
 //!
+//!     # use paris::Logger;
+//!     # #[cfg(feature = "macros")]
+//!     # use paris::{ info, error };
+//!     # let mut log = Logger::new();
 //!     // You can have icons at the start of your message!
 //!     log.info("Will add ℹ at the start");
 //!     log.error("Will add ✖ at the start");
 //!
-//!     // or as macros
+//!      // or as macros
+//!     # #[cfg(feature = "macros")]
 //!     info!("Will add ℹ at the start");
+//!     # #[cfg(feature = "macros")]
 //!     error!("Will add ✖ at the start");
 //!
 //!
@@ -475,7 +481,6 @@ mod tests {
     fn loading() {
         let mut logger = Logger::new();
         logger.loading("Loading in the middle of a test is not good!");
-        // Long thing here
         logger.done().success("Done loading!");
 
 
