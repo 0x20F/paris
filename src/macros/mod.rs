@@ -1,4 +1,20 @@
-#![macro_use]
+/// Default logging, this just outputs to the terminal
+/// Use when you want full control of how you want
+/// your log to look. All color keys work as normal.
+///
+/// # Example
+/// ```
+/// use paris::log;
+///
+/// log!("This <cyan>is <bright green>a log<//>!");
+/// ```
+#[macro_export]
+macro_rules! log {
+    ($($arg:tt)*) => {
+        let message = format!($($arg)*);
+        $crate::output::stdout(message, "\n");
+    }
+}
 
 
 /// Adds an info icon to the log message,
@@ -69,5 +85,22 @@ macro_rules! success {
     ($($arg:tt)*) => {
         let message = format!("<green><tick></> {}", format!($($arg)*));
         $crate::output::stdout(message, "\n");
+    }
+}
+
+
+
+
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn macros() {
+        log!("This <cyan>is <bright green>a log<//>!");
+        info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
+        error!("This is going to <bright red>stderr</> {}", "WOOOO");
+        warn!("This is a {} <yellow>BEWARE</>!", "warning");
+        success!("{} went well, congrats!", "<bright green>Everything</>");
     }
 }
