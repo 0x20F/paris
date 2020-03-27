@@ -5,6 +5,8 @@ use crate::formatter::Formatter;
 use std::fmt::Display;
 
 
+
+
 pub fn stdout<T>(message: T, line_ending: &str) where T: Display {
     #[cfg(feature = "timestamps")] {
         let timestamp = timestamp::now();
