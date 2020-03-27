@@ -85,6 +85,7 @@ mod timestamp;
 
 
 mod formatter;
+mod output;
 
 use std::fmt::Display;
 use std::thread;
@@ -368,18 +369,7 @@ impl Logger {
         where T: Display
     {
         self.done();
-
-        #[cfg(feature = "timestamps")] {
-            let timestamp = timestamp::now();
-            let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
-            print!("{}", Formatter::colorize_string(message));
-        }
-
-        #[cfg(not(feature = "timestamps"))] {
-            let message = format!("{}{}", message, self.get_line_ending());
-            print!("{}", Formatter::colorize_string(message));
-        }
-
+        output::stdout(message, &self.line_ending);
         self
     }
 
@@ -390,18 +380,7 @@ impl Logger {
         where T: Display
     {
         self.done();
-
-        #[cfg(feature = "timestamps")] {
-            let timestamp = timestamp::now();
-            let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
-            eprint!("{}", Formatter::colorize_string(message));
-        }
-
-        #[cfg(not(feature = "timestamps"))] {
-            let message = format!("{}{}", message, self.get_line_ending());
-            eprint!("{}", Formatter::colorize_string(message));
-        }
-
+        output::stderr(message, &self.line_ending);
         self
     }
 
