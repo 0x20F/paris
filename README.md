@@ -47,11 +47,15 @@ paris = { version = "1.3", features = ["macros"] }
 ```
 
 
-### Simple methods
+### Simple api
 ```rust
 // You can have icons at the start of your message!
 log.info("Will add ℹ at the start");
 log.error("Will add ✖ at the start");
+
+// or as macros
+info!("Will add ℹ at the start");
+error!("Will add ✖ at the start");
 ```
 
 See [the Logger struct](https://docs.rs/paris/) for all methods
