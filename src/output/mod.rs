@@ -1,3 +1,8 @@
+//!
+//!
+//! Contains helper functions for outputting to
+//! `stdout` and `stderr`.
+//!
 #[cfg(feature = "timestamps")]
 use crate::timestamp;
 
@@ -6,7 +11,9 @@ use std::fmt::Display;
 
 
 
-
+/// Basically print! without all the argument formatting.
+/// It does however replace keys with their respective color
+/// codes and adds timestamps if feature is enabled.
 pub fn stdout<T>(message: T, line_ending: &str) where T: Display {
     #[cfg(feature = "timestamps")] {
         let timestamp = timestamp::now();
@@ -21,7 +28,9 @@ pub fn stdout<T>(message: T, line_ending: &str) where T: Display {
 }
 
 
-
+/// Basically eprint! without all the argument formatting.
+/// It does however replace keys with their respective color
+/// codes and adds timestamps if feature is enabled.
 pub fn stderr<T>(message: T, line_ending: &str) where T: Display {
     #[cfg(feature = "timestamps")] {
         let timestamp = timestamp::now();
