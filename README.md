@@ -28,11 +28,19 @@ let mut log = Logger::new();
 
 log.info("It's that simple!");
 ```
-##### Optional features
+#### Optional features
+##### Timestamps 
 If you'd like timestamps with all your logs you'll
 have to enable the feature when adding the crate as a dependency. 
 
 Notice: This will also include `chrono` as a dependency.
+```toml
+[dependencies]
+paris = { version = "1.3", features = ["timestamps"] }
+```
+##### Macros
+Every common function has a macro. To make use of these
+macros you need to enable the macros feature.
 ```toml
 [dependencies]
 paris = { version = "1.3", features = ["timestamps"] }
