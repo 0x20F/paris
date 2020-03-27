@@ -369,7 +369,7 @@ impl Logger {
         where T: Display
     {
         self.done();
-        output::stdout(message, &self.line_ending);
+        output::stdout(message, &self.get_line_ending());
         self
     }
 
@@ -380,7 +380,7 @@ impl Logger {
         where T: Display
     {
         self.done();
-        output::stderr(message, &self.line_ending);
+        output::stderr(message, &self.get_line_ending());
         self
     }
 
