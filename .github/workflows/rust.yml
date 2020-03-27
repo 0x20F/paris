@@ -40,6 +40,13 @@ jobs:
           command: test
           args: --features timestamps
 
+      - name: Run tests with macros feature enabled
+        uses: actions-rs/cargo@v1
+        continue-on-error: ${{ matrix.config.toolchain == 'nightly' }}
+        with:
+          command: test
+          args: --features macros
+
       - name: Run cargo clippy
         uses: actions-rs/clippy-check@v1
         with:

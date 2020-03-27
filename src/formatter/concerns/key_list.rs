@@ -17,15 +17,16 @@ impl<'a> Iterator for KeyList<'a> {
         let mut key = None;
 
         if let Some(i) = self.input.find('<') {
+            self.input = &self.input[i..];
+
             let rest = self.input.char_indices()
-                .skip(i)
                 .take_while(|(_, c)| *c != '>')
                 .last()
                 .map(|(idx, c)| idx + c.len_utf8())
                 .unwrap_or_default();
 
             // +1 to get the last '>' that's excluded
-            key = Some(&self.input[i..(rest + 1)]);
+            key = Some(&self.input[..(rest + 1)]);
             self.input = &self.input[(rest + 1)..];
         }
 

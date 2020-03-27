@@ -9,15 +9,44 @@
 //!
 //!     log.info("It's that simple!");
 //!
-//!  # Simple methods
+//! ### Simple api
 //!
 //!     # use paris::Logger;
+//!     # #[cfg(feature = "macros")]
+//!     # use paris::{ info, error };
 //!     # let mut log = Logger::new();
 //!     // You can have icons at the start of your message!
 //!     log.info("Will add ℹ at the start");
 //!     log.error("Will add ✖ at the start");
 //!
-//!  See [the `Logger` struct](./struct.Logger.html) for all methods
+//!      // or as macros
+//!     # #[cfg(feature = "macros")]
+//!     info!("Will add ℹ at the start");
+//!     # #[cfg(feature = "macros")]
+//!     error!("Will add ✖ at the start");
+//!
+//!
+//! See [the Logger struct](https://docs.rs/paris/) for all methods
+//!
+//! ### Macros
+//! With the macros feature enabled, you get access to macro equivalents
+//! of the logger functions.
+//!
+//! Advantages of using macros:
+//! * Logger doesn't have to be instantiated
+//! * Simple to write
+//! * Can format parameters like `print!` and `println!`
+//!
+//! Disadvantages of using macros:
+//! * Can't chain calls
+//! * Manual newlines and tabs with `\n` and `\t`
+//! * There's no loading animation for macros
+//!
+//! You get to decide whether you want to use macros or not.
+//! Every macro has the same functionality as its `Logger`
+//! equivalent. Colors and icon keys work just the same.
+//!
+//! See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
 //!
 //!
 //! # Chaining
@@ -82,9 +111,13 @@
 #[cfg(feature = "timestamps")]
 mod timestamp;
 
+#[cfg(feature = "macros")]
+mod macros;
+
 
 
 mod formatter;
+pub mod output;
 
 use std::fmt::Display;
 use std::thread;
@@ -94,6 +127,12 @@ use std::io::prelude::*;
 use std::io;
 
 pub use formatter::{ Formatter, LogIcon };
+
+
+
+
+
+
 
 
 
@@ -161,6 +200,8 @@ impl Logger {
     /// # let mut logger = Logger::new();
     /// logger.info("This is some info");
     /// ```
+    ///
+    /// Equivalent macro: `info!()`
     pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stdout(format!("<cyan><info></> {}", message))
     }
@@ -175,6 +216,8 @@ impl Logger {
     /// # let mut logger = Logger::new();
     /// logger.success("Everything went great!");
     /// ```
+    ///
+    /// Equivalent macro: `success!()`
     pub fn success<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stdout(format!("<green><tick></> {}", message))
     }
@@ -189,6 +232,8 @@ impl Logger {
     /// # let mut logger = Logger::new();
     /// logger.warn("This is a warning");
     /// ```
+    ///
+    /// Equivalent macro: `warn!()`
     pub fn warn<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stdout(format!("<yellow><warn></> {}", message))
     }
@@ -203,6 +248,8 @@ impl Logger {
     /// # let mut logger = Logger::new();
     /// logger.error("Something broke, here's the error");
     /// ```
+    ///
+    /// Equivalent macro: `error!()`
     pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stderr(format!("<red><cross></> {}", message))
     }
@@ -368,18 +415,7 @@ impl Logger {
         where T: Display
     {
         self.done();
-
-        #[cfg(feature = "timestamps")] {
-            let timestamp = timestamp::now();
-            let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
-            print!("{}", Formatter::colorize_string(message));
-        }
-
-        #[cfg(not(feature = "timestamps"))] {
-            let message = format!("{}{}", message, self.get_line_ending());
-            print!("{}", Formatter::colorize_string(message));
-        }
-
+        output::stdout(message, &self.get_line_ending());
         self
     }
 
@@ -390,18 +426,7 @@ impl Logger {
         where T: Display
     {
         self.done();
-
-        #[cfg(feature = "timestamps")] {
-            let timestamp = timestamp::now();
-            let message = format!("{}{}{}", timestamp, message, self.get_line_ending());
-            eprint!("{}", Formatter::colorize_string(message));
-        }
-
-        #[cfg(not(feature = "timestamps"))] {
-            let message = format!("{}{}", message, self.get_line_ending());
-            eprint!("{}", Formatter::colorize_string(message));
-        }
-
+        output::stderr(message, &self.get_line_ending());
         self
     }
 
@@ -440,13 +465,14 @@ impl Logger {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::{time::Duration, thread};
 
 
     #[test]
     fn loading() {
         let mut logger = Logger::new();
         logger.loading("Loading in the middle of a test is not good!");
-        // Long thing here
+        thread::sleep(Duration::from_secs(1));
         logger.done().success("Done loading!");
 
 
