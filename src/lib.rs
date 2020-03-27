@@ -83,7 +83,7 @@
 mod timestamp;
 
 #[cfg(feature = "macros")]
-pub mod macros;
+mod macros;
 
 
 
