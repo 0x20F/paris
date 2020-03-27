@@ -1,58 +1,96 @@
+#[cfg(not(feature = "no_logger"))]
 use paris::Logger;
-use paris::LogIcon;
 
 #[cfg(feature = "macros")]
 use paris::{ info, success, error, warn };
 
+use paris::LogIcon;
+
+
+
+
 
 #[test]
+#[cfg(not(feature = "no_logger"))]
 fn log() {
     let mut logger = Logger::new();
     logger.log("This is the most basic of texts.");
 }
 
 
+
+
+
 #[test]
+#[cfg(not(feature = "no_logger"))]
 fn info() {
     let mut logger = Logger::new();
     logger.info("This is some info, it should work");
+}
 
-    #[cfg(feature = "macros")]
+#[test]
+#[cfg(feature = "macros")]
+fn info_macro() {
     info!("This is some info from a macro");
 }
 
 
+
+
+
 #[test]
+#[cfg(not(feature = "no_logger"))]
 fn success() {
     let mut logger = Logger::new();
     logger.success("You did it and nothing broke!!");
+}
 
-    #[cfg(feature = "macros")]
+#[test]
+#[cfg(feature = "macros")]
+fn success_macro() {
     success!("This is some success from a macro");
 }
 
 
+
+
+
 #[test]
+#[cfg(not(feature = "no_logger"))]
 fn error() {
     let mut logger = Logger::new();
     logger.error("This is an error, but test should still work");
+}
 
-    #[cfg(feature = "macros")]
+#[test]
+#[cfg(feature = "macros")]
+fn error_macro() {
     error!("This is an error from the macro");
 }
 
 
+
+
+
 #[test]
+#[cfg(not(feature = "no_logger"))]
 fn warning() {
     let mut logger = Logger::new();
     logger.warn("This is a warning, watch it");
+}
 
-    #[cfg(feature = "macros")]
+#[test]
+#[cfg(feature = "macros")]
+fn warning_macro() {
     warn!("This is a warning from the macro!");
 }
 
 
+
+
+
 #[test]
+#[cfg(not(feature = "no_logger"))]
 fn loading() {
     let mut logger = Logger::new();
     logger.loading("Parsing 500 files");
@@ -62,6 +100,9 @@ fn loading() {
     logger.loading("Parsing another 500 files");
     logger.done().error("Failed parsing another 500 files");
 }
+
+
+
 
 
 #[test]

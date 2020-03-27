@@ -3,27 +3,32 @@
 //!
 //! # How to use
 //!
+//!     # #[cfg(not(feature = "no_logger"))] {
 //!     use paris::Logger;
 //!
 //!     let mut log = Logger::new();
 //!
 //!     log.info("It's that simple!");
+//!     # }
 //!
 //! ### Simple api
 //!
+//!     # #[cfg(not(feature = "no_logger"))] {
 //!     # use paris::Logger;
-//!     # #[cfg(feature = "macros")]
-//!     # use paris::{ info, error };
 //!     # let mut log = Logger::new();
 //!     // You can have icons at the start of your message!
 //!     log.info("Will add ℹ at the start");
 //!     log.error("Will add ✖ at the start");
+//!     # }
+//!
+//!
+//!     # #[cfg(feature = "macros")] {
+//!     # use paris::{ info, error };
 //!
 //!      // or as macros
-//!     # #[cfg(feature = "macros")]
 //!     info!("Will add ℹ at the start");
-//!     # #[cfg(feature = "macros")]
 //!     error!("Will add ✖ at the start");
+//!     # }
 //!
 //!
 //! See [the Logger struct](https://docs.rs/paris/) for all methods
@@ -55,12 +60,14 @@
 //! that every log string becomes when you have to concatenate
 //! a bunch of strings and add tabs and newlines everywhere.
 //!
+//!     # #[cfg(not(feature = "no_logger"))] {
 //!     # use paris::Logger;
 //!     # let mut log = Logger::new();
 //!     log.info("this is some info")
 //!        .indent(4).warn("this is now indented by 4")
 //!        .newline(5)
 //!        .success("and this is 5 lines under all other messages");
+//!     # }
 //!
 //! # Customisation
 //! Outputting text is cool. Outputting text with a colored icon
@@ -69,28 +76,34 @@
 //! Included in the crate are a variety of keys you can use
 //! to colorize your logs just the way you want them to be.
 //!
+//!     # #[cfg(not(feature = "no_logger"))] {
 //!     # use paris::Logger;
 //!     # let mut log = Logger::new();
 //!     log.info("I can write normal text or use tags to <red>color it</>");
 //!     log.warn("Every function can contain <on green><black>tags</>");
 //!
 //!     log.info("If you don't write them <bleu>correctly</>, you just get an ugly looking tag");
+//!     # }
 //!
 //! There's a key for all colors supported by the terminal `(white, black, red, blue, magenta, etc.)`
 //! If you add the word `on` to any of those colors, it becomes the
 //! background color instead `(on red, on blue, on green)`.
 //!
+//!     # #[cfg(not(feature = "no_logger"))] {
 //!     # use paris::Logger;
 //!     # let mut log = Logger::new();
 //!     // How useful...
 //!     log.info("<on red> This has red background </>");
+//!     # }
 //!
 //! Maybe you'd like to use your terminals brighter colors, if that's the case
 //! you just have to add `bright` to your tag. Makes sense.
 //!
+//!     # #[cfg(not(feature = "no_logger"))] {
 //!     # use paris::Logger;
 //!     # let mut log = Logger::new();
 //!     log.info("<blue><on bright red> This text is blue on a bright red background</> it's a pain");
+//!     # }
 //!
 //! See [the README](https://github.com/SirTheViking/logger/blob/master/README.md) for a full list of keys
 //! if you're not feeling confident in your ability to name colors. It happens.
@@ -115,13 +128,17 @@ mod timestamp;
 mod macros;
 
 
+#[cfg(not(feature = "no_logger"))]
+mod logger;
+#[cfg(not(feature = "no_logger"))]
+pub use logger::Logger;
+
 
 mod formatter;
-mod logger;
 pub mod output;
 
 pub use formatter::{ Formatter, LogIcon };
-pub use logger::Logger;
+
 
 
 
