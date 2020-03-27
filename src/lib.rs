@@ -468,16 +468,6 @@ mod tests {
     use std::{time::Duration, thread};
 
 
-    #[cfg(feature = "macros")]
-    #[test]
-    fn macros() {
-        info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
-        error!("This is going to <bright red>stderr</> {}", "WOOOO");
-        warn!("This is a {} <yellow>BEWARE</>!", "warning");
-        success!("{} went well, congrats!", "<bright green>Everything</>");
-    }
-
-
     #[test]
     fn loading() {
         let mut logger = Logger::new();

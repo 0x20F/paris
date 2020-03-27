@@ -71,3 +71,21 @@ macro_rules! success {
         $crate::output::stdout(message, "\n");
     }
 }
+
+
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn macros() {
+        info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
+        error!("This is going to <bright red>stderr</> {}", "WOOOO");
+        warn!("This is a {} <yellow>BEWARE</>!", "warning");
+        success!("{} went well, congrats!", "<bright green>Everything</>");
+    }
+}
