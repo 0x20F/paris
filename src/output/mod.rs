@@ -1,4 +1,6 @@
+#[cfg(feature = "timestamps")]
 use crate::timestamp;
+
 use crate::formatter::Formatter;
 use std::fmt::Display;
 
