@@ -1,6 +1,15 @@
 #![macro_use]
 
 
+/// Adds an info icon to the log message,
+/// then writes to `stdout`.
+///
+/// # Example
+/// ```
+/// use paris::info;
+///
+/// info!("This is some info");
+/// ```
 #[macro_export]
 macro_rules! info {
     ($($arg:tt)*) => {
@@ -9,6 +18,16 @@ macro_rules! info {
     }
 }
 
+
+/// Adds an error icon to the log message,
+/// then writes to `stderr`.
+///
+/// # Example
+/// ```
+/// use paris::error;
+///
+/// error!("Everything is burning");
+/// ```
 #[macro_export]
 macro_rules! error {
     ($($arg:tt)*) => {
@@ -17,6 +36,16 @@ macro_rules! error {
     }
 }
 
+
+/// Adds a warning icon to the log message,
+/// then writes to `stdout`.
+///
+/// # Example
+/// ```
+/// use paris::warn;
+///
+/// warn!("Everything could start burning!");
+/// ```
 #[macro_export]
 macro_rules! warn {
         ($($arg:tt)*) => {
@@ -25,6 +54,16 @@ macro_rules! warn {
     }
 }
 
+
+/// Adds a success icon to the log message,
+/// then writes to `stdout`.
+///
+/// # Example
+/// ```
+/// use paris::success;
+///
+/// success!("You did it!");
+/// ```
 #[macro_export]
 macro_rules! success {
     ($($arg:tt)*) => {
