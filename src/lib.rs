@@ -108,6 +108,14 @@ macro_rules! info {
 }
 
 
+macro_rules! error {
+    ($($arg:tt)*) => {
+        let message = format!("<red><cross></> {}", format!($($arg)*));
+        output::stderr(message, "\n");
+    }
+}
+
+
 
 
 
@@ -438,6 +446,7 @@ mod tests {
     #[test]
     fn macros() {
         info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
+        error!("This is going to <bright red>stderr</> {}", "WOOOO");
     }
 
 
