@@ -47,7 +47,7 @@ paris = { version = "1.3", features = ["macros"] }
 ```
 
 
-### Simple api
+### Simple API
 ```rust
 // You can have icons at the start of your message!
 log.info("Will add ℹ at the start");
