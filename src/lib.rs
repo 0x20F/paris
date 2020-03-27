@@ -171,6 +171,8 @@ impl Logger {
     /// # let mut logger = Logger::new();
     /// logger.info("This is some info");
     /// ```
+    ///
+    /// Equivalent macro: `info!()`
     pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stdout(format!("<cyan><info></> {}", message))
     }
@@ -185,6 +187,8 @@ impl Logger {
     /// # let mut logger = Logger::new();
     /// logger.success("Everything went great!");
     /// ```
+    ///
+    /// Equivalent macro: `success!()`
     pub fn success<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stdout(format!("<green><tick></> {}", message))
     }
@@ -199,6 +203,8 @@ impl Logger {
     /// # let mut logger = Logger::new();
     /// logger.warn("This is a warning");
     /// ```
+    ///
+    /// Equivalent macro: `warn!()`
     pub fn warn<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stdout(format!("<yellow><warn></> {}", message))
     }
@@ -213,6 +219,8 @@ impl Logger {
     /// # let mut logger = Logger::new();
     /// logger.error("Something broke, here's the error");
     /// ```
+    ///
+    /// Equivalent macro: `error!()`
     pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stderr(format!("<red><cross></> {}", message))
     }
