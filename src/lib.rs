@@ -116,6 +116,14 @@ macro_rules! error {
 }
 
 
+macro_rules! warn {
+    ($($arg:tt)*) => {
+        let message = format!("<yellow><warn></> {}", format!($($arg)*));
+        output::stdout(message, "\n");
+    }
+}
+
+
 
 
 
@@ -447,6 +455,7 @@ mod tests {
     fn macros() {
         info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
         error!("This is going to <bright red>stderr</> {}", "WOOOO");
+        warn!("This is a {} <yellow>BEWARE</>!", "warning");
     }
 
 
