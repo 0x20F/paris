@@ -99,7 +99,7 @@ pub use formatter::{ Formatter, LogIcon };
 
 
 
-
+#[macro_export]
 macro_rules! info {
     ($($arg:tt)*) => {
         let message = format!("<cyan><info></> {}", format!($($arg)*));
@@ -108,6 +108,7 @@ macro_rules! info {
 }
 
 
+#[macro_export]
 macro_rules! error {
     ($($arg:tt)*) => {
         let message = format!("<red><cross></> {}", format!($($arg)*));
@@ -116,6 +117,7 @@ macro_rules! error {
 }
 
 
+#[macro_export]
 macro_rules! warn {
     ($($arg:tt)*) => {
         let message = format!("<yellow><warn></> {}", format!($($arg)*));
@@ -124,6 +126,7 @@ macro_rules! warn {
 }
 
 
+#[macro_export]
 macro_rules! success {
     ($($arg:tt)*) => {
         let message = format!("<green><tick></> {}", format!($($arg)*));
@@ -458,7 +461,7 @@ mod tests {
 
     use super::*;
 
-
+    #[cfg(feature = "macros")]
     #[test]
     fn macros() {
         info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
