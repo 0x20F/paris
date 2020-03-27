@@ -465,6 +465,7 @@ impl Logger {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::{time::Duration, thread};
 
 
     #[cfg(feature = "macros")]
@@ -481,6 +482,7 @@ mod tests {
     fn loading() {
         let mut logger = Logger::new();
         logger.loading("Loading in the middle of a test is not good!");
+        thread::sleep(Duration::from_secs(1));
         logger.done().success("Done loading!");
 
 
