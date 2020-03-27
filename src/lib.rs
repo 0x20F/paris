@@ -9,15 +9,38 @@
 //!
 //!     log.info("It's that simple!");
 //!
-//!  # Simple methods
+//! ### Simple api
 //!
-//!     # use paris::Logger;
-//!     # let mut log = Logger::new();
 //!     // You can have icons at the start of your message!
 //!     log.info("Will add ℹ at the start");
 //!     log.error("Will add ✖ at the start");
 //!
-//!  See [the `Logger` struct](./struct.Logger.html) for all methods
+//!     // or as macros
+//!     info!("Will add ℹ at the start");
+//!     error!("Will add ✖ at the start");
+//!
+//!
+//! See [the Logger struct](https://docs.rs/paris/) for all methods
+//!
+//! ### Macros
+//! With the macros feature enabled, you get access to macro equivalents
+//! of the logger functions.
+//!
+//! Advantages of using macros:
+//! * Logger doesn't have to be instantiated
+//! * Simple to write
+//! * Can format parameters like `print!` and `println!`
+//!
+//! Disadvantages of using macros:
+//! * Can't chain calls
+//! * Manual newlines and tabs with `\n` and `\t`
+//! * There's no loading animation for macros
+//!
+//! You get to decide whether you want to use macros or not.
+//! Every macro has the same functionality as its `Logger`
+//! equivalent. Colors and icon keys work just the same.
+//!
+//! See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
 //!
 //!
 //! # Chaining
