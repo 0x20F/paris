@@ -83,12 +83,12 @@
 mod timestamp;
 
 #[cfg(feature = "macros")]
-mod macros;
+pub mod macros;
 
 
 
 mod formatter;
-mod output;
+pub mod output;
 
 use std::fmt::Display;
 use std::thread;
@@ -427,8 +427,8 @@ impl Logger {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
+
 
     #[cfg(feature = "macros")]
     #[test]
