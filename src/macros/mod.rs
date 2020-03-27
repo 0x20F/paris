@@ -79,8 +79,6 @@ macro_rules! success {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
     fn macros() {
         info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
