@@ -58,7 +58,7 @@ info!("Will add ℹ at the start");
 error!("Will add ✖ at the start");
 ```
 
-See [the Logger struct](https://docs.rs/paris/) for all methods
+See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
 
 ### Macros
 With the macros feature enabled, you get access to macro equivalents
