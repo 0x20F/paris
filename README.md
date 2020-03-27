@@ -74,6 +74,7 @@ You get to decide whether you want to use macros or not.
 Every macro has the same functionality as its `Logger`
 equivalent. Colors and icon keys work just the same.
 
+See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
 
 
 ### Chaining
