@@ -102,7 +102,8 @@ pub use formatter::{ Formatter, LogIcon };
 
 macro_rules! info {
     ($($arg:tt)*) => {
-        println!("{}", Formatter::colorize_string(format!($($arg)*)))
+        let message = format!("<cyan><info></> {}", format!($($arg)*));
+        output::stdout(message, "\n");
     }
 }
 
