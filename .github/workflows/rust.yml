@@ -47,6 +47,13 @@ jobs:
           command: test
           args: --features macros
 
+      - name: Run tests with main logger disabled
+        uses: actions-rs/cargo@v1
+        continue-on-error: ${{ matrix.config.toolchain == 'nightly' }}
+        with:
+          command: test
+          args: --features no_logger
+
       - name: Run cargo clippy
         uses: actions-rs/clippy-check@v1
         with:

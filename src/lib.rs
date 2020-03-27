@@ -38,7 +38,7 @@
 //! of the logger functions.
 //!
 //! Advantages of using macros:
-//! * Logger doesn't have to be instantiated
+//! * You don't have to instantiate the logger `Logger::new()`
 //! * Simple to write
 //! * Can format parameters like `print!` and `println!`
 //!
