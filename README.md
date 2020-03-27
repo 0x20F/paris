@@ -43,7 +43,7 @@ Every common function has a macro. To make use of these
 macros you need to enable the macros feature.
 ```toml
 [dependencies]
-paris = { version = "1.3", features = ["timestamps"] }
+paris = { version = "1.3", features = ["macros"] }
 ```
 
 
