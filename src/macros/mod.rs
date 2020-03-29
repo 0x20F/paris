@@ -101,6 +101,7 @@ macro_rules! success {
 mod tests {
     #[test]
     fn macros() {
+        log!("This <cyan>is <bright green>a log<//>!");
         info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
         error!("This is going to <bright red>stderr</> {}", "WOOOO");
         warn!("This is a {} <yellow>BEWARE</>!", "warning");
