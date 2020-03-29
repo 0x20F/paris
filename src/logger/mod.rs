@@ -59,6 +59,8 @@ impl Logger {
     ///
     /// logger.log("Basic and boring."); // Basic and boring.
     /// ```
+    /// 
+    /// Equivalent macro: `log!()`
     pub fn log<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stdout(message)
     }
