@@ -1,7 +1,3 @@
-#![macro_use]
-
-
-
 /// Default logging, this just outputs to the terminal
 /// Use when you want full control of how you want
 /// your log to look. All color keys work as normal.
