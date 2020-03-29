@@ -18,7 +18,7 @@
 ## How to use
 ```toml
 [dependencies]
-paris = "1.3"
+paris = "1.4"
 ```
 
 ```rust
@@ -28,25 +28,68 @@ let mut log = Logger::new();
 
 log.info("It's that simple!");
 ```
-##### Optional features
+
+#### Optional features
+
+##### Timestamps 
 If you'd like timestamps with all your logs you'll
 have to enable the feature when adding the crate as a dependency. 
 
 Notice: This will also include `chrono` as a dependency.
 ```toml
 [dependencies]
-paris = { version = "1.3", features = ["timestamps"] }
+paris = { version = "1.4", features = ["timestamps"] }
+```
+
+##### Macros
+Every common function has a macro. To make use of these
+macros you'll need to enable the macros feature.
+```toml
+[dependencies]
+paris = { version = "1.4", features = ["macros"] }
+```
+
+##### No logger
+If you'd prefer to only use the macros and not even have
+the `Logger` struct included in your package, that's definitely possible!
+All you need to do is enable the `no_logger` feature.
+```toml
+[dependencies]
+paris = { version = "1.4", features = ["no_logger"] }
 ```
 
 
-### Simple methods
+### Simple API
 ```rust
 // You can have icons at the start of your message!
 log.info("Will add ℹ at the start");
 log.error("Will add ✖ at the start");
-```
 
-See [the Logger struct](https://docs.rs/paris/) for all methods
+// or as macros
+info!("Will add ℹ at the start");
+error!("Will add ✖ at the start");
+```
+###### See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
+
+
+### Macros
+With the macros feature enabled, you get access to macro equivalents
+of the logger functions.
+
+Advantages of using macros:
+* You don't have to instantiate the logger `Logger::new()`
+* Simple to write
+* Can format parameters like `print!` and `println!`
+
+Disadvantages of using macros:
+* Can't chain calls
+* Manual newlines and tabs with `\n` and `\t`
+* There's no loading animation for macros
+
+You get to decide whether you want to use macros or not.
+Every macro has the same functionality as its `Logger`
+equivalent. Colors and icon keys work just the same.
+###### See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
 
 
 ### Chaining
