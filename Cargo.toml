@@ -1,15 +1,15 @@
 [package]
 name = "paris"
-version = "1.4.1"
+version = "1.4.2"
 authors = ["Poly <alexhexan22@gmail.com>"]
 edition = "2018"
 
 documentation = "https://docs.rs/paris"
-homepage = "https://github.com/0x20F/logger"
-repository = "https://github.com/0x20F/logger"
+homepage = "https://github.com/0x20F/paris"
+repository = "https://github.com/0x20F/paris"
 readme = "README.md"
 
-keywords = ["log", "logger", "simple", "terminal", "cli"]
+keywords = ["log", "logger", "shell", "terminal", "cli"]
 categories = ["command-line-interface", "command-line-utilities"]
 
 description = "A simple logger for your CLI apps or other things you want in the terminal"

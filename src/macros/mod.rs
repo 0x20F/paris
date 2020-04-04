@@ -11,8 +11,7 @@
 #[macro_export]
 macro_rules! log {
     ($($arg:tt)*) => {
-        let message = format!($($arg)*);
-        $crate::output::stdout(message, "\n");
+        $crate::output::stdout(format!($($arg)*), "\n");
     }
 }
 
@@ -29,8 +28,7 @@ macro_rules! log {
 #[macro_export]
 macro_rules! info {
     ($($arg:tt)*) => {
-        let message = format!("<cyan><info></> {}", format!($($arg)*));
-        $crate::output::stdout(message, "\n");
+        $crate::output::stdout(format!("<cyan><info></> {}", format!($($arg)*)), "\n");
     }
 }
 
@@ -47,8 +45,7 @@ macro_rules! info {
 #[macro_export]
 macro_rules! error {
     ($($arg:tt)*) => {
-        let message = format!("<red><cross></> {}", format!($($arg)*));
-        $crate::output::stderr(message, "\n");
+        $crate::output::stderr(format!("<red><cross></> {}", format!($($arg)*)), "\n");
     }
 }
 
@@ -64,9 +61,8 @@ macro_rules! error {
 /// ```
 #[macro_export]
 macro_rules! warn {
-        ($($arg:tt)*) => {
-        let message = format!("<yellow><warn></> {}", format!($($arg)*));
-        $crate::output::stdout(message, "\n");
+    ($($arg:tt)*) => {
+        $crate::output::stdout(format!("<yellow><warn></> {}", format!($($arg)*)), "\n");
     }
 }
 
@@ -83,8 +79,7 @@ macro_rules! warn {
 #[macro_export]
 macro_rules! success {
     ($($arg:tt)*) => {
-        let message = format!("<green><tick></> {}", format!($($arg)*));
-        $crate::output::stdout(message, "\n");
+        $crate::output::stdout(format!("<green><tick></> {}", format!($($arg)*)), "\n");
     }
 }
 
@@ -102,5 +97,11 @@ mod tests {
         error!("This is going to <bright red>stderr</> {}", "WOOOO");
         warn!("This is a {} <yellow>BEWARE</>!", "warning");
         success!("{} went well, congrats!", "<bright green>Everything</>");
+
+
+        match "a" {
+            "a" => log!("It works inside a match as well!!! {}", "<bright blue>finally</>"),
+            _ => unreachable!()
+        }
     }
 }
