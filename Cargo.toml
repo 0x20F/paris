@@ -5,8 +5,8 @@ authors = ["Poly <alexhexan22@gmail.com>"]
 edition = "2018"
 
 documentation = "https://docs.rs/paris"
-homepage = "https://github.com/0x20F/logger"
-repository = "https://github.com/0x20F/logger"
+homepage = "https://github.com/0x20F/paris"
+repository = "https://github.com/0x20F/paris"
 readme = "README.md"
 
 keywords = ["log", "logger", "shell", "terminal", "cli"]
