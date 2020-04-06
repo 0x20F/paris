@@ -134,10 +134,10 @@ mod logger;
 pub use logger::Logger;
 
 
-mod formatter;
+pub mod formatter;
 pub mod output;
 
-pub use formatter::{ Formatter, LogIcon };
+pub use formatter::LogIcon;
 
 
 
