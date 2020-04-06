@@ -1,5 +1,5 @@
-/// A wrapper around a few functions to make
-/// finding and replacing keys inside a string easier.
+//! A wrapper around a few functions to make
+//! finding and replacing keys inside a string easier.
 
 
 mod color;
