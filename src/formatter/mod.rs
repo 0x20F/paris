@@ -1,79 +1,76 @@
+//! A wrapper around a few functions to make
+//! finding and replacing keys inside a string easier.
+
+
 mod color;
 mod style;
 mod icons;
 mod concerns;
 
+use concerns::{ FromKey, KeyList };
 use color::Color;
 use style::Style;
 
-use concerns::{ FromKey, KeyList };
 pub use icons::LogIcon;
 
 
-/// A wrapper around a few functions to make
-/// finding and replacing keys inside a string easier.
-pub struct Formatter {}
 
+/// Finds all keys in the given input. Keys meaning
+/// whatever the logger uses. Something that looks like `<key>`.
+/// And replaces all those keys with their color, style
+/// or icon equivalent.
+pub fn colorize_string<S>(input: S) -> String
+    where S: Into<String>
+{
+    let input = input.into();
+    let mut output = input.clone();
 
-impl Formatter {
+    for key in KeyList::new(&input) {
+        let color_key = cleanup_key(key);
 
-    /// Finds all keys in the given input. Keys meaning
-    /// whatever the logger uses. Something that looks like `<key>`.
-    /// And replaces all those keys with their color, style
-    /// or icon equivalent.
-    pub fn colorize_string<S>(input: S) -> String
-        where S: Into<String>
-    {
-        let input = input.into();
-        let mut output = input.clone();
-
-        for key in KeyList::new(&input) {
-            let color_key = Formatter::cleanup_key(key);
-
-            let c = Color::from_key(&color_key);
-            if let Some(c) = c {
-                output = output.replace(key, &c);
-                continue;
-            }
-
-
-            let s = Style::from_key(&color_key);
-            if let Some(c) = s {
-                output = output.replace(key, &c);
-                continue;
-            }
-
-
-            let i = LogIcon::from_key(&color_key);
-            if let Some(i) = i {
-                output = output.replace(key, &i);
-                continue;
-            }
+        let c = Color::from_key(&color_key);
+        if let Some(c) = c {
+            output = output.replace(key, &c);
+            continue;
         }
 
-        output
-    }
 
-
-    /// Removes characters that can be used instead
-    /// of spaces from a key if the key doesn't already
-    /// contain spaces
-    fn cleanup_key(key: &str) -> String {
-        let key = key.trim_matches(|c| c == '<' || c == '>');
-
-        // If key already contains space, its already
-        // intended or a typo
-        if key.contains(' ') {
-            return key.to_string();
+        let s = Style::from_key(&color_key);
+        if let Some(c) = s {
+            output = output.replace(key, &c);
+            continue;
         }
 
-        key.chars()
-            .map(|c| match c {
-                '_' => ' ',
-                '-' => ' ',
-                _ => c
-            }).collect()
+
+        let i = LogIcon::from_key(&color_key);
+        if let Some(i) = i {
+            output = output.replace(key, &i);
+            continue;
+        }
     }
+
+    output
+}
+
+
+/// Removes characters that can be used instead
+/// of spaces from a key if the key doesn't already
+/// contain spaces
+fn cleanup_key(key: &str) -> String {
+    let key = key.trim_matches(|c| c == '<' || c == '>');
+
+    // If key already contains space, its already
+    // intended or a typo
+    if key.contains(' ') {
+        return key.to_string();
+    }
+
+    key.chars()
+        .map(|c| match c {
+            '_' => ' ',
+            '-' => ' ',
+            _ => c
+        }).collect()
 }
 
 
@@ -84,7 +81,7 @@ impl Formatter {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::{ colorize_string, cleanup_key };
 
 
     macro_rules! replacement {
@@ -97,7 +94,7 @@ mod tests {
                 let c = format!("\x1B[{}m", $code);
 
                 let s = format!("has: {:<20} -> {}Test string", n, k);
-                let parsed = Formatter::colorize_string(s);
+                let parsed = colorize_string(s);
 
                 // Just to see all the cool colors
                 println!("{}", parsed);
@@ -153,7 +150,7 @@ mod tests {
         let c = format!("\x1B[{}m", 0);
 
         let s = format!("{}Test string", k);
-        let parsed = Formatter::colorize_string(s);
+        let parsed = colorize_string(s);
 
         assert!(!parsed.contains(&k));
         assert!(parsed.contains(&c));
@@ -162,17 +159,17 @@ mod tests {
     #[test]
     fn normal_tags() {
         let s = String::from("<html> This is normal stuff </html>");
-        let parsed = Formatter::colorize_string(s);
+        let parsed = colorize_string(s);
 
         // Make sure its still in there
         assert!(parsed.contains("<html>"));
     }
 
     #[test]
-    fn cleanup_key() {
+    fn cleanup() {
         let color = "<on_bright-green>";
 
-        let clean = Formatter::cleanup_key(color);
+        let clean = cleanup_key(color);
 
         assert_eq!("on bright green", clean);
     }
