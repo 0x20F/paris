@@ -15,7 +15,6 @@ macro_rules! log {
     }
 }
 
-
 /// Adds an info icon to the log message,
 /// then writes to `stdout`.
 ///
@@ -31,7 +30,6 @@ macro_rules! info {
         $crate::output::stdout(format!("<cyan><info></> {}", format!($($arg)*)), "\n");
     }
 }
-
 
 /// Adds an error icon to the log message,
 /// then writes to `stderr`.
@@ -49,7 +47,6 @@ macro_rules! error {
     }
 }
 
-
 /// Adds a warning icon to the log message,
 /// then writes to `stdout`.
 ///
@@ -65,7 +62,6 @@ macro_rules! warn {
         $crate::output::stdout(format!("<yellow><warn></> {}", format!($($arg)*)), "\n");
     }
 }
-
 
 /// Adds a success icon to the log message,
 /// then writes to `stdout`.
@@ -83,25 +79,25 @@ macro_rules! success {
     }
 }
 
-
-
-
-
-
 #[cfg(test)]
 mod tests {
     #[test]
     fn macros() {
         log!("This <cyan>is <bright green>a log<//>!");
-        info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
+        info!(
+            "<red>HAHAHAHAHA<///> <black><on green>{}</>",
+            "the crate supports macros with colors!"
+        );
         error!("This is going to <bright red>stderr</> {}", "WOOOO");
         warn!("This is a {} <yellow>BEWARE</>!", "warning");
         success!("{} went well, congrats!", "<bright green>Everything</>");
 
-
         match "a" {
-            "a" => log!("It works inside a match as well!!! {}", "<bright blue>finally</>"),
-            _ => unreachable!()
+            "a" => log!(
+                "It works inside a match as well!!! {}",
+                "<bright blue>finally</>"
+            ),
+            _ => unreachable!(),
         }
     }
 }

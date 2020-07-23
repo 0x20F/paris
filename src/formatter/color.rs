@@ -1,6 +1,5 @@
-use super::concerns::{ Ansi, FromKey };
+use super::concerns::{Ansi, FromKey};
 use std::str::FromStr;
-
 
 pub enum Color {
     Black,
@@ -24,11 +23,9 @@ pub enum Color {
     ForegroundReset,
     Reset,
 
-    None // So we can check if its a color or not
-    // In case there's HTML in the logs
+    None, // So we can check if its a color or not
+          // In case there's HTML in the logs
 }
-
-
 
 impl Color {
     pub fn get_fg_value(&self) -> u8 {
@@ -54,10 +51,9 @@ impl Color {
             Color::BackgroundReset => 49,
             Color::Reset => 0,
 
-            Color::None => 0
+            Color::None => 0,
         }
     }
-
 
     pub fn get_bg_value(&self) -> u8 {
         match *self {
@@ -82,20 +78,16 @@ impl Color {
             Color::BackgroundReset => 49,
             Color::Reset => 0,
 
-            Color::None => 0
+            Color::None => 0,
         }
     }
 }
-
-
 
 impl<'a> From<&'a str> for Color {
     fn from(s: &str) -> Self {
         s.parse().unwrap_or(Color::None)
     }
 }
-
-
 
 impl FromStr for Color {
     type Err = ();
@@ -126,15 +118,12 @@ impl FromStr for Color {
             "//" => Ok(Color::ForegroundReset),
             "/" => Ok(Color::Reset),
 
-            _ => Err(())
+            _ => Err(()),
         }
     }
 }
 
-
-
 impl FromKey for Color {
-
     /// Convert a str to an Ansi color code based
     /// on the key standard that the colored lib has.
     /// With some of my own additions.
@@ -161,15 +150,9 @@ impl FromKey for Color {
     }
 }
 
-
-
-
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
 
     macro_rules! color_test {
         ($name:ident, $key:expr, $value:expr) => {
@@ -182,7 +165,6 @@ mod tests {
             }
         };
     }
-
 
     color_test!(reset, "/", 0);
     color_test!(background, "on red", 41);

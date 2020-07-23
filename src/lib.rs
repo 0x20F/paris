@@ -127,18 +127,12 @@ mod timestamp;
 #[cfg(feature = "macros")]
 mod macros;
 
-
 #[cfg(not(feature = "no_logger"))]
 mod logger;
 #[cfg(not(feature = "no_logger"))]
 pub use logger::Logger;
 
-
 pub mod formatter;
 pub mod output;
 
 pub use formatter::LogIcon;
-
-
-
-
