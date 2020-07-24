@@ -1,26 +1,24 @@
 //! A wrapper around a few functions to make
 //! finding and replacing keys inside a string easier.
 
-
 mod color;
-mod style;
-mod icons;
 mod concerns;
+mod icons;
+mod style;
 
-use concerns::{ FromKey, KeyList };
 use color::Color;
+use concerns::{FromKey, KeyList};
 use style::Style;
 
 pub use icons::LogIcon;
-
-
 
 /// Finds all keys in the given input. Keys meaning
 /// whatever the logger uses. Something that looks like `<key>`.
 /// And replaces all those keys with their color, style
 /// or icon equivalent.
 pub fn colorize_string<S>(input: S) -> String
-    where S: Into<String>
+where
+    S: Into<String>,
 {
     let input = input.into();
     let mut output = input.clone();
@@ -34,13 +32,11 @@ pub fn colorize_string<S>(input: S) -> String
             continue;
         }
 
-
         let s = Style::from_key(&color_key);
         if let Some(c) = s {
             output = output.replace(key, &c);
             continue;
         }
-
 
         let i = LogIcon::from_key(&color_key);
         if let Some(i) = i {
@@ -51,7 +47,6 @@ pub fn colorize_string<S>(input: S) -> String
 
     output
 }
-
 
 /// Removes characters that can be used instead
 /// of spaces from a key if the key doesn't already
@@ -69,20 +64,14 @@ fn cleanup_key(key: &str) -> String {
         .map(|c| match c {
             '_' => ' ',
             '-' => ' ',
-            _ => c
-        }).collect()
+            _ => c,
+        })
+        .collect()
 }
-
-
-
-
-
-
 
 #[cfg(test)]
 mod tests {
-    use super::{ colorize_string, cleanup_key };
-
+    use super::{cleanup_key, colorize_string};
 
     macro_rules! replacement {
         ($key:ident, $code:expr) => {

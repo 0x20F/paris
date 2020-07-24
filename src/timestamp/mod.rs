@@ -1,7 +1,6 @@
 extern crate chrono;
 
-use chrono::{ Timelike, Utc };
-
+use chrono::{Timelike, Utc};
 
 pub fn now() -> String {
     let now = Utc::now();

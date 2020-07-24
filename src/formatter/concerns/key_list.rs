@@ -2,13 +2,11 @@ pub struct KeyList<'a> {
     input: &'a str,
 }
 
-
 impl<'a> KeyList<'a> {
     pub fn new(input: &'a str) -> Self {
         Self { input }
     }
 }
-
 
 impl<'a> Iterator for KeyList<'a> {
     type Item = &'a str;
@@ -19,7 +17,9 @@ impl<'a> Iterator for KeyList<'a> {
         if let Some(i) = self.input.find('<') {
             self.input = &self.input[i..];
 
-            let rest = self.input.char_indices()
+            let rest = self
+                .input
+                .char_indices()
                 .take_while(|(_, c)| *c != '>')
                 .last()
                 .map(|(idx, c)| idx + c.len_utf8())
@@ -33,11 +33,6 @@ impl<'a> Iterator for KeyList<'a> {
         key
     }
 }
-
-
-
-
-
 
 #[cfg(test)]
 mod tests {
