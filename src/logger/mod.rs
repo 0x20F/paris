@@ -1,3 +1,5 @@
+mod custom;
+
 use std::fmt::Display;
 use std::io;
 use std::io::prelude::*;
@@ -6,7 +8,7 @@ use std::thread;
 use std::time::Duration;
 
 use crate::output;
-use crate::formatter::Formatter;
+use custom::CustomStyle;
 
 #[allow(missing_docs)]
 pub struct Logger {
@@ -15,7 +17,7 @@ pub struct Logger {
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
-    formatter: Formatter
+    styles: Vec<CustomStyle>
 }
 
 impl Default for Logger {
@@ -26,7 +28,7 @@ impl Default for Logger {
             loading_handle: None,
 
             line_ending: String::from("\n"),
-            formatter: Formatter::new()
+            styles: Vec::with_capacity(1)
         }
     }
 }
@@ -266,7 +268,9 @@ impl Logger {
             })
             .collect();
 
-        self.formatter.add_style(key, colors);
+        self.styles.push(
+            CustomStyle::new(key, colors)
+        );
 
         self
     }

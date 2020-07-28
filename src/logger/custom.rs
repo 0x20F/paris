@@ -1,6 +1,3 @@
-use std::str::FromStr;
-use crate::formatter::concerns::FromKey;
-
 pub struct CustomStyle {
     key: String,
     colors: Vec<String>

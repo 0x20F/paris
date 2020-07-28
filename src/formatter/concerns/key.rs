@@ -2,7 +2,6 @@ use super::FromKey;
 use crate::formatter::color::Color;
 use crate::formatter::style::Style;
 use crate::formatter::icons::LogIcon;
-use crate::formatter::custom::CustomStyle;
 use std::fmt::{Display, Formatter, Result};
 
 

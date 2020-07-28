@@ -3,7 +3,6 @@
 
 mod color;
 mod concerns;
-mod custom;
 mod icons;
 mod style;
 
@@ -11,40 +10,26 @@ use concerns::KeyList;
 use concerns::Key;
 
 pub use icons::LogIcon;
-use crate::formatter::custom::CustomStyle;
 
 
-pub struct Formatter {
-    custom_styles: Vec<CustomStyle>
+/// Finds all keys in the given input. Keys meaning
+/// whatever the logger uses. Something that looks like `<key>`.
+/// And replaces all those keys with their color, style
+/// or icon equivalent.
+pub fn colorize_string<S>(input: S) -> String
+    where
+        S: Into<String>,
+{
+    let input = input.into();
+    let mut output = input.clone();
+
+    for key in KeyList::new(&input) {
+        output = output.replace(&key.to_string(), &key.to_ansi());
+    }
+
+    output
 }
 
-impl Formatter {
-    pub fn new() -> Self {
-        Self { custom_styles: Vec::with_capacity(1) }
-    }
-
-    /// Finds all keys in the given input. Keys meaning
-    /// whatever the logger uses. Something that looks like `<key>`.
-    /// And replaces all those keys with their color, style
-    /// or icon equivalent.
-    pub fn colorize_string<S>(input: S) -> String
-        where
-            S: Into<String>,
-    {
-        let input = input.into();
-        let mut output = input.clone();
-
-        for key in KeyList::new(&input) {
-            output = output.replace(&key.to_string(), &key.to_ansi());
-        }
-
-        output
-    }
-
-    pub fn add_style(&mut self, key: &str, colors: Vec<String>) {
-        self.custom_styles.push(CustomStyle::new(key, colors));
-    }
-}
 
 
 #[cfg(test)]
