@@ -257,15 +257,16 @@ impl Logger {
         self
     }
 
+    ///
     pub fn add_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Logger {
-        let colors: String = colors
+        let colors: Vec<String> = colors
             .iter()
             .map(|color| {
                 format!("<{}>", color)
             })
             .collect();
 
-        self.formatter.add_style(key, &colors);
+        self.formatter.add_style(key, colors);
 
         self
     }

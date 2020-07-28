@@ -8,6 +8,7 @@ mod icons;
 mod style;
 
 use concerns::KeyList;
+use concerns::Key;
 
 pub use icons::LogIcon;
 use crate::formatter::custom::CustomStyle;
@@ -19,13 +20,11 @@ pub struct Formatter {
 
 impl Formatter {
     pub fn new() -> Self {
-        Self {
-            custom_styles: Vec::with_capacity(1)
-        }
+        Self { custom_styles: Vec::with_capacity(1) }
     }
 
-    pub fn add_style(&mut self, key: &str, value: &str) {
-        self.custom_styles.push(CustomStyle::new(key, value));
+    pub fn add_style(&mut self, key: &str, colors: Vec<String>) {
+        self.custom_styles.push(CustomStyle::new(key, colors));
     }
 
     /// Finds all keys in the given input. Keys meaning

@@ -1,13 +1,25 @@
+use std::str::FromStr;
+use crate::formatter::concerns::FromKey;
+
 pub struct CustomStyle {
     key: String,
-    value: String
+    colors: Vec<String>
 }
 
 impl CustomStyle {
-    pub fn new(key: &str, value: &str) -> Self {
+    pub fn new(key: &str, colors: Vec<String>) -> Self {
         Self {
             key: key.to_owned(),
-            value: value.to_owned()
+            colors
         }
+    }
+
+    pub fn key(&self) -> &str {
+        &self.key
+    }
+
+    pub fn expand(&self) -> String {
+        // Turn it into the ansi values it should be
+        unimplemented!()
     }
 }

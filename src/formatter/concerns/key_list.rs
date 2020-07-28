@@ -1,4 +1,4 @@
-use super::key::Key;
+use super::Key;
 
 pub struct KeyList<'a> {
     input: &'a str,
