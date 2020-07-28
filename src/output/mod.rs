@@ -20,13 +20,13 @@ where
     {
         let timestamp = timestamp::now();
         let message = format!("{}{}{}", timestamp, message, line_ending);
-        print!("{}", formatter::colorize_string(message));
+        print!("{}", message);
     }
 
     #[cfg(not(feature = "timestamps"))]
     {
         let message = format!("{}{}", message, line_ending);
-        print!("{}", formatter::colorize_string(message));
+        print!("{}", message);
     }
 }
 
@@ -41,12 +41,12 @@ where
     {
         let timestamp = timestamp::now();
         let message = format!("{}{}{}", timestamp, message, line_ending);
-        eprint!("{}", formatter::colorize_string(message));
+        eprint!("{}", message);
     }
 
     #[cfg(not(feature = "timestamps"))]
     {
         let message = format!("{}{}", message, line_ending);
-        eprint!("{}", formatter::colorize_string(message));
+        eprint!("{}", message);
     }
 }

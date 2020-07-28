@@ -5,11 +5,50 @@ mod color;
 mod concerns;
 mod icons;
 mod style;
+mod keys;
 
-use concerns::KeyList;
-use concerns::Key;
+use keys::{Key, KeyList};
 
 pub use icons::LogIcon;
+
+
+pub struct Formatter {}
+
+impl Formatter {
+    pub fn new() -> Self {
+        Self {}
+    }
+
+    pub fn get_keys(input: &str) -> KeyList {
+        KeyList::new(input)
+    }
+
+    // For logger enabled
+    pub fn colorize(input: &str, keys: KeyList) -> String {
+        let mut output = input.to_owned();
+
+        for key in keys {
+            output = output.replace(&key.to_string(), &key.to_ansi());
+        }
+
+        output
+    }
+
+    // For logger disabled
+    /*pub fn colorize_string<S>(input: S) -> String
+        where
+            S: Into<String>,
+    {
+        let input = input.into();
+        let mut output = input.clone();
+
+        for key in KeyList::new(&input) {
+            output = output.replace(&key.to_string(), &key.to_ansi());
+        }
+
+        output
+    }*/
+}
 
 
 /// Finds all keys in the given input. Keys meaning

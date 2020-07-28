@@ -1,9 +1,3 @@
-mod key_list;
-mod key;
-
-pub use key_list::KeyList;
-pub use key::Key;
-
 /// Escape whatever's being sent
 /// in here to an ansi code
 pub struct Ansi {}

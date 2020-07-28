@@ -9,6 +9,7 @@ use std::time::Duration;
 
 use crate::output;
 use custom::CustomStyle;
+use crate::formatter::Formatter;
 
 #[allow(missing_docs)]
 pub struct Logger {
@@ -17,7 +18,9 @@ pub struct Logger {
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
-    styles: Vec<CustomStyle>
+
+    styles: Vec<CustomStyle>,
+    formatter: Formatter,
 }
 
 impl Default for Logger {
@@ -28,7 +31,8 @@ impl Default for Logger {
             loading_handle: None,
 
             line_ending: String::from("\n"),
-            styles: Vec::with_capacity(1)
+            styles: Vec::with_capacity(1),
+            formatter: Formatter::new()
         }
     }
 }
@@ -281,7 +285,12 @@ impl Logger {
         T: Display,
     {
         self.done();
-        output::stdout(message, &self.get_line_ending());
+        let message = message.to_string();
+
+        let keys = Formatter::get_keys(&message);
+        let colorized = Formatter::colorize(&message, keys);
+
+        output::stdout(colorized, &self.get_line_ending());
         self
     }
 
@@ -291,7 +300,12 @@ impl Logger {
         T: Display,
     {
         self.done();
-        output::stderr(message, &self.get_line_ending());
+        let message = message.to_string();
+
+        let keys = Formatter::get_keys(&message);
+        let colorized = Formatter::colorize(&message, keys);
+
+        output::stderr(colorized, &self.get_line_ending());
         self
     }
 
