@@ -80,9 +80,9 @@
 //!     # use paris::Logger;
 //!     # let mut log = Logger::new();
 //!     log.info("I can write normal text or use tags to <red>color it</>");
-//!     log.warn("Every function can contain <on green><black>tags</>");
+//!     log.warn("Every function can contain <on-green><black>tags</>");
 //!
-//!     log.info("If you don't write them <bleu>correctly</>, you just get an ugly looking tag");
+//!     log.info("If you don't write them <what>correctly</>, you just get an ugly looking tag");
 //!     # }
 //!
 //! There's a key for all colors supported by the terminal `(white, black, red, blue, magenta, etc.)`
@@ -93,7 +93,7 @@
 //!     # use paris::Logger;
 //!     # let mut log = Logger::new();
 //!     // How useful...
-//!     log.info("<on red> This has red background </>");
+//!     log.info("<on-red> This has red background </>");
 //!     # }
 //!
 //! Maybe you'd like to use your terminals brighter colors, if that's the case
@@ -102,7 +102,7 @@
 //!     # #[cfg(not(feature = "no_logger"))] {
 //!     # use paris::Logger;
 //!     # let mut log = Logger::new();
-//!     log.info("<blue><on bright red> This text is blue on a bright red background</> it's a pain");
+//!     log.info("<blue><on-bright-red> This text is blue on a bright red background</> it's a pain");
 //!     # }
 //!
 //! See [the README](https://github.com/SirTheViking/logger/blob/master/README.md) for a full list of keys

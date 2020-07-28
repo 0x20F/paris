@@ -113,23 +113,23 @@ Included in the crate are a variety of keys you can use
 to colorize your logs just the way you want them to be.
 ```rust
 log.info("I can write normal text or use tags to <red>color it</>");
-log.warn("Every function can contain <on green><black>tags</>");
+log.warn("Every function can contain <on-green><black>tags</>");
 
 log.info("If you don't write them <bleu>correctly</>, you just get an ugly looking tag");
 ```
 
 There's a key for all colors supported by the terminal `(white, black, red, blue, magenta, etc.)`
 If you add the word `on` to any of those colors, it becomes the
-background color instead `(on red, on blue, on green)`.
+background color instead `(on-red, on-blue, on-green)`.
 ```rust
 // How useful...
-log.info("<on red> This has red background </>");
+log.info("<on-red> This has red background</>");
 ```
 
 Maybe you'd like to use your terminals brighter colors, if that's the case
 you just have to add `bright` to your tag. Makes sense.
 ```rust
-log.info("<blue><on bright red> This text is blue on a bright red background</> it's a pain");
+log.info("<blue><on-bright-red> This text is blue on a bright red background</> it's a pain");
 ```
 
 ###### Scroll down for a full list of keys if you're not feeling confident in your ability to name colors. It happens.
@@ -149,23 +149,23 @@ it'll be enough, but for those times when it isn't there are a few other tags su
 
 
 ## Color keys
-To use a key just add the color name surrounded by `<`, `>` to your log string. Include spaces
-or use underlines(`_`) or dashes(`-`) instead if you wish.
+To use a key just add the color name surrounded by `<`, `>` to your log string. If you don't like the dashes(`-`),
+you can use underlines(`_`) or spaces(` `)
 
 #### Foreground
 `black`, `red`, `green`, `yellow`, `blue`, `cyan`, `magenta`, `white`
 
 ##### Bright
-`bright black`, `bright red`, `bright green`, `bright yellow`, `bright blue`, `bright cyan`, `bright magenta`,
- `bright white`
+`bright-black`, `bright-red`, `bright-green`, `bright-yellow`, `bright-blue`, `bright-cyan`, `bright-magenta`,
+ `bright-white`
 
 
 #### Background
-`on black`, `on red`, `on green`, `on yellow`, `on blue`, `on cyan`, `on magenta`, `on white`
+`on-black`, `on-red`, `on-green`, `on-yellow`, `on-blue`, `on-cyan`, `on-magenta`, `on-white`
 
 ##### Bright
-`on bright black`, `on bright red`, `on bright green`, `on bright yellow`, `on bright blue`, `on bright cyan`, 
-`on bright magenta`, `on bright white`
+`on-bright-black`, `on-bright-red`, `on-bright-green`, `on-bright-yellow`, `on-bright-blue`, `on-bright-cyan`, 
+`on-bright-magenta`, `on-bright-white`
 
 #### Styles
 `bold`(`b`), `underline`(`u`), `dimmed`(`d`), `italic`(`i`)
