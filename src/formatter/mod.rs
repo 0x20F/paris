@@ -3,75 +3,54 @@
 
 mod color;
 mod concerns;
+mod custom;
 mod icons;
 mod style;
 
-use color::Color;
-use concerns::{FromKey, KeyList};
-use style::Style;
+use concerns::KeyList;
 
 pub use icons::LogIcon;
+use crate::formatter::custom::CustomStyle;
 
-/// Finds all keys in the given input. Keys meaning
-/// whatever the logger uses. Something that looks like `<key>`.
-/// And replaces all those keys with their color, style
-/// or icon equivalent.
-pub fn colorize_string<S>(input: S) -> String
-where
-    S: Into<String>,
-{
-    let input = input.into();
-    let mut output = input.clone();
 
-    for key in KeyList::new(&input) {
-        let color_key = cleanup_key(key);
+pub struct Formatter {
+    custom_styles: Vec<CustomStyle>
+}
 
-        let c = Color::from_key(&color_key);
-        if let Some(c) = c {
-            output = output.replace(key, &c);
-            continue;
-        }
-
-        let s = Style::from_key(&color_key);
-        if let Some(c) = s {
-            output = output.replace(key, &c);
-            continue;
-        }
-
-        let i = LogIcon::from_key(&color_key);
-        if let Some(i) = i {
-            output = output.replace(key, &i);
-            continue;
+impl Formatter {
+    pub fn new() -> Self {
+        Self {
+            custom_styles: Vec::with_capacity(1)
         }
     }
 
-    output
-}
-
-/// Removes characters that can be used instead
-/// of spaces from a key if the key doesn't already
-/// contain spaces
-fn cleanup_key(key: &str) -> String {
-    let key = key.trim_matches(|c| c == '<' || c == '>');
-
-    // If key already contains space, its already
-    // intended or a typo
-    if key.contains(' ') {
-        return key.to_string();
+    pub fn add_style(&mut self, key: &str, value: &str) {
+        self.custom_styles.push(CustomStyle::new(key, value));
     }
 
-    key.chars()
-        .map(|c| match c {
-            '_' => ' ',
-            '-' => ' ',
-            _ => c,
-        })
-        .collect()
+    /// Finds all keys in the given input. Keys meaning
+    /// whatever the logger uses. Something that looks like `<key>`.
+    /// And replaces all those keys with their color, style
+    /// or icon equivalent.
+    pub fn colorize_string<S>(input: S) -> String
+        where
+            S: Into<String>,
+    {
+        let input = input.into();
+        let mut output = input.clone();
+
+        for key in KeyList::new(&input) {
+            output = output.replace(key.contents(), &key.to_string());
+        }
+
+        output
+    }
 }
+
 
 #[cfg(test)]
 mod tests {
-    use super::{cleanup_key, colorize_string};
+    use super::*;
 
     macro_rules! replacement {
         ($key:ident, $code:expr) => {
@@ -83,7 +62,7 @@ mod tests {
                 let c = format!("\x1B[{}m", $code);
 
                 let s = format!("has: {:<20} -> {}Test string", n, k);
-                let parsed = colorize_string(s);
+                let parsed = Formatter::colorize_string(s);
 
                 // Just to see all the cool colors
                 println!("{}", parsed);
@@ -139,7 +118,7 @@ mod tests {
         let c = format!("\x1B[{}m", 0);
 
         let s = format!("{}Test string", k);
-        let parsed = colorize_string(s);
+        let parsed = Formatter::colorize_string(s);
 
         assert!(!parsed.contains(&k));
         assert!(parsed.contains(&c));
@@ -148,18 +127,9 @@ mod tests {
     #[test]
     fn normal_tags() {
         let s = String::from("<html> This is normal stuff </html>");
-        let parsed = colorize_string(s);
+        let parsed = Formatter::colorize_string(s);
 
         // Make sure its still in there
         assert!(parsed.contains("<html>"));
-    }
-
-    #[test]
-    fn cleanup() {
-        let color = "<on_bright-green>";
-
-        let clean = cleanup_key(color);
-
-        assert_eq!("on bright green", clean);
     }
 }

@@ -6,6 +6,7 @@ use std::thread;
 use std::time::Duration;
 
 use crate::output;
+use crate::formatter::Formatter;
 
 #[allow(missing_docs)]
 pub struct Logger {
@@ -14,6 +15,7 @@ pub struct Logger {
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
+    formatter: Formatter
 }
 
 impl Default for Logger {
@@ -24,6 +26,7 @@ impl Default for Logger {
             loading_handle: None,
 
             line_ending: String::from("\n"),
+            formatter: Formatter::new()
         }
     }
 }
@@ -254,6 +257,19 @@ impl Logger {
         self
     }
 
+    pub fn add_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Logger {
+        let colors: String = colors
+            .iter()
+            .map(|color| {
+                format!("<{}>", color)
+            })
+            .collect();
+
+        self.formatter.add_style(key, &colors);
+
+        self
+    }
+
     /// Output to stdout, add timestamps or on the same line
     fn stdout<T>(&mut self, message: T) -> &mut Logger
     where
@@ -329,6 +345,12 @@ mod tests {
 
         logger.info("Reset the line");
         assert_eq!(logger.line_ending, String::from("\n"));
+    }
+
+    #[test]
+    fn add_styles() {
+        let mut logger = Logger::new();
+        logger.add_style("lmao", vec!["ayaya", "yayay"]);
     }
 
     #[test]

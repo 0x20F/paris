@@ -1,3 +1,5 @@
+use super::key::Key;
+
 pub struct KeyList<'a> {
     input: &'a str,
 }
@@ -9,7 +11,7 @@ impl<'a> KeyList<'a> {
 }
 
 impl<'a> Iterator for KeyList<'a> {
-    type Item = &'a str;
+    type Item = Key<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
         let mut key = None;
@@ -26,7 +28,7 @@ impl<'a> Iterator for KeyList<'a> {
                 .unwrap_or_default();
 
             // +1 to get the last '>' that's excluded
-            key = Some(&self.input[..(rest + 1)]);
+            key = Some(Key::new(&self.input[..(rest + 1)]));
             self.input = &self.input[(rest + 1)..];
         }
 
