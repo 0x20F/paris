@@ -23,10 +23,6 @@ impl Formatter {
         Self { custom_styles: Vec::with_capacity(1) }
     }
 
-    pub fn add_style(&mut self, key: &str, colors: Vec<String>) {
-        self.custom_styles.push(CustomStyle::new(key, colors));
-    }
-
     /// Finds all keys in the given input. Keys meaning
     /// whatever the logger uses. Something that looks like `<key>`.
     /// And replaces all those keys with their color, style
@@ -39,10 +35,14 @@ impl Formatter {
         let mut output = input.clone();
 
         for key in KeyList::new(&input) {
-            output = output.replace(key.contents(), &key.to_string());
+            output = output.replace(&key.to_string(), &key.to_ansi());
         }
 
         output
+    }
+
+    pub fn add_style(&mut self, key: &str, colors: Vec<String>) {
+        self.custom_styles.push(CustomStyle::new(key, colors));
     }
 }
 

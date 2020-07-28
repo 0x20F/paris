@@ -35,6 +35,24 @@ impl<'a> Key<'a> {
         LogIcon::from_key(&self.clean)
     }
 
+    pub fn to_ansi(&self) -> String {
+        let mut content: String = self.contents().to_owned();
+
+        if let Some(c) = self.as_color() {
+            content = c;
+        }
+
+        if let Some(s) = self.as_style() {
+            content = s;
+        }
+
+        if let Some(i) = self.as_icon() {
+            content = i;
+        }
+
+        content
+    }
+
     /// Removes characters that can be used instead
     /// of spaces from a key if the key doesn't already
     /// contain spaces
@@ -59,21 +77,7 @@ impl<'a> Key<'a> {
 
 impl Display for Key<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        let mut content: String = self.contents().to_owned();
-
-        if let Some(c) = self.as_color() {
-            content = c;
-        }
-
-        if let Some(s) = self.as_style() {
-            content = s;
-        }
-
-        if let Some(i) = self.as_icon() {
-            content = i;
-        }
-
-        write!(f, "{}", content)
+        write!(f, "{}", self.contents)
     }
 }
 
