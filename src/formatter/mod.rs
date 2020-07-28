@@ -46,7 +46,7 @@ mod tests {
                 let c = format!("\x1B[{}m", $code);
 
                 let s = format!("has: {:<20} -> {}Test string", n, k);
-                let parsed = Formatter::colorize_string(s);
+                let parsed = colorize_string(s);
 
                 // Just to see all the cool colors
                 println!("{}", parsed);
@@ -102,7 +102,7 @@ mod tests {
         let c = format!("\x1B[{}m", 0);
 
         let s = format!("{}Test string", k);
-        let parsed = Formatter::colorize_string(s);
+        let parsed = colorize_string(s);
 
         assert!(!parsed.contains(&k));
         assert!(parsed.contains(&c));
@@ -111,7 +111,7 @@ mod tests {
     #[test]
     fn normal_tags() {
         let s = String::from("<html> This is normal stuff </html>");
-        let parsed = Formatter::colorize_string(s);
+        let parsed = colorize_string(s);
 
         // Make sure its still in there
         assert!(parsed.contains("<html>"));
