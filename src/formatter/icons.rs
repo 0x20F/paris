@@ -6,7 +6,7 @@
 //! in log strings on the other hand. So you can't
 //! write `<info>` in a string and expect it to
 //! be replaced with the info icon.
-use super::concerns::FromKey;
+use super::keys::FromKey;
 use std::fmt::{Display, Formatter, Result as DisplayResult};
 use std::str::FromStr;
 

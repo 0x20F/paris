@@ -1,4 +1,4 @@
-use crate::formatter::concerns::FromKey;
+use crate::formatter::keys::FromKey;
 use crate::formatter::color::Color;
 use crate::formatter::style::Style;
 use crate::formatter::icons::LogIcon;
