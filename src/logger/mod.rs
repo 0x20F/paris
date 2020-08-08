@@ -10,6 +10,7 @@ use std::time::Duration;
 use crate::output;
 use custom::CustomStyle;
 use crate::formatter::Formatter;
+use crate::output::{Stdout, Stderr};
 
 #[allow(missing_docs)]
 pub struct Logger {
@@ -18,9 +19,6 @@ pub struct Logger {
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
-
-    styles: Vec<CustomStyle>,
-    formatter: Formatter,
 }
 
 impl Default for Logger {
@@ -31,8 +29,6 @@ impl Default for Logger {
             loading_handle: None,
 
             line_ending: String::from("\n"),
-            styles: Vec::with_capacity(1),
-            formatter: Formatter::new()
         }
     }
 }
@@ -206,7 +202,7 @@ impl Logger {
 
                 let message = format!("\r<cyan>{}</> {}", frames[i], &thread_message);
 
-                output::stdout(message, "");
+                Stdout::write(message, "");
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
@@ -263,22 +259,6 @@ impl Logger {
         self
     }
 
-    ///
-    pub fn add_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Logger {
-        let colors: Vec<String> = colors
-            .iter()
-            .map(|color| {
-                format!("<{}>", color)
-            })
-            .collect();
-
-        self.styles.push(
-            CustomStyle::new(key, colors)
-        );
-
-        self
-    }
-
     /// Output to stdout, add timestamps or on the same line
     fn stdout<T>(&mut self, message: T) -> &mut Logger
     where
@@ -290,7 +270,7 @@ impl Logger {
         let keys = Formatter::get_keys(&message);
         let colorized = Formatter::colorize(&message, keys);
 
-        output::stdout(colorized, &self.get_line_ending());
+        Stdout::write(colorized, &self.get_line_ending());
         self
     }
 
@@ -305,7 +285,7 @@ impl Logger {
         let keys = Formatter::get_keys(&message);
         let colorized = Formatter::colorize(&message, keys);
 
-        output::stderr(colorized, &self.get_line_ending());
+        Stderr::write(colorized, &self.get_line_ending());
         self
     }
 
@@ -364,12 +344,6 @@ mod tests {
 
         logger.info("Reset the line");
         assert_eq!(logger.line_ending, String::from("\n"));
-    }
-
-    #[test]
-    fn add_styles() {
-        let mut logger = Logger::new();
-        logger.add_style("lmao", vec!["ayaya", "yayay"]);
     }
 
     #[test]

@@ -33,21 +33,6 @@ impl Formatter {
 
         output
     }
-
-    // For logger disabled
-    /*pub fn colorize_string<S>(input: S) -> String
-        where
-            S: Into<String>,
-    {
-        let input = input.into();
-        let mut output = input.clone();
-
-        for key in KeyList::new(&input) {
-            output = output.replace(&key.to_string(), &key.to_ansi());
-        }
-
-        output
-    }*/
 }
 
 
