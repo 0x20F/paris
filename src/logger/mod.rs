@@ -10,7 +10,7 @@ use std::time::Duration;
 use crate::output;
 use custom::CustomStyle;
 use crate::formatter::Formatter;
-use crate::output::{Stdout, Stderr};
+use crate::output::{Stdout, Stderr, Writer};
 
 #[allow(missing_docs)]
 pub struct Logger {

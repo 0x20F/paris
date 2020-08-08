@@ -23,7 +23,7 @@ pub trait Timestamp {
     }
 }
 
-pub trait Write {
+pub trait Writer {
     fn write<T>(message: T, line_ending: &str)
         where
             T: Display;
