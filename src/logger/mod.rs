@@ -7,7 +7,6 @@ use std::time::Duration;
 
 use crate::output;
 use crate::formatter::Formatter;
-use crate::output::{Stdout, Stderr, Writer};
 
 #[allow(missing_docs)]
 pub struct Logger {
@@ -16,6 +15,7 @@ pub struct Logger {
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
+    formatter: Formatter,
 }
 
 impl Default for Logger {
@@ -26,6 +26,7 @@ impl Default for Logger {
             loading_handle: None,
 
             line_ending: String::from("\n"),
+            formatter: Formatter::new()
         }
     }
 }
@@ -199,7 +200,7 @@ impl Logger {
 
                 let message = format!("\r<cyan>{}</> {}", frames[i], &thread_message);
 
-                Stdout::write(message, "");
+                output::stdout(message, "");
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
@@ -264,10 +265,10 @@ impl Logger {
         self.done();
         let message = message.to_string();
 
-        let formatter = Formatter::new();
-        let colorized = formatter.colorize(&message);
-
-        Stdout::write(colorized, &self.get_line_ending());
+        output::stdout(
+            self.formatter.colorize(&message),
+            &self.get_line_ending()
+        );
         self
     }
 
@@ -279,10 +280,10 @@ impl Logger {
         self.done();
         let message = message.to_string();
 
-        let formatter = Formatter::new();
-        let colorized = formatter.colorize(&message);
-
-        Stderr::write(colorized, &self.get_line_ending());
+        output::stderr(
+            self.formatter.colorize(&message),
+            &self.get_line_ending()
+        );
         self
     }
 

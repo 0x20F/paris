@@ -93,12 +93,4 @@ mod tests {
 
         assert_eq!("on bright green", clean);
     }
-
-    #[test]
-    fn custom() {
-        let custom = "<one>";
-        let key = Key::new(custom);
-
-        let cus = CustomStyle::new("one", vec!["aye", "aye"]);
-    }
 }

@@ -1,30 +1,36 @@
 //!
 //! TODO: This
 //!
-
-mod stdout;
-mod stderr;
-
-pub use stdout::Stdout;
-pub use stderr::Stderr;
 use std::fmt::Display;
+use crate::formatter;
 
 
-pub trait Timestamp {
-    fn current_time() -> String {
-        let mut timestamp = String::new();
+fn current_time() -> String {
+    let mut timestamp = String::new();
 
-        #[cfg(feature = "timestamps")]
-        {
-            timestamp = crate::timestamp::now();
-        }
-
-        timestamp
+    #[cfg(feature = "timestamps")]
+    {
+        timestamp = crate::timestamp::now();
     }
+
+    timestamp
 }
 
-pub trait Writer {
-    fn write<T>(message: T, line_ending: &str)
-        where
-            T: Display;
+
+pub fn stdout<T>(message: T, line_ending: &str)
+    where
+        T: Display
+{
+    let timestamp = current_time();
+    let message = format!("{}{}{}", timestamp, message, line_ending);
+    print!("{}", message);
+}
+
+pub fn stderr<T>(message: T, line_ending: &str)
+    where
+        T: Display
+{
+    let timestamp = current_time();
+    let message = format!("{}{}{}", timestamp, message, line_ending);
+    eprint!("{}", message);
 }
