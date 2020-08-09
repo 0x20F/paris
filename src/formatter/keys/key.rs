@@ -3,7 +3,6 @@ use crate::formatter::color::Color;
 use crate::formatter::style::Style;
 use crate::formatter::icons::LogIcon;
 use std::fmt::{Display, Formatter, Result};
-use crate::formatter::custom::CustomStyle;
 
 
 pub struct Key<'a> {

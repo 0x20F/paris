@@ -6,18 +6,24 @@ mod concerns;
 mod icons;
 mod style;
 mod keys;
+
+#[cfg(not(feature = "no_logger"))]
 mod custom;
 
 use keys::{Key, KeyList};
+
+#[cfg(not(feature = "no_logger"))]
 use custom::CustomStyle;
 
 pub use icons::LogIcon;
 
 // TODO: Things in here should only exist if logger is enabled
+#[cfg(not(feature = "no_logger"))]
 pub struct Formatter {
     custom_styles: Vec<CustomStyle>
 }
 
+#[cfg(not(feature = "no_logger"))]
 impl Formatter {
     pub fn new() -> Self {
         Self {
@@ -165,6 +171,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(not(feature = "no_logger"))]
     fn custom_style() {
         let s = String::from("<custom> This has custom styles <lol> Here's some blue shit yoooo </>");
 

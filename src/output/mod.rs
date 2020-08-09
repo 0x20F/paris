@@ -17,6 +17,7 @@ fn current_time() -> String {
 }
 
 
+#[cfg(not(feature = "no_logger"))]
 pub fn stdout<T>(message: T, line_ending: &str)
     where
         T: Display
@@ -26,6 +27,7 @@ pub fn stdout<T>(message: T, line_ending: &str)
     print!("{}", message);
 }
 
+#[cfg(not(feature = "no_logger"))]
 pub fn stderr<T>(message: T, line_ending: &str)
     where
         T: Display
@@ -35,6 +37,8 @@ pub fn stderr<T>(message: T, line_ending: &str)
     eprint!("{}", message);
 }
 
+// TODO: These should only exist if they're needed
+#[cfg(feature = "macros")]
 pub fn format_stdout<T>(message: T, line_ending: &str)
     where
         T: Display
@@ -44,6 +48,7 @@ pub fn format_stdout<T>(message: T, line_ending: &str)
     print!("{}", formatter::colorize_string(message));
 }
 
+#[cfg(feature = "macros")]
 pub fn format_stderr<T>(message: T, line_ending: &str)
     where
         T: Display
