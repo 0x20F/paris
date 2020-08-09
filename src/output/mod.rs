@@ -37,7 +37,6 @@ pub fn stderr<T>(message: T, line_ending: &str)
     eprint!("{}", message);
 }
 
-// TODO: These should only exist if they're needed
 #[cfg(feature = "macros")]
 pub fn format_stdout<T>(message: T, line_ending: &str)
     where

@@ -17,7 +17,7 @@ use custom::CustomStyle;
 
 pub use icons::LogIcon;
 
-// TODO: Things in here should only exist if logger is enabled
+
 #[cfg(not(feature = "no_logger"))]
 pub struct Formatter {
     custom_styles: Vec<CustomStyle>
