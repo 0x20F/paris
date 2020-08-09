@@ -5,8 +5,8 @@ use std::sync::{Arc, RwLock};
 use std::thread;
 use std::time::Duration;
 
-use crate::output;
 use crate::formatter::Formatter;
+use crate::output;
 
 #[allow(missing_docs)]
 pub struct Logger {
@@ -26,7 +26,7 @@ impl Default for Logger {
             loading_handle: None,
 
             line_ending: String::from("\n"),
-            formatter: Formatter::new()
+            formatter: Formatter::new(),
         }
     }
 }
@@ -270,10 +270,7 @@ impl Logger {
         self.done();
         let message = message.to_string();
 
-        output::stdout(
-            self.formatter.colorize(&message),
-            &self.get_line_ending()
-        );
+        output::stdout(self.formatter.colorize(&message), &self.get_line_ending());
         self
     }
 
@@ -285,10 +282,7 @@ impl Logger {
         self.done();
         let message = message.to_string();
 
-        output::stderr(
-            self.formatter.colorize(&message),
-            &self.get_line_ending()
-        );
+        output::stderr(self.formatter.colorize(&message), &self.get_line_ending());
         self
     }
 

@@ -4,8 +4,8 @@
 mod color;
 mod concerns;
 mod icons;
-mod style;
 mod keys;
+mod style;
 
 #[cfg(not(feature = "no_logger"))]
 mod custom;
@@ -16,16 +16,17 @@ use keys::{Key, KeyList};
 
 pub use icons::LogIcon;
 
-
 #[cfg(not(feature = "no_logger"))]
 pub struct Formatter {
-    custom_styles: Vec<CustomStyle>
+    custom_styles: Vec<CustomStyle>,
 }
 
 #[cfg(not(feature = "no_logger"))]
 impl Default for Formatter {
     fn default() -> Self {
-        Self { custom_styles: vec![] }
+        Self {
+            custom_styles: vec![],
+        }
     }
 }
 
@@ -36,9 +37,7 @@ impl Formatter {
     }
 
     pub fn new_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Formatter {
-        self.custom_styles.push(
-            CustomStyle::new(key, colors)
-        );
+        self.custom_styles.push(CustomStyle::new(key, colors));
 
         self
     }
@@ -69,14 +68,13 @@ impl Formatter {
     }
 }
 
-
 /// Finds all keys in the given input. Keys meaning
 /// whatever the logger uses. Something that looks like `<key>`.
 /// And replaces all those keys with their color, style
 /// or icon equivalent.
 pub fn colorize_string<S>(input: S) -> String
-    where
-        S: Into<String>,
+where
+    S: Into<String>,
 {
     let input = input.into();
     let mut output = input.clone();
@@ -87,8 +85,6 @@ pub fn colorize_string<S>(input: S) -> String
 
     output
 }
-
-
 
 #[cfg(test)]
 mod tests {
@@ -178,11 +174,11 @@ mod tests {
     #[test]
     #[cfg(not(feature = "no_logger"))]
     fn custom_style() {
-        let s = String::from("<custom> This has custom styles <lol> Here's some blue shit yoooo </>");
+        let s =
+            String::from("<custom> This has custom styles <lol> Here's some blue shit yoooo </>");
 
         let mut fmt = Formatter::new();
-        fmt
-            .new_style("custom", vec!["red", "on-green"])
+        fmt.new_style("custom", vec!["red", "on-green"])
             .new_style("lol", vec!["cyan", "on-blue"]);
 
         let parsed = fmt.colorize(&s);

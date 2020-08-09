@@ -6,7 +6,6 @@ use std::fmt::Display;
 #[cfg(feature = "macros")]
 use crate::formatter;
 
-
 fn current_time() -> String {
     #[cfg(feature = "timestamps")]
     {
@@ -19,11 +18,10 @@ fn current_time() -> String {
     }
 }
 
-
 #[cfg(not(feature = "no_logger"))]
 pub fn stdout<T>(message: T, line_ending: &str)
-    where
-        T: Display
+where
+    T: Display,
 {
     let timestamp = current_time();
     let message = format!("{}{}{}", timestamp, message, line_ending);
@@ -32,8 +30,8 @@ pub fn stdout<T>(message: T, line_ending: &str)
 
 #[cfg(not(feature = "no_logger"))]
 pub fn stderr<T>(message: T, line_ending: &str)
-    where
-        T: Display
+where
+    T: Display,
 {
     let timestamp = current_time();
     let message = format!("{}{}{}", timestamp, message, line_ending);
@@ -42,8 +40,8 @@ pub fn stderr<T>(message: T, line_ending: &str)
 
 #[cfg(feature = "macros")]
 pub fn format_stdout<T>(message: T, line_ending: &str)
-    where
-        T: Display
+where
+    T: Display,
 {
     let timestamp = current_time();
     let message = format!("{}{}{}", timestamp, message, line_ending);
@@ -52,8 +50,8 @@ pub fn format_stdout<T>(message: T, line_ending: &str)
 
 #[cfg(feature = "macros")]
 pub fn format_stderr<T>(message: T, line_ending: &str)
-    where
-        T: Display
+where
+    T: Display,
 {
     let timestamp = current_time();
     let message = format!("{}{}{}", timestamp, message, line_ending);

@@ -1,7 +1,7 @@
+mod from_key;
 mod key;
 mod key_list;
-mod from_key;
 
+pub use from_key::FromKey;
 pub use key::Key;
 pub use key_list::KeyList;
-pub use from_key::FromKey;

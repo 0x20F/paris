@@ -1,20 +1,19 @@
-use crate::formatter::keys::FromKey;
 use crate::formatter::color::Color;
-use crate::formatter::style::Style;
 use crate::formatter::icons::LogIcon;
+use crate::formatter::keys::FromKey;
+use crate::formatter::style::Style;
 use std::fmt::{Display, Formatter, Result};
-
 
 pub struct Key<'a> {
     contents: &'a str,
-    clean: String
+    clean: String,
 }
 
 impl<'a> Key<'a> {
     pub fn new(value: &'a str) -> Self {
         Self {
             contents: value,
-            clean: Self::clean(value)
+            clean: Self::clean(value),
         }
     }
 
