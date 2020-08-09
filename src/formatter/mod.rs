@@ -9,11 +9,10 @@ mod keys;
 
 #[cfg(not(feature = "no_logger"))]
 mod custom;
-
-use keys::{Key, KeyList};
-
 #[cfg(not(feature = "no_logger"))]
 use custom::CustomStyle;
+
+use keys::{Key, KeyList};
 
 pub use icons::LogIcon;
 
@@ -31,13 +30,14 @@ impl Formatter {
         }
     }
 
-    pub fn new_style(&mut self, key: &str, colors: Vec<&str>) {
+    pub fn new_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Formatter {
         self.custom_styles.push(
             CustomStyle::new(key, colors)
         );
+
+        self
     }
 
-    // For logger enabled
     pub fn colorize(&self, input: &str) -> String {
         let mut output = input.to_string();
 
@@ -176,10 +176,13 @@ mod tests {
         let s = String::from("<custom> This has custom styles <lol> Here's some blue shit yoooo </>");
 
         let mut fmt = Formatter::new();
-        fmt.new_style("custom", vec!["red", "on-green"]);
-        fmt.new_style("lol", vec!["cyan", "on-blue"]);
+        fmt
+            .new_style("custom", vec!["red", "on-green"])
+            .new_style("lol", vec!["cyan", "on-blue"]);
+
         let parsed = fmt.colorize(&s);
 
-        println!("Parsed is: {}", parsed);
+        assert!(!parsed.contains("<custom>"));
+        assert!(!parsed.contains("<lol>"));
     }
 }
