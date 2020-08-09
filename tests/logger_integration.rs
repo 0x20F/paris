@@ -8,6 +8,15 @@ use paris::LogIcon;
 
 #[test]
 #[cfg(not(feature = "no_logger"))]
+fn add_custom_styles() {
+    let mut logger = Logger::new();
+    logger.add_style("lol", vec!["green", "bold", "on_blue"]);
+
+    logger.log("<lol>This is custom colored</>");
+}
+
+#[test]
+#[cfg(not(feature = "no_logger"))]
 fn log() {
     let mut logger = Logger::new();
     logger.log("This is the most basic of texts.");
