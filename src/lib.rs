@@ -33,26 +33,6 @@
 //!
 //! See [the Logger struct](https://docs.rs/paris/) for all methods
 //!
-//! ### Macros
-//! With the macros feature enabled, you get access to macro equivalents
-//! of the logger functions.
-//!
-//! Advantages of using macros:
-//! * You don't have to instantiate the logger `Logger::new()`
-//! * Simple to write
-//! * Can format parameters like `print!` and `println!`
-//!
-//! Disadvantages of using macros:
-//! * Can't chain calls
-//! * Manual newlines and tabs with `\n` and `\t`
-//! * There's no loading animation for macros
-//!
-//! You get to decide whether you want to use macros or not.
-//! Every macro has the same functionality as its `Logger`
-//! equivalent. Colors and icon keys work just the same.
-//!
-//! See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
-//!
 //!
 //! # Chaining
 //! All methods can be chained together to build more intricate
@@ -105,6 +85,19 @@
 //!     log.info("<blue><on-bright-red> This text is blue on a bright red background</> it's a pain");
 //!     # }
 //!
+//! If you feel like writing a lot of colors by hand is too tedious, or if you know you're going
+//! to be using the same combination of colors over and over again you can create a `custom style`
+//! that encapsulates all those colors.
+//!
+//!     # #[cfg(not(feature = "no_logger"))] {
+//!     # use paris::Logger;
+//!     # let mut log = Logger::new();
+//!     log.add_style("lol", vec!["green", "bold", "on-bright-blue"]);
+//!
+//!     // '<lol>' is now a key that you can use in your strings
+//!     log.info("<lol>This is has all your new styles</>");
+//!     # }
+//!
 //! See [the README](https://github.com/SirTheViking/logger/blob/master/README.md) for a full list of keys
 //! if you're not feeling confident in your ability to name colors. It happens.
 //!
@@ -119,6 +112,26 @@
 
 //! * `<///>` only resets the background
 //! * `<//>` only reset the foreground
+//!
+//! ### Macros
+//! With the macros feature enabled, you get access to macro equivalents
+//! of the logger functions.
+//!
+//! Advantages of using macros:
+//! * You don't have to instantiate the logger `Logger::new()`
+//! * Simple to write
+//! * Can format parameters like `print!` and `println!`
+//!
+//! Disadvantages of using macros:
+//! * Can't chain calls
+//! * Manual newlines and tabs with `\n` and `\t`
+//! * There's no loading animation for macros
+//!
+//! You get to decide whether you want to use macros or not.
+//! Every macro has the same functionality as its `Logger`
+//! equivalent. Colors and icon keys work just the same.
+//!
+//! See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
 #![warn(missing_docs)]
 
 #[cfg(feature = "timestamps")]
