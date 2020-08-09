@@ -34,3 +34,21 @@ pub fn stderr<T>(message: T, line_ending: &str)
     let message = format!("{}{}{}", timestamp, message, line_ending);
     eprint!("{}", message);
 }
+
+pub fn format_stdout<T>(message: T, line_ending: &str)
+    where
+        T: Display
+{
+    let timestamp = current_time();
+    let message = format!("{}{}{}", timestamp, message, line_ending);
+    print!("{}", formatter::colorize_string(message));
+}
+
+pub fn format_stderr<T>(message: T, line_ending: &str)
+    where
+        T: Display
+{
+    let timestamp = current_time();
+    let message = format!("{}{}{}", timestamp, message, line_ending);
+    eprint!("{}", formatter::colorize_string(message));
+}

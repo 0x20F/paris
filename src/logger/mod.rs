@@ -257,6 +257,11 @@ impl Logger {
         self
     }
 
+    pub fn add_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Logger {
+        self.formatter.new_style(key, colors);
+        self
+    }
+
     /// Output to stdout, add timestamps or on the same line
     fn stdout<T>(&mut self, message: T) -> &mut Logger
     where
@@ -357,5 +362,12 @@ mod tests {
             .log("A basic log eh")
             .indent(2)
             .info("If it didn't crash it's fine");
+    }
+
+    #[test]
+    fn add_style_works() {
+        let mut logger = Logger::new();
+
+        logger.add_style("lmao", vec!["red", "on-green"]);
     }
 }
