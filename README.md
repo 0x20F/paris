@@ -6,7 +6,7 @@
 <p align="center">
    <img alt="Build status badge" src="https://github.com/0x20F/paris/workflows/build/badge.svg"/>
    <img alt="Crates io badge" src="https://img.shields.io/crates/v/paris.svg"/>
-   <a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License badge" src="https://img.shields.io/badge/License-GPLv3-blue.svg"/></a>
+   <a href="https://www.gnu.org/licenses/mit"><img alt="License badge" src="https://img.shields.io/badge/License-MIT-blue.svg"/></a>
 </p>
 
 
