@@ -16,6 +16,11 @@ use keys::{Key, KeyList};
 
 pub use icons::LogIcon;
 
+/// Heavier formatter that allows the possibility of
+/// custom styles in strings. That is the only reason
+/// this struct exists, if you don't need custom things
+/// just use the `colorize_string()` function provided
+/// in the module.
 #[cfg(not(feature = "no_logger"))]
 pub struct Formatter {
     custom_styles: Vec<CustomStyle>,
@@ -32,16 +37,33 @@ impl Default for Formatter {
 
 #[cfg(not(feature = "no_logger"))]
 impl Formatter {
+    /// Create a new formatter with no custom styles defined
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// Tell the formatter that you want a new style
+    /// and what colors that style equates to so it knows
+    /// what to replace it with when formatting
+    ///
+    /// # Example
+    /// ```
+    /// use paris::formatter::Formatter;
+    ///
+    /// let mut fmt = Formatter::new();
+    /// fmt.new_style("lol", vec!["green", "bold", "on_blue"]);
+    ///
+    /// // '<lol>' is now a key that can be used in strings
     pub fn new_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Formatter {
         self.custom_styles.push(CustomStyle::new(key, colors));
 
         self
     }
 
+    /// Finds all keys in the given input. Keys meaning
+    /// whatever the logger uses. Something that looks like `<key>`.
+    /// And replaces all those keys with their color, style
+    /// or icon equivalent.
     pub fn colorize(&self, input: &str) -> String {
         let mut output = input.to_string();
 
@@ -57,6 +79,7 @@ impl Formatter {
         output
     }
 
+    /// Convert a key to a custom style if they match
     fn as_style(&self, key: &Key) -> Option<&CustomStyle> {
         for style in self.custom_styles.iter() {
             if style.key() == key.contents() {
@@ -72,6 +95,8 @@ impl Formatter {
 /// whatever the logger uses. Something that looks like `<key>`.
 /// And replaces all those keys with their color, style
 /// or icon equivalent.
+///
+/// #### This function does not take into account custom styles, you need the struct for that
 pub fn colorize_string<S>(input: S) -> String
 where
     S: Into<String>,

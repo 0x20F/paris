@@ -257,6 +257,18 @@ impl Logger {
         self
     }
 
+    /// Add a custom key to the available list of keys
+    ///
+    /// # Example
+    /// ```
+    /// # use paris::Logger;
+    /// # let mut logger = Logger::new();
+    ///
+    /// logger.add_style("lol", vec!["green", "bold", "on_blue"]);
+    ///
+    /// // '<lol>' can now be used as a key in strings and will contain
+    /// // the defined colors and styles
+    /// logger.info("<lol>much shorter than writing all of them</>");
     pub fn add_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Logger {
         self.formatter.new_style(key, colors);
         self
