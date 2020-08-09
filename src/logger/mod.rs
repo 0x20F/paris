@@ -185,9 +185,10 @@ impl Logger {
         drop(status); // Release the lock so a mutable can be returned
 
         let status = self.is_loading.clone();
-        let thread_message = message.to_string();
+        let message = self.formatter.colorize(&message.to_string());
 
-        self.loading_message = message.to_string();
+        let thread_message = message.clone();
+        self.loading_message = message;
 
         self.loading_handle = Some(thread::spawn(move || {
             let frames: [&str; 6] = ["⠦", "⠇", "⠋", "⠙", "⠸", "⠴"];
@@ -199,8 +200,7 @@ impl Logger {
                 }
 
                 let message = format!("\r<cyan>{}</> {}", frames[i], &thread_message);
-
-                output::stdout(message, "");
+                output::stdout(crate::formatter::colorize_string(message), "");
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
