@@ -72,26 +72,6 @@ error!("Will add ✖ at the start");
 ###### See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
 
 
-### Macros
-With the macros feature enabled, you get access to macro equivalents
-of the logger functions.
-
-Advantages of using macros:
-* You don't have to instantiate the logger `Logger::new()`
-* Simple to write
-* Can format parameters like `print!` and `println!`
-
-Disadvantages of using macros:
-* Can't chain calls
-* Manual newlines and tabs with `\n` and `\t`
-* There's no loading animation for macros
-
-You get to decide whether you want to use macros or not.
-Every macro has the same functionality as its `Logger`
-equivalent. Colors and icon keys work just the same.
-###### See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
-
-
 ### Chaining
 All methods can be chained together to build more intricate
 log/message combinations, in hopes of minimizing the chaos
@@ -132,6 +112,16 @@ you just have to add `bright` to your tag. Makes sense.
 log.info("<blue><on-bright-red> This text is blue on a bright red background</> it's a pain");
 ```
 
+If you feel like writing a lot of colors by hand is too tedious, or if you know you're going
+to be using the same combination of colors over and over again you can create a `custom style`
+that encapsulates all those colors.
+```rust
+log.add_style("lol", vec!["green", "bold", "on-bright-blue"]);
+
+// '<lol>' is now a key that you can use in your strings
+log.info("<lol>This is has all your new styles</>");
+```
+
 ###### Scroll down for a full list of keys if you're not feeling confident in your ability to name colors. It happens.
 
 
@@ -146,6 +136,26 @@ it'll be enough, but for those times when it isn't there are a few other tags su
 
 * `<///>` only resets the background
 * `<//>` only reset the foreground
+
+
+### Macros
+With the macros feature enabled, you get access to macro equivalents
+of the logger functions.
+
+Advantages of using macros:
+* You don't have to instantiate the logger `Logger::new()`
+* Simple to write
+* Can format parameters like `print!` and `println!`
+
+Disadvantages of using macros:
+* Can't chain calls
+* Manual newlines and tabs with `\n` and `\t`
+* There's no loading animation for macros
+
+You get to decide whether you want to use macros or not.
+Every macro has the same functionality as its `Logger`
+equivalent. Colors and icon keys work just the same.
+###### See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
 
 
 ## Color keys
