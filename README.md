@@ -18,7 +18,7 @@
 ## How to use
 ```toml
 [dependencies]
-paris = "1.4"
+paris = "1.5"
 ```
 
 ```rust
