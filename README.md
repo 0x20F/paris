@@ -38,7 +38,7 @@ have to enable the feature when adding the crate as a dependency.
 Notice: This will also include `chrono` as a dependency.
 ```toml
 [dependencies]
-paris = { version = "1.4", features = ["timestamps"] }
+paris = { version = "1.5", features = ["timestamps"] }
 ```
 
 ##### Macros
@@ -46,7 +46,7 @@ Every common function has a macro. To make use of these
 macros you'll need to enable the macros feature.
 ```toml
 [dependencies]
-paris = { version = "1.4", features = ["macros"] }
+paris = { version = "1.5", features = ["macros"] }
 ```
 
 ##### No logger
@@ -55,7 +55,7 @@ the `Logger` struct included in your package, that's definitely possible!
 All you need to do is enable the `no_logger` feature.
 ```toml
 [dependencies]
-paris = { version = "1.4", features = ["no_logger"] }
+paris = { version = "1.5", features = ["no_logger"] }
 ```
 
 
