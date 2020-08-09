@@ -6,11 +6,11 @@ use crate::formatter;
 
 
 fn current_time() -> String {
-    let mut timestamp = String::new();
+    let timestamp = String::new();
 
     #[cfg(feature = "timestamps")]
     {
-        timestamp = crate::timestamp::now();
+        let timestamp = crate::timestamp::now();
     }
 
     timestamp
