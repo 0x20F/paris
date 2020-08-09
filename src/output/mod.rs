@@ -1,6 +1,7 @@
 //! Helper functions for writing to stdout/stderr
 //!
 //! Some can format, some cannot
+#[cfg(any(feature = "macros", not(feature = "no_logger")))]
 use std::fmt::Display;
 
 #[cfg(feature = "macros")]
@@ -8,6 +9,7 @@ use crate::formatter;
 
 /// Gets the current timestamp or empty string
 /// based on whether timestamps feature is enabled
+#[cfg(any(feature = "macros", not(feature = "no_logger")))]
 fn current_time() -> String {
     #[cfg(feature = "timestamps")]
     {

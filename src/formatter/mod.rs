@@ -11,8 +11,10 @@ mod style;
 mod custom;
 #[cfg(not(feature = "no_logger"))]
 use custom::CustomStyle;
+#[cfg(not(feature = "no_logger"))]
+use keys::Key;
 
-use keys::{Key, KeyList};
+use keys::KeyList;
 
 pub use icons::LogIcon;
 
