@@ -2,13 +2,18 @@
 use paris::Logger;
 
 #[cfg(feature = "macros")]
-use paris::{ info, success, error, warn };
+use paris::{error, info, success, warn};
 
 use paris::LogIcon;
 
+#[test]
+#[cfg(not(feature = "no_logger"))]
+fn add_custom_styles() {
+    let mut logger = Logger::new();
+    logger.add_style("lol", vec!["green", "bold", "on_blue"]);
 
-
-
+    logger.log("<lol>This is custom colored</>");
+}
 
 #[test]
 #[cfg(not(feature = "no_logger"))]
@@ -16,10 +21,6 @@ fn log() {
     let mut logger = Logger::new();
     logger.log("This is the most basic of texts.");
 }
-
-
-
-
 
 #[test]
 #[cfg(not(feature = "no_logger"))]
@@ -34,10 +35,6 @@ fn info_macro() {
     info!("This is some info from a macro");
 }
 
-
-
-
-
 #[test]
 #[cfg(not(feature = "no_logger"))]
 fn success() {
@@ -50,10 +47,6 @@ fn success() {
 fn success_macro() {
     success!("This is some success from a macro");
 }
-
-
-
-
 
 #[test]
 #[cfg(not(feature = "no_logger"))]
@@ -68,10 +61,6 @@ fn error_macro() {
     error!("This is an error from the macro");
 }
 
-
-
-
-
 #[test]
 #[cfg(not(feature = "no_logger"))]
 fn warning() {
@@ -85,10 +74,6 @@ fn warning_macro() {
     warn!("This is a warning from the macro!");
 }
 
-
-
-
-
 #[test]
 #[cfg(not(feature = "no_logger"))]
 fn loading() {
@@ -101,15 +86,11 @@ fn loading() {
     logger.done().error("Failed parsing another 500 files");
 }
 
-
-
-
-
 #[test]
 fn icons() {
     println!(
-        "{} All {} Of {} Them {} At {} Once", 
-        LogIcon::Info, 
+        "{} All {} Of {} Them {} At {} Once",
+        LogIcon::Info,
         LogIcon::Tick,
         LogIcon::Cross,
         LogIcon::Warning,

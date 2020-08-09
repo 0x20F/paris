@@ -1,88 +1,121 @@
 //! A wrapper around a few functions to make
 //! finding and replacing keys inside a string easier.
 
-
 mod color;
-mod style;
-mod icons;
 mod concerns;
+mod icons;
+mod keys;
+mod style;
 
-use concerns::{ FromKey, KeyList };
-use color::Color;
-use style::Style;
+#[cfg(not(feature = "no_logger"))]
+mod custom;
+#[cfg(not(feature = "no_logger"))]
+use custom::CustomStyle;
+#[cfg(not(feature = "no_logger"))]
+use keys::Key;
+
+use keys::KeyList;
 
 pub use icons::LogIcon;
 
+/// Heavier formatter that allows the possibility of
+/// custom styles in strings. That is the only reason
+/// this struct exists, if you don't need custom things
+/// just use the `colorize_string()` function provided
+/// in the module.
+#[cfg(not(feature = "no_logger"))]
+pub struct Formatter {
+    custom_styles: Vec<CustomStyle>,
+}
 
+#[cfg(not(feature = "no_logger"))]
+impl Default for Formatter {
+    fn default() -> Self {
+        Self {
+            custom_styles: vec![],
+        }
+    }
+}
+
+#[cfg(not(feature = "no_logger"))]
+impl Formatter {
+    /// Create a new formatter with no custom styles defined
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Tell the formatter that you want a new style
+    /// and what colors that style equates to so it knows
+    /// what to replace it with when formatting
+    ///
+    /// # Example
+    /// ```
+    /// use paris::formatter::Formatter;
+    ///
+    /// let mut fmt = Formatter::new();
+    /// fmt.new_style("lol", vec!["green", "bold", "on_blue"]);
+    ///
+    /// // '<lol>' is now a key that can be used in strings
+    pub fn new_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Formatter {
+        self.custom_styles.push(CustomStyle::new(key, colors));
+
+        self
+    }
+
+    /// Finds all keys in the given input. Keys meaning
+    /// whatever the logger uses. Something that looks like `<key>`.
+    /// And replaces all those keys with their color, style
+    /// or icon equivalent.
+    pub fn colorize(&self, input: &str) -> String {
+        let mut output = input.to_string();
+
+        for key in KeyList::new(&input) {
+            if let Some(style) = self.as_style(&key) {
+                let ansi = style.expand();
+                output = output.replace(&key.to_string(), &ansi);
+            }
+
+            output = output.replace(&key.to_string(), &key.to_ansi());
+        }
+
+        output
+    }
+
+    /// Convert a key to a custom style if they match
+    fn as_style(&self, key: &Key) -> Option<&CustomStyle> {
+        for style in self.custom_styles.iter() {
+            if style.key() == key.contents() {
+                return Some(style);
+            }
+        }
+
+        None
+    }
+}
 
 /// Finds all keys in the given input. Keys meaning
 /// whatever the logger uses. Something that looks like `<key>`.
 /// And replaces all those keys with their color, style
 /// or icon equivalent.
+///
+/// #### This function does not take into account custom styles, you need the struct for that
 pub fn colorize_string<S>(input: S) -> String
-    where S: Into<String>
+where
+    S: Into<String>,
 {
     let input = input.into();
     let mut output = input.clone();
 
     for key in KeyList::new(&input) {
-        let color_key = cleanup_key(key);
-
-        let c = Color::from_key(&color_key);
-        if let Some(c) = c {
-            output = output.replace(key, &c);
-            continue;
-        }
-
-
-        let s = Style::from_key(&color_key);
-        if let Some(c) = s {
-            output = output.replace(key, &c);
-            continue;
-        }
-
-
-        let i = LogIcon::from_key(&color_key);
-        if let Some(i) = i {
-            output = output.replace(key, &i);
-            continue;
-        }
+        output = output.replace(&key.to_string(), &key.to_ansi());
     }
 
     output
 }
 
-
-/// Removes characters that can be used instead
-/// of spaces from a key if the key doesn't already
-/// contain spaces
-fn cleanup_key(key: &str) -> String {
-    let key = key.trim_matches(|c| c == '<' || c == '>');
-
-    // If key already contains space, its already
-    // intended or a typo
-    if key.contains(' ') {
-        return key.to_string();
-    }
-
-    key.chars()
-        .map(|c| match c {
-            '_' => ' ',
-            '-' => ' ',
-            _ => c
-        }).collect()
-}
-
-
-
-
-
-
-
 #[cfg(test)]
 mod tests {
-    use super::{ colorize_string, cleanup_key };
-
+    use super::*;
 
     macro_rules! replacement {
         ($key:ident, $code:expr) => {
@@ -166,11 +199,18 @@ mod tests {
     }
 
     #[test]
-    fn cleanup() {
-        let color = "<on_bright-green>";
+    #[cfg(not(feature = "no_logger"))]
+    fn custom_style() {
+        let s =
+            String::from("<custom> This has custom styles <lol> Here's some blue shit yoooo </>");
 
-        let clean = cleanup_key(color);
+        let mut fmt = Formatter::new();
+        fmt.new_style("custom", vec!["red", "on-green"])
+            .new_style("lol", vec!["cyan", "on-blue"]);
 
-        assert_eq!("on bright green", clean);
+        let parsed = fmt.colorize(&s);
+
+        assert!(!parsed.contains("<custom>"));
+        assert!(!parsed.contains("<lol>"));
     }
 }

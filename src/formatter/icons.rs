@@ -6,10 +6,9 @@
 //! in log strings on the other hand. So you can't
 //! write `<info>` in a string and expect it to
 //! be replaced with the info icon.
+use super::keys::FromKey;
+use std::fmt::{Display, Formatter, Result as DisplayResult};
 use std::str::FromStr;
-use std::fmt::{ Display, Formatter, Result as DisplayResult };
-use super::concerns::FromKey;
-
 
 /// Contains definitions for icons that can be
 /// used in the terminal. See [this github repo](https://github.com/sindresorhus/figures)
@@ -63,15 +62,12 @@ pub enum LogIcon {
     /// ```
     Heart,
 
-
     /// No icon. Empty string. Nada.
     /// This is here to return something
     /// for the parser when it doesn't match
     /// any given keys
-    None
+    None,
 }
-
-
 
 impl LogIcon {
     /// Match the enum value and return the equivalent icon.
@@ -84,12 +80,10 @@ impl LogIcon {
             LogIcon::Warning => "⚠",
             LogIcon::Tick => "✔",
             LogIcon::Heart => "♥",
-            LogIcon::None => ""
+            LogIcon::None => "",
         }
     }
 }
-
-
 
 impl Display for LogIcon {
     fn fmt(&self, f: &mut Formatter<'_>) -> DisplayResult {
@@ -97,15 +91,11 @@ impl Display for LogIcon {
     }
 }
 
-
-
 impl<'a> From<&'a str> for LogIcon {
     fn from(s: &'a str) -> Self {
         s.parse().unwrap_or(LogIcon::None)
     }
 }
-
-
 
 impl FromStr for LogIcon {
     type Err = ();
@@ -119,12 +109,10 @@ impl FromStr for LogIcon {
             "warn" => Ok(LogIcon::Warning),
             "tick" => Ok(LogIcon::Tick),
             "heart" => Ok(LogIcon::Heart),
-            _ => Err(())
+            _ => Err(()),
         }
     }
 }
-
-
 
 impl FromKey for LogIcon {
     fn from_key(key: &str) -> Option<String> {
@@ -132,14 +120,10 @@ impl FromKey for LogIcon {
 
         match i {
             LogIcon::None => None,
-            _ => Some(i.to_string())
+            _ => Some(i.to_string()),
         }
     }
 }
-
-
-
-
 
 #[cfg(test)]
 mod tests {
@@ -156,7 +140,6 @@ mod tests {
             }
         };
     }
-
 
     icon_test!(tick, "✔");
     icon_test!(cross, "✖");

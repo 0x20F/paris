@@ -18,7 +18,7 @@
 ## How to use
 ```toml
 [dependencies]
-paris = "1.4"
+paris = "1.5"
 ```
 
 ```rust
@@ -38,7 +38,7 @@ have to enable the feature when adding the crate as a dependency.
 Notice: This will also include `chrono` as a dependency.
 ```toml
 [dependencies]
-paris = { version = "1.4", features = ["timestamps"] }
+paris = { version = "1.5", features = ["timestamps"] }
 ```
 
 ##### Macros
@@ -46,7 +46,7 @@ Every common function has a macro. To make use of these
 macros you'll need to enable the macros feature.
 ```toml
 [dependencies]
-paris = { version = "1.4", features = ["macros"] }
+paris = { version = "1.5", features = ["macros"] }
 ```
 
 ##### No logger
@@ -55,7 +55,7 @@ the `Logger` struct included in your package, that's definitely possible!
 All you need to do is enable the `no_logger` feature.
 ```toml
 [dependencies]
-paris = { version = "1.4", features = ["no_logger"] }
+paris = { version = "1.5", features = ["no_logger"] }
 ```
 
 
@@ -69,26 +69,6 @@ log.error("Will add ✖ at the start");
 info!("Will add ℹ at the start");
 error!("Will add ✖ at the start");
 ```
-###### See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
-
-
-### Macros
-With the macros feature enabled, you get access to macro equivalents
-of the logger functions.
-
-Advantages of using macros:
-* You don't have to instantiate the logger `Logger::new()`
-* Simple to write
-* Can format parameters like `print!` and `println!`
-
-Disadvantages of using macros:
-* Can't chain calls
-* Manual newlines and tabs with `\n` and `\t`
-* There's no loading animation for macros
-
-You get to decide whether you want to use macros or not.
-Every macro has the same functionality as its `Logger`
-equivalent. Colors and icon keys work just the same.
 ###### See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
 
 
@@ -113,23 +93,33 @@ Included in the crate are a variety of keys you can use
 to colorize your logs just the way you want them to be.
 ```rust
 log.info("I can write normal text or use tags to <red>color it</>");
-log.warn("Every function can contain <on green><black>tags</>");
+log.warn("Every function can contain <on-green><black>tags</>");
 
 log.info("If you don't write them <bleu>correctly</>, you just get an ugly looking tag");
 ```
 
 There's a key for all colors supported by the terminal `(white, black, red, blue, magenta, etc.)`
 If you add the word `on` to any of those colors, it becomes the
-background color instead `(on red, on blue, on green)`.
+background color instead `(on-red, on-blue, on-green)`.
 ```rust
 // How useful...
-log.info("<on red> This has red background </>");
+log.info("<on-red> This has red background</>");
 ```
 
 Maybe you'd like to use your terminals brighter colors, if that's the case
 you just have to add `bright` to your tag. Makes sense.
 ```rust
-log.info("<blue><on bright red> This text is blue on a bright red background</> it's a pain");
+log.info("<blue><on-bright-red> This text is blue on a bright red background</> it's a pain");
+```
+
+If you feel like writing a lot of colors by hand is too tedious, or if you know you're going
+to be using the same combination of colors over and over again you can create a `custom style`
+that encapsulates all those colors.
+```rust
+log.add_style("lol", vec!["green", "bold", "on-bright-blue"]);
+
+// '<lol>' is now a key that you can use in your strings
+log.info("<lol>This is has all your new styles</>");
 ```
 
 ###### Scroll down for a full list of keys if you're not feeling confident in your ability to name colors. It happens.
@@ -148,24 +138,44 @@ it'll be enough, but for those times when it isn't there are a few other tags su
 * `<//>` only reset the foreground
 
 
+### Macros
+With the macros feature enabled, you get access to macro equivalents
+of the logger functions.
+
+Advantages of using macros:
+* You don't have to instantiate the logger `Logger::new()`
+* Simple to write
+* Can format parameters like `print!` and `println!`
+
+Disadvantages of using macros:
+* Can't chain calls
+* Manual newlines and tabs with `\n` and `\t`
+* There's no loading animation for macros
+
+You get to decide whether you want to use macros or not.
+Every macro has the same functionality as its `Logger`
+equivalent. Colors and icon keys work just the same.
+###### See [the Logger struct](https://docs.rs/paris/) for all methods and their macro equivalents
+
+
 ## Color keys
-To use a key just add the color name surrounded by `<`, `>` to your log string. Include spaces
-or use underlines(`_`) or dashes(`-`) instead if you wish.
+To use a key just add the color name surrounded by `<`, `>` to your log string. If you don't like the dashes(`-`),
+you can use underlines(`_`) or spaces(` `)
 
 #### Foreground
 `black`, `red`, `green`, `yellow`, `blue`, `cyan`, `magenta`, `white`
 
 ##### Bright
-`bright black`, `bright red`, `bright green`, `bright yellow`, `bright blue`, `bright cyan`, `bright magenta`,
- `bright white`
+`bright-black`, `bright-red`, `bright-green`, `bright-yellow`, `bright-blue`, `bright-cyan`, `bright-magenta`,
+ `bright-white`
 
 
 #### Background
-`on black`, `on red`, `on green`, `on yellow`, `on blue`, `on cyan`, `on magenta`, `on white`
+`on-black`, `on-red`, `on-green`, `on-yellow`, `on-blue`, `on-cyan`, `on-magenta`, `on-white`
 
 ##### Bright
-`on bright black`, `on bright red`, `on bright green`, `on bright yellow`, `on bright blue`, `on bright cyan`, 
-`on bright magenta`, `on bright white`
+`on-bright-black`, `on-bright-red`, `on-bright-green`, `on-bright-yellow`, `on-bright-blue`, `on-bright-cyan`, 
+`on-bright-magenta`, `on-bright-white`
 
 #### Styles
 `bold`(`b`), `underline`(`u`), `dimmed`(`d`), `italic`(`i`)

@@ -11,10 +11,9 @@
 #[macro_export]
 macro_rules! log {
     ($($arg:tt)*) => {
-        $crate::output::stdout(format!($($arg)*), "\n");
+        $crate::output::format_stdout(format!($($arg)*), "\n");
     }
 }
-
 
 /// Adds an info icon to the log message,
 /// then writes to `stdout`.
@@ -28,10 +27,9 @@ macro_rules! log {
 #[macro_export]
 macro_rules! info {
     ($($arg:tt)*) => {
-        $crate::output::stdout(format!("<cyan><info></> {}", format!($($arg)*)), "\n");
+        $crate::output::format_stdout(format!("<cyan><info></> {}", format!($($arg)*)), "\n");
     }
 }
-
 
 /// Adds an error icon to the log message,
 /// then writes to `stderr`.
@@ -45,10 +43,9 @@ macro_rules! info {
 #[macro_export]
 macro_rules! error {
     ($($arg:tt)*) => {
-        $crate::output::stderr(format!("<red><cross></> {}", format!($($arg)*)), "\n");
+        $crate::output::format_stderr(format!("<red><cross></> {}", format!($($arg)*)), "\n");
     }
 }
-
 
 /// Adds a warning icon to the log message,
 /// then writes to `stdout`.
@@ -62,10 +59,9 @@ macro_rules! error {
 #[macro_export]
 macro_rules! warn {
     ($($arg:tt)*) => {
-        $crate::output::stdout(format!("<yellow><warn></> {}", format!($($arg)*)), "\n");
+        $crate::output::format_stdout(format!("<yellow><warn></> {}", format!($($arg)*)), "\n");
     }
 }
-
 
 /// Adds a success icon to the log message,
 /// then writes to `stdout`.
@@ -79,29 +75,29 @@ macro_rules! warn {
 #[macro_export]
 macro_rules! success {
     ($($arg:tt)*) => {
-        $crate::output::stdout(format!("<green><tick></> {}", format!($($arg)*)), "\n");
+        $crate::output::format_stdout(format!("<green><tick></> {}", format!($($arg)*)), "\n");
     }
 }
-
-
-
-
-
 
 #[cfg(test)]
 mod tests {
     #[test]
     fn macros() {
         log!("This <cyan>is <bright green>a log<//>!");
-        info!("<red>HAHAHAHAHA<///> <black><on green>{}</>", "the crate supports macros with colors!");
+        info!(
+            "<red>HAHAHAHAHA<///> <black><on green>{}</>",
+            "the crate supports macros with colors!"
+        );
         error!("This is going to <bright red>stderr</> {}", "WOOOO");
         warn!("This is a {} <yellow>BEWARE</>!", "warning");
         success!("{} went well, congrats!", "<bright green>Everything</>");
 
-
         match "a" {
-            "a" => log!("It works inside a match as well!!! {}", "<bright blue>finally</>"),
-            _ => unreachable!()
+            "a" => log!(
+                "It works inside a match as well!!! {}",
+                "<bright blue>finally</>"
+            ),
+            _ => unreachable!(),
         }
     }
 }

@@ -1,14 +1,12 @@
 use std::fmt::Display;
+use std::io;
+use std::io::prelude::*;
+use std::sync::{Arc, RwLock};
 use std::thread;
 use std::time::Duration;
-use std::sync::{ Arc, RwLock };
-use std::io::prelude::*;
-use std::io;
 
+use crate::formatter::Formatter;
 use crate::output;
-
-
-
 
 #[allow(missing_docs)]
 pub struct Logger {
@@ -16,24 +14,22 @@ pub struct Logger {
     loading_message: String,
     loading_handle: Option<thread::JoinHandle<()>>,
 
-    line_ending: String
+    line_ending: String,
+    formatter: Formatter,
 }
-
-
 
 impl Default for Logger {
     fn default() -> Self {
         Self {
-            is_loading      : Arc::new(RwLock::new(false)),
-            loading_message : String::from(""),
-            loading_handle  : None,
+            is_loading: Arc::new(RwLock::new(false)),
+            loading_message: String::from(""),
+            loading_handle: None,
 
-            line_ending     : String::from("\n")
+            line_ending: String::from("\n"),
+            formatter: Formatter::new(),
         }
     }
 }
-
-
 
 impl Logger {
     /// Initializes a new logger
@@ -46,8 +42,6 @@ impl Logger {
     pub fn new() -> Self {
         Self::default()
     }
-
-
 
     /// Prints to stdout with no bells and whistles. I does however
     /// add a timestamp if enabled.
@@ -65,8 +59,6 @@ impl Logger {
         self.stdout(message)
     }
 
-
-
     /// Prints to stdout and adds some info flair to the text
     ///
     /// # Example
@@ -80,8 +72,6 @@ impl Logger {
     pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stdout(format!("<cyan><info></> {}", message))
     }
-
-
 
     /// Prints to stdout and adds some success flair to text
     ///
@@ -97,8 +87,6 @@ impl Logger {
         self.stdout(format!("<green><tick></> {}", message))
     }
 
-
-
     /// Prints to stdout and adds some warning flare to text
     ///
     /// # Example
@@ -113,8 +101,6 @@ impl Logger {
         self.stdout(format!("<yellow><warn></> {}", message))
     }
 
-
-
     /// Prints to stderr and adds some error flare to text
     ///
     /// # Example
@@ -128,8 +114,6 @@ impl Logger {
     pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
         self.stderr(format!("<red><cross></> {}", message))
     }
-
-
 
     /// Prints a specified amount of newlines to stdout
     ///
@@ -149,8 +133,6 @@ impl Logger {
         self
     }
 
-
-
     /// Prints a specified amount of tabs to stdout
     ///
     /// # Example
@@ -167,8 +149,6 @@ impl Logger {
         print!("{}", "\t".repeat(amount));
         self
     }
-
-
 
     /// Starts a loading animation with the given message.
     ///
@@ -218,11 +198,7 @@ impl Logger {
                     i = 0;
                 }
 
-                let message = format!(
-                    "\r<cyan>{}</> {}",
-                    frames[i],
-                    &thread_message
-                );
+                let message = format!("\r<cyan>{}</> {}", frames[i], &thread_message);
 
                 output::stdout(message, "");
                 io::stdout().flush().unwrap();
@@ -235,8 +211,6 @@ impl Logger {
 
         self
     }
-
-
 
     /// Stops the loading animation and clears the line so you can print something else
     /// when loading is done, maybe a success message. All other methods (success, warning, error, etc.)
@@ -253,8 +227,10 @@ impl Logger {
         drop(status); // Release the lock so a mutable can be returned
 
         self.loading_handle
-            .take().expect("Called stop on a non-existing thread")
-            .join().expect("Could not join spawned thread");
+            .take()
+            .expect("Called stop on a non-existing thread")
+            .join()
+            .expect("Could not join spawned thread");
 
         let clearing_length = self.loading_message.len() + 5;
         print!("\r{}\r", " ".repeat(clearing_length));
@@ -262,8 +238,6 @@ impl Logger {
 
         self
     }
-
-
 
     /// Forces the next statement to not output a newline
     ///
@@ -283,37 +257,52 @@ impl Logger {
         self
     }
 
-
+    /// Add a custom key to the available list of keys
+    ///
+    /// # Example
+    /// ```
+    /// # use paris::Logger;
+    /// # let mut logger = Logger::new();
+    ///
+    /// logger.add_style("lol", vec!["green", "bold", "on_blue"]);
+    ///
+    /// // '<lol>' can now be used as a key in strings and will contain
+    /// // the defined colors and styles
+    /// logger.info("<lol>much shorter than writing all of them</>");
+    pub fn add_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Logger {
+        self.formatter.new_style(key, colors);
+        self
+    }
 
     /// Output to stdout, add timestamps or on the same line
     fn stdout<T>(&mut self, message: T) -> &mut Logger
-        where T: Display
+    where
+        T: Display,
     {
         self.done();
-        output::stdout(message, &self.get_line_ending());
+        let message = message.to_string();
+
+        output::stdout(self.formatter.colorize(&message), &self.get_line_ending());
         self
     }
-
-
 
     /// Output to stderr, add timestamps or write on the same line
     fn stderr<T>(&mut self, message: T) -> &mut Logger
-        where T: Display
+    where
+        T: Display,
     {
         self.done();
-        output::stderr(message, &self.get_line_ending());
+        let message = message.to_string();
+
+        output::stderr(self.formatter.colorize(&message), &self.get_line_ending());
         self
     }
-
-
 
     /// Sets line ending to something specific
     /// mostly \n for now
     fn set_line_ending<T: Into<String>>(&mut self, ending: T) {
         self.line_ending = ending.into();
     }
-
-
 
     /// Return line ending based on whats already set
     /// set it back to newline if its not already
@@ -330,18 +319,10 @@ impl Logger {
     }
 }
 
-
-
-
-
-
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::{time::Duration, thread};
-
+    use std::{thread, time::Duration};
 
     #[test]
     fn loading() {
@@ -350,7 +331,6 @@ mod tests {
         thread::sleep(Duration::from_secs(1));
         logger.done().success("Done loading!");
 
-
         logger.info("About to load again");
         logger
             .loading("Loading something else")
@@ -358,12 +338,12 @@ mod tests {
             .error("Done loading instantly lol");
     }
 
-
     #[test]
     fn same() {
         let mut logger = Logger::new();
         logger
-            .same().success("This is on one line")
+            .same()
+            .success("This is on one line")
             .indent(1)
             .info("This is on the same line!!!")
             .error("But this one isn't");
@@ -374,7 +354,6 @@ mod tests {
         logger.info("Reset the line");
         assert_eq!(logger.line_ending, String::from("\n"));
     }
-
 
     #[test]
     fn it_works() {
@@ -389,5 +368,12 @@ mod tests {
             .log("A basic log eh")
             .indent(2)
             .info("If it didn't crash it's fine");
+    }
+
+    #[test]
+    fn add_style_works() {
+        let mut logger = Logger::new();
+
+        logger.add_style("lmao", vec!["red", "on-green"]);
     }
 }

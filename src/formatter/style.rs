@@ -1,6 +1,6 @@
-use super::concerns::{ Ansi, FromKey };
+use super::concerns::Ansi;
+use super::keys::FromKey;
 use std::str::FromStr;
-
 
 pub enum Style {
     Bold,
@@ -15,10 +15,8 @@ pub enum Style {
     Dimmed,
     DimmedReset,
 
-    None
+    None,
 }
-
-
 
 impl Style {
     pub fn get_value(&self) -> u8 {
@@ -35,20 +33,16 @@ impl Style {
             Style::Underline => 4,
             Style::UnderlineReset => 24,
 
-            Style::None => 0
+            Style::None => 0,
         }
     }
 }
-
-
 
 impl<'a> From<&'a str> for Style {
     fn from(s: &'a str) -> Self {
         s.parse().unwrap_or(Style::None)
     }
 }
-
-
 
 impl FromStr for Style {
     type Err = ();
@@ -61,7 +55,7 @@ impl FromStr for Style {
             "/bold" | "/b" => Ok(Style::BoldReset),
 
             "dimmed" | "d" => Ok(Style::Dimmed),
-            "/dimmed"| "/d" => Ok(Style::DimmedReset),
+            "/dimmed" | "/d" => Ok(Style::DimmedReset),
 
             "italic" | "i" => Ok(Style::Italic),
             "/italic" | "/i" => Ok(Style::ItalicReset),
@@ -69,12 +63,10 @@ impl FromStr for Style {
             "underline" | "u" => Ok(Style::Underline),
             "/underline" | "/u" => Ok(Style::UnderlineReset),
 
-            _ => Err(())
+            _ => Err(()),
         }
     }
 }
-
-
 
 impl FromKey for Style {
     fn from_key(key: &str) -> Option<String> {
@@ -82,7 +74,7 @@ impl FromKey for Style {
 
         match s {
             Style::None => None,
-            _ => Some(Ansi::escape(s.get_value()))
+            _ => Some(Ansi::escape(s.get_value())),
         }
     }
 }

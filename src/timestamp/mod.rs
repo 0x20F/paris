@@ -1,7 +1,6 @@
 extern crate chrono;
 
-use chrono::{ Timelike, Utc };
-
+use chrono::{Timelike, Utc};
 
 pub fn now() -> String {
     let now = Utc::now();
@@ -16,5 +15,5 @@ pub fn now() -> String {
         if is_pm { "PM" } else { "AM" }
     );
 
-    stamp
+    crate::formatter::colorize_string(stamp)
 }
