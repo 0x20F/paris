@@ -1,4 +1,4 @@
-use crate::formatter::keys::{FromKey, Key};
+use crate::formatter::keys::Key;
 
 pub struct CustomStyle {
     key: String,
@@ -9,7 +9,7 @@ impl CustomStyle {
     pub fn new(key: &str, colors: Vec<&str>) -> Self {
         Self {
             key: format!("<{}>", key),
-            colors: colors.iter().map(|s| s.to_string()).collect()
+            colors: colors.iter().map(|s| (*s).to_string()).collect()
         }
     }
 

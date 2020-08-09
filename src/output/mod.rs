@@ -2,18 +2,21 @@
 //! TODO: This
 //!
 use std::fmt::Display;
+
+#[cfg(feature = "macros")]
 use crate::formatter;
 
 
 fn current_time() -> String {
-    let timestamp = String::new();
-
     #[cfg(feature = "timestamps")]
     {
-        let timestamp = crate::timestamp::now();
+        crate::timestamp::now()
     }
 
-    timestamp
+    #[cfg(not(eature = "timestamps"))]
+    {
+        String::new()
+    }
 }
 
 

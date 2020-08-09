@@ -23,11 +23,16 @@ pub struct Formatter {
 }
 
 #[cfg(not(feature = "no_logger"))]
+impl Default for Formatter {
+    fn default() -> Self {
+        Self { custom_styles: vec![] }
+    }
+}
+
+#[cfg(not(feature = "no_logger"))]
 impl Formatter {
     pub fn new() -> Self {
-        Self {
-            custom_styles: vec![]
-        }
+        Self::default()
     }
 
     pub fn new_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Formatter {
