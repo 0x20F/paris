@@ -198,7 +198,11 @@ impl Logger {
                     i = 0;
                 }
 
-                let message = format!("\r<cyan>{}</> {}", frames[i], &thread_message);
+                // This should call the formatter::colorize() method
+                // but we don't have access to self in this thread.
+                // Instead, just hardcode it as cyan (36)
+                let message = format!("\r\x1B[36m{} {}", frames[i], &thread_message);
+                
 
                 output::stdout(message, "");
                 io::stdout().flush().unwrap();
