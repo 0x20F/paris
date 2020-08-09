@@ -6,32 +6,55 @@ mod concerns;
 mod icons;
 mod style;
 mod keys;
+mod custom;
 
 use keys::{Key, KeyList};
+use custom::CustomStyle;
 
 pub use icons::LogIcon;
 
-
-pub struct Formatter {}
+// TODO: Things in here should only exist if logger is enabled
+pub struct Formatter {
+    custom_styles: Vec<CustomStyle>
+}
 
 impl Formatter {
     pub fn new() -> Self {
-        Self {}
+        Self {
+            custom_styles: vec![]
+        }
     }
 
-    pub fn get_keys(input: &str) -> KeyList {
-        KeyList::new(input)
+    pub fn new_style(&mut self, key: &str, colors: Vec<&str>) {
+        self.custom_styles.push(
+            CustomStyle::new(key, colors)
+        );
     }
 
     // For logger enabled
-    pub fn colorize(input: &str, keys: KeyList) -> String {
-        let mut output = input.to_owned();
+    pub fn colorize(&self, input: &str) -> String {
+        let mut output = input.to_string();
 
-        for key in keys {
+        for key in KeyList::new(&input) {
+            if let Some(style) = self.as_style(&key) {
+                let ansi = style.expand();
+                output = output.replace(&key.to_string(), &ansi);
+            }
+
             output = output.replace(&key.to_string(), &key.to_ansi());
         }
 
         output
+    }
+
+    fn as_style(&self, key: &Key) -> Option<&CustomStyle> {
+        for style in self.custom_styles.iter() {
+            if style.key() == key.contents() {
+                return Some(style);
+            }
+        }
+
+        None
     }
 }
 
@@ -139,5 +162,17 @@ mod tests {
 
         // Make sure its still in there
         assert!(parsed.contains("<html>"));
+    }
+
+    #[test]
+    fn custom_style() {
+        let s = String::from("<custom> This has custom styles <lol> Here's some blue shit yoooo </>");
+
+        let mut fmt = Formatter::new();
+        fmt.new_style("custom", vec!["red", "on-green"]);
+        fmt.new_style("lol", vec!["cyan", "on-blue"]);
+        let parsed = fmt.colorize(&s);
+
+        println!("Parsed is: {}", parsed);
     }
 }

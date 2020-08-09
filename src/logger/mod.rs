@@ -1,5 +1,3 @@
-mod custom;
-
 use std::fmt::Display;
 use std::io;
 use std::io::prelude::*;
@@ -8,7 +6,6 @@ use std::thread;
 use std::time::Duration;
 
 use crate::output;
-use custom::CustomStyle;
 use crate::formatter::Formatter;
 use crate::output::{Stdout, Stderr, Writer};
 
@@ -267,8 +264,8 @@ impl Logger {
         self.done();
         let message = message.to_string();
 
-        let keys = Formatter::get_keys(&message);
-        let colorized = Formatter::colorize(&message, keys);
+        let formatter = Formatter::new();
+        let colorized = formatter.colorize(&message);
 
         Stdout::write(colorized, &self.get_line_ending());
         self
@@ -282,8 +279,8 @@ impl Logger {
         self.done();
         let message = message.to_string();
 
-        let keys = Formatter::get_keys(&message);
-        let colorized = Formatter::colorize(&message, keys);
+        let formatter = Formatter::new();
+        let colorized = formatter.colorize(&message);
 
         Stderr::write(colorized, &self.get_line_ending());
         self

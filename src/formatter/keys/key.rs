@@ -3,6 +3,7 @@ use crate::formatter::color::Color;
 use crate::formatter::style::Style;
 use crate::formatter::icons::LogIcon;
 use std::fmt::{Display, Formatter, Result};
+use crate::formatter::custom::CustomStyle;
 
 
 pub struct Key<'a> {
@@ -91,5 +92,13 @@ mod tests {
         let clean = Key::clean(color);
 
         assert_eq!("on bright green", clean);
+    }
+
+    #[test]
+    fn custom() {
+        let custom = "<one>";
+        let key = Key::new(custom);
+
+        let cus = CustomStyle::new("one", vec!["aye", "aye"]);
     }
 }
