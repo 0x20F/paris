@@ -14,7 +14,7 @@ categories = ["command-line-interface", "command-line-utilities"]
 
 description = "A simple logger for your CLI apps or other things you want in the terminal"
 
-license = "MIT"
+license = "MIT OR Apache-2.0"
 
 exclude = [
     "example/*",
