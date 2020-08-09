@@ -15,5 +15,5 @@ pub fn now() -> String {
         if is_pm { "PM" } else { "AM" }
     );
 
-    stamp
+    crate::formatter::colorize_string(stamp)
 }

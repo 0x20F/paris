@@ -1,52 +1,67 @@
+//! Helper functions for writing to stdout/stderr
 //!
-//!
-//! Contains helper functions for outputting to
-//! `stdout` and `stderr`.
-//!
-#[cfg(feature = "timestamps")]
-use crate::timestamp;
-
-use crate::formatter;
+//! Some can format, some cannot
+#[cfg(any(feature = "macros", not(feature = "no_logger")))]
 use std::fmt::Display;
 
-/// Basically print! without all the argument formatting.
-/// It does however replace keys with their respective color
-/// codes and adds timestamps if feature is enabled.
+#[cfg(feature = "macros")]
+use crate::formatter;
+
+/// Gets the current timestamp or empty string
+/// based on whether timestamps feature is enabled
+#[cfg(any(feature = "macros", not(feature = "no_logger")))]
+fn current_time() -> String {
+    #[cfg(feature = "timestamps")]
+    {
+        crate::timestamp::now()
+    }
+
+    #[cfg(not(feature = "timestamps"))]
+    {
+        String::new()
+    }
+}
+
+/// Writes to stdout without replacing keys
+#[cfg(not(feature = "no_logger"))]
 pub fn stdout<T>(message: T, line_ending: &str)
 where
     T: Display,
 {
-    #[cfg(feature = "timestamps")]
-    {
-        let timestamp = timestamp::now();
-        let message = format!("{}{}{}", timestamp, message, line_ending);
-        print!("{}", formatter::colorize_string(message));
-    }
-
-    #[cfg(not(feature = "timestamps"))]
-    {
-        let message = format!("{}{}", message, line_ending);
-        print!("{}", formatter::colorize_string(message));
-    }
+    let timestamp = current_time();
+    let message = format!("{}{}{}", timestamp, message, line_ending);
+    print!("{}", message);
 }
 
-/// Basically eprint! without all the argument formatting.
-/// It does however replace keys with their respective color
-/// codes and adds timestamps if feature is enabled.
+/// Writes to stderr without replacing keys
+#[cfg(not(feature = "no_logger"))]
 pub fn stderr<T>(message: T, line_ending: &str)
 where
     T: Display,
 {
-    #[cfg(feature = "timestamps")]
-    {
-        let timestamp = timestamp::now();
-        let message = format!("{}{}{}", timestamp, message, line_ending);
-        eprint!("{}", formatter::colorize_string(message));
-    }
+    let timestamp = current_time();
+    let message = format!("{}{}{}", timestamp, message, line_ending);
+    eprint!("{}", message);
+}
 
-    #[cfg(not(feature = "timestamps"))]
-    {
-        let message = format!("{}{}", message, line_ending);
-        eprint!("{}", formatter::colorize_string(message));
-    }
+/// Writes to stdout and replaces keys inside the given string
+#[cfg(feature = "macros")]
+pub fn format_stdout<T>(message: T, line_ending: &str)
+where
+    T: Display,
+{
+    let timestamp = current_time();
+    let message = format!("{}{}{}", timestamp, message, line_ending);
+    print!("{}", formatter::colorize_string(message));
+}
+
+/// Writes to stderr and replaces keys inside the given string
+#[cfg(feature = "macros")]
+pub fn format_stderr<T>(message: T, line_ending: &str)
+where
+    T: Display,
+{
+    let timestamp = current_time();
+    let message = format!("{}{}{}", timestamp, message, line_ending);
+    eprint!("{}", formatter::colorize_string(message));
 }

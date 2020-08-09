@@ -5,6 +5,7 @@ use std::sync::{Arc, RwLock};
 use std::thread;
 use std::time::Duration;
 
+use crate::formatter::Formatter;
 use crate::output;
 
 #[allow(missing_docs)]
@@ -14,6 +15,7 @@ pub struct Logger {
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
+    formatter: Formatter,
 }
 
 impl Default for Logger {
@@ -24,6 +26,7 @@ impl Default for Logger {
             loading_handle: None,
 
             line_ending: String::from("\n"),
+            formatter: Formatter::new(),
         }
     }
 }
@@ -254,13 +257,32 @@ impl Logger {
         self
     }
 
+    /// Add a custom key to the available list of keys
+    ///
+    /// # Example
+    /// ```
+    /// # use paris::Logger;
+    /// # let mut logger = Logger::new();
+    ///
+    /// logger.add_style("lol", vec!["green", "bold", "on_blue"]);
+    ///
+    /// // '<lol>' can now be used as a key in strings and will contain
+    /// // the defined colors and styles
+    /// logger.info("<lol>much shorter than writing all of them</>");
+    pub fn add_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Logger {
+        self.formatter.new_style(key, colors);
+        self
+    }
+
     /// Output to stdout, add timestamps or on the same line
     fn stdout<T>(&mut self, message: T) -> &mut Logger
     where
         T: Display,
     {
         self.done();
-        output::stdout(message, &self.get_line_ending());
+        let message = message.to_string();
+
+        output::stdout(self.formatter.colorize(&message), &self.get_line_ending());
         self
     }
 
@@ -270,7 +292,9 @@ impl Logger {
         T: Display,
     {
         self.done();
-        output::stderr(message, &self.get_line_ending());
+        let message = message.to_string();
+
+        output::stderr(self.formatter.colorize(&message), &self.get_line_ending());
         self
     }
 
@@ -344,5 +368,12 @@ mod tests {
             .log("A basic log eh")
             .indent(2)
             .info("If it didn't crash it's fine");
+    }
+
+    #[test]
+    fn add_style_works() {
+        let mut logger = Logger::new();
+
+        logger.add_style("lmao", vec!["red", "on-green"]);
     }
 }

@@ -1,4 +1,5 @@
-use super::concerns::{Ansi, FromKey};
+use super::concerns::Ansi;
+use super::keys::FromKey;
 use std::str::FromStr;
 
 pub enum Style {
