@@ -5,7 +5,7 @@ use std::sync::{Arc, RwLock};
 use std::thread;
 use std::time::Duration;
 
-use crate::formatter::Formatter;
+use crate::formatter::{Formatter, colorize_string};
 use crate::output;
 
 #[allow(missing_docs)]
@@ -200,7 +200,7 @@ impl Logger {
                 }
 
                 let message = format!("\r<cyan>{}</> {}", frames[i], &thread_message);
-                output::stdout(crate::formatter::colorize_string(message), "");
+                output::stdout(colorize_string(message), "");
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
@@ -232,7 +232,7 @@ impl Logger {
             .join()
             .expect("Could not join spawned thread");
 
-        let clearing_length = self.loading_message.len() + 5;
+        let clearing_length = self.loading_message.len();
         print!("\r{}\r", " ".repeat(clearing_length));
         io::stdout().flush().unwrap();
 
