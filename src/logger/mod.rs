@@ -5,13 +5,12 @@ use std::sync::{Arc, RwLock};
 use std::thread;
 use std::time::Duration;
 
-use crate::formatter::Formatter;
+use crate::formatter::{colorize_string, Ansi, Formatter};
 use crate::output;
 
 #[allow(missing_docs)]
 pub struct Logger {
     is_loading: Arc<RwLock<bool>>,
-    loading_message: String,
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
@@ -22,7 +21,6 @@ impl Default for Logger {
     fn default() -> Self {
         Self {
             is_loading: Arc::new(RwLock::new(false)),
-            loading_message: String::from(""),
             loading_handle: None,
 
             line_ending: String::from("\n"),
@@ -185,9 +183,9 @@ impl Logger {
         drop(status); // Release the lock so a mutable can be returned
 
         let status = self.is_loading.clone();
-        let thread_message = message.to_string();
+        let message = self.formatter.colorize(&message.to_string());
 
-        self.loading_message = message.to_string();
+        let thread_message = message.clone();
 
         self.loading_handle = Some(thread::spawn(move || {
             let frames: [&str; 6] = ["⠦", "⠇", "⠋", "⠙", "⠸", "⠴"];
@@ -199,8 +197,7 @@ impl Logger {
                 }
 
                 let message = format!("\r<cyan>{}</> {}", frames[i], &thread_message);
-
-                output::stdout(message, "");
+                output::stdout(colorize_string(message), "");
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
@@ -232,10 +229,7 @@ impl Logger {
             .join()
             .expect("Could not join spawned thread");
 
-        let clearing_length = self.loading_message.len() + 5;
-        print!("\r{}\r", " ".repeat(clearing_length));
-        io::stdout().flush().unwrap();
-
+        Ansi::clear_line();
         self
     }
 

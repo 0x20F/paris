@@ -16,6 +16,7 @@ use keys::Key;
 
 use keys::KeyList;
 
+pub use concerns::Ansi;
 pub use icons::LogIcon;
 
 /// Heavier formatter that allows the possibility of

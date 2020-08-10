@@ -8,4 +8,9 @@ impl Ansi {
     pub fn escape(code: u8) -> String {
         format!("\x1B[{}m", code)
     }
+
+    /// Clears the line of all characters
+    pub fn clear_line() {
+        print!("\r\x1B[2K");
+    }
 }
