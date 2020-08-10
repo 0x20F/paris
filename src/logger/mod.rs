@@ -5,7 +5,7 @@ use std::sync::{Arc, RwLock};
 use std::thread;
 use std::time::Duration;
 
-use crate::formatter::{Formatter, colorize_string};
+use crate::formatter::{colorize_string, Formatter};
 use crate::output;
 
 #[allow(missing_docs)]
