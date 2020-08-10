@@ -5,7 +5,7 @@ use std::sync::{Arc, RwLock};
 use std::thread;
 use std::time::Duration;
 
-use crate::formatter::{colorize_string, Formatter};
+use crate::formatter::{colorize_string, Ansi, Formatter};
 use crate::output;
 
 #[allow(missing_docs)]
@@ -229,7 +229,7 @@ impl Logger {
             .join()
             .expect("Could not join spawned thread");
 
-        print!("\r\x1B[2K");
+        Ansi::clear_line();
         self
     }
 
