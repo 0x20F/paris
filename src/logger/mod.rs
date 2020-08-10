@@ -11,7 +11,6 @@ use crate::output;
 #[allow(missing_docs)]
 pub struct Logger {
     is_loading: Arc<RwLock<bool>>,
-    loading_message: String,
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
@@ -22,7 +21,6 @@ impl Default for Logger {
     fn default() -> Self {
         Self {
             is_loading: Arc::new(RwLock::new(false)),
-            loading_message: String::from(""),
             loading_handle: None,
 
             line_ending: String::from("\n"),
@@ -188,7 +186,6 @@ impl Logger {
         let message = self.formatter.colorize(&message.to_string());
 
         let thread_message = message.clone();
-        self.loading_message = message;
 
         self.loading_handle = Some(thread::spawn(move || {
             let frames: [&str; 6] = ["⠦", "⠇", "⠋", "⠙", "⠸", "⠴"];
@@ -232,11 +229,7 @@ impl Logger {
             .join()
             .expect("Could not join spawned thread");
 
-        // +2 accounts for animation character and space
-        let clearing_length = self.loading_message.len() + 2;
-        print!("\r{}\r", " ".repeat(clearing_length));
-        io::stdout().flush().unwrap();
-
+        print!("\r\x1B[2K");
         self
     }
 
