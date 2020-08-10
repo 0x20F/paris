@@ -232,7 +232,8 @@ impl Logger {
             .join()
             .expect("Could not join spawned thread");
 
-        let clearing_length = self.loading_message.len();
+        // +2 accounts for animation character and space
+        let clearing_length = self.loading_message.len() + 2;
         print!("\r{}\r", " ".repeat(clearing_length));
         io::stdout().flush().unwrap();
 
