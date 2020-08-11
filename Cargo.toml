@@ -1,6 +1,6 @@
 [package]
 name = "paris"
-version = "1.5.6"
+version = "1.5.7"
 authors = ["Poly <alexhexan22@gmail.com>"]
 edition = "2018"
 
@@ -14,7 +14,7 @@ categories = ["command-line-interface", "command-line-utilities"]
 
 description = "A simple logger for your CLI apps or other things you want in the terminal"
 
-license = "MIT OR Apache-2.0"
+license = "MPL-2.0"
 
 exclude = [
     "example/*",
