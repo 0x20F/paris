@@ -34,8 +34,8 @@ impl CustomStyle {
 
 #[cfg(test)]
 mod tests {
-    use crate::formatter::keys::Key;
     use crate::formatter::custom::CustomStyle;
+    use crate::formatter::keys::Key;
 
     #[test]
     fn ansi_expansion() {
