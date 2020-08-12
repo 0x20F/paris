@@ -1,15 +1,17 @@
 use crate::formatter::keys::Key;
 
-pub struct CustomStyle {
+pub struct CustomStyle<'a> {
     key: String,
     colors: Vec<String>,
+    test: &'a str
 }
 
-impl CustomStyle {
+impl<'a> CustomStyle<'a> {
     pub fn new(key: &str, colors: Vec<&str>) -> Self {
         Self {
             key: format!("<{}>", key),
             colors: colors.iter().map(|s| (*s).to_string()).collect(),
+            test: "as"
         }
     }
 

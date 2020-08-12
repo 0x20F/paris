@@ -9,15 +9,15 @@ use crate::formatter::{colorize_string, Ansi, Formatter};
 use crate::output;
 
 #[allow(missing_docs)]
-pub struct Logger {
+pub struct Logger<'a> {
     is_loading: Arc<RwLock<bool>>,
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
-    formatter: Formatter,
+    formatter: Formatter<'a>,
 }
 
-impl Default for Logger {
+impl<'a> Default for Logger<'a> {
     fn default() -> Self {
         Self {
             is_loading: Arc::new(RwLock::new(false)),
@@ -29,7 +29,7 @@ impl Default for Logger {
     }
 }
 
-impl Logger {
+impl<'a> Logger<'a> {
     /// Initializes a new logger
     ///
     /// # Example
