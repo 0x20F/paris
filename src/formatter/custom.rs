@@ -31,8 +31,8 @@ impl<'a> CustomStyle<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::formatter::keys::Key;
     use crate::formatter::custom::CustomStyle;
+    use crate::formatter::keys::Key;
 
     #[test]
     fn ansi_expansion() {
@@ -45,16 +45,9 @@ mod tests {
     #[test]
     fn ansi_expansion_multiple() {
         let style = CustomStyle::new("lol", vec!["blue", "bold", "on-green"]);
-        let colors = vec![
-            Key::new("blue"),
-            Key::new("bold"),
-            Key::new("on-green")
-        ];
+        let colors = vec![Key::new("blue"), Key::new("bold"), Key::new("on-green")];
 
-        let generated: String = colors
-            .iter()
-            .map(|k| k.to_ansi())
-            .collect();
+        let generated: String = colors.iter().map(|k| k.to_ansi()).collect();
 
         assert_eq!(style.expand(), generated);
     }
