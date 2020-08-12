@@ -57,7 +57,7 @@ impl<'a> Formatter<'a> {
     /// fmt.new_style("lol", vec!["green", "bold", "on_blue"]);
     ///
     /// // '<lol>' is now a key that can be used in strings
-    pub fn new_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Self {
+    pub fn new_style(&mut self, key: &str, colors: Vec<&'a str>) -> &mut Self {
         self.custom_styles.push(CustomStyle::new(key, colors));
 
         self

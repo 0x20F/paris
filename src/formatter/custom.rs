@@ -2,16 +2,14 @@ use crate::formatter::keys::Key;
 
 pub struct CustomStyle<'a> {
     key: String,
-    colors: Vec<String>,
-    test: &'a str
+    colors: Vec<Key<'a>>,
 }
 
 impl<'a> CustomStyle<'a> {
-    pub fn new(key: &str, colors: Vec<&str>) -> Self {
+    pub fn new(key: &str, colors: Vec<&'a str>) -> Self {
         Self {
             key: format!("<{}>", key),
-            colors: colors.iter().map(|s| (*s).to_string()).collect(),
-            test: "as"
+            colors: colors.iter().map(|s| Key::new(s)).collect(),
         }
     }
 
@@ -24,10 +22,7 @@ impl<'a> CustomStyle<'a> {
 
         // Turn it into the ansi values it should be
         for color in self.colors.iter() {
-            let key = Key::new(color);
-            let ansi = key.to_ansi();
-
-            colors.push(ansi);
+            colors.push(color.to_ansi());
         }
 
         colors.join("")

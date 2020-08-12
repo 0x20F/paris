@@ -263,7 +263,7 @@ impl<'a> Logger<'a> {
     /// // '<lol>' can now be used as a key in strings and will contain
     /// // the defined colors and styles
     /// logger.info("<lol>much shorter than writing all of them</>");
-    pub fn add_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Self {
+    pub fn add_style(&mut self, key: &str, colors: Vec<&'a str>) -> &mut Self {
         self.formatter.new_style(key, colors);
         self
     }
