@@ -9,15 +9,15 @@ use crate::formatter::{colorize_string, Ansi, Formatter};
 use crate::output;
 
 #[allow(missing_docs)]
-pub struct Logger {
+pub struct Logger<'a> {
     is_loading: Arc<RwLock<bool>>,
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
-    formatter: Formatter,
+    formatter: Formatter<'a>,
 }
 
-impl Default for Logger {
+impl<'a> Default for Logger<'a> {
     fn default() -> Self {
         Self {
             is_loading: Arc::new(RwLock::new(false)),
@@ -29,7 +29,7 @@ impl Default for Logger {
     }
 }
 
-impl Logger {
+impl<'a> Logger<'a> {
     /// Initializes a new logger
     ///
     /// # Example
@@ -185,8 +185,6 @@ impl Logger {
         let status = self.is_loading.clone();
         let message = self.formatter.colorize(&message.to_string());
 
-        let thread_message = message.clone();
-
         self.loading_handle = Some(thread::spawn(move || {
             let frames: [&str; 6] = ["⠦", "⠇", "⠋", "⠙", "⠸", "⠴"];
             let mut i = 1;
@@ -196,7 +194,7 @@ impl Logger {
                     i = 0;
                 }
 
-                let message = format!("\r<cyan>{}</> {}", frames[i], &thread_message);
+                let message = format!("\r<cyan>{}</> {}", frames[i], &message);
                 output::stdout(colorize_string(message), "");
                 io::stdout().flush().unwrap();
 
@@ -263,7 +261,7 @@ impl Logger {
     /// // '<lol>' can now be used as a key in strings and will contain
     /// // the defined colors and styles
     /// logger.info("<lol>much shorter than writing all of them</>");
-    pub fn add_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Self {
+    pub fn add_style(&mut self, key: &str, colors: Vec<&'a str>) -> &mut Self {
         self.formatter.new_style(key, colors);
         self
     }
