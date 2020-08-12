@@ -31,3 +31,17 @@ impl CustomStyle {
         colors.join("")
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::formatter::keys::Key;
+    use crate::formatter::custom::CustomStyle;
+
+    #[test]
+    fn ansi_expansion() {
+        let style = CustomStyle::new("lol", vec!["blue"]);
+        let color = Key::new("blue");
+
+        assert_eq!(style.expand(), color.to_ansi());
+    }
+}
