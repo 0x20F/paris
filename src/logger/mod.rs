@@ -185,8 +185,6 @@ impl<'a> Logger<'a> {
         let status = self.is_loading.clone();
         let message = self.formatter.colorize(&message.to_string());
 
-        let thread_message = message.clone();
-
         self.loading_handle = Some(thread::spawn(move || {
             let frames: [&str; 6] = ["⠦", "⠇", "⠋", "⠙", "⠸", "⠴"];
             let mut i = 1;
@@ -196,7 +194,7 @@ impl<'a> Logger<'a> {
                     i = 0;
                 }
 
-                let message = format!("\r<cyan>{}</> {}", frames[i], &thread_message);
+                let message = format!("\r<cyan>{}</> {}", frames[i], &message);
                 output::stdout(colorize_string(message), "");
                 io::stdout().flush().unwrap();
 
