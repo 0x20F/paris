@@ -41,4 +41,21 @@ mod tests {
 
         assert_eq!(style.expand(), color.to_ansi());
     }
+
+    #[test]
+    fn ansi_expansion_multiple() {
+        let style = CustomStyle::new("lol", vec!["blue", "bold", "on-green"]);
+        let colors = vec![
+            Key::new("blue"),
+            Key::new("bold"),
+            Key::new("on-green")
+        ];
+
+        let generated: String = colors
+            .iter()
+            .map(|k| k.to_ansi())
+            .collect();
+
+        assert_eq!(style.expand(), generated);
+    }
 }
