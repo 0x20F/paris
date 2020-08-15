@@ -6,6 +6,7 @@
 <p align="center">
    <img alt="Build status badge" src="https://github.com/0x20F/paris/workflows/build/badge.svg"/>
    <img alt="Crates io badge" src="https://img.shields.io/crates/v/paris.svg"/>
+   <img alt="Repository version badge" src="https://img.shields.io/badge/repository-1.5.8-blue.svg">
    <a href="https://opensource.org/licenses/MPL-2.0"><img alt="License badge" src="https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg"/></a>
 </p>
 
