@@ -1,7 +1,7 @@
 [package]
 name = "paris"
 version = "1.5.7"
-authors = ["Poly <alexhexan22@gmail.com>"]
+authors = ["Poly <0x20fa@gmail.com>"]
 edition = "2018"
 
 documentation = "https://docs.rs/paris"
