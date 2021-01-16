@@ -25,12 +25,12 @@ pub use icons::LogIcon;
 /// just use the `colorize_string()` function provided
 /// in the module.
 #[cfg(not(feature = "no_logger"))]
-pub struct Formatter {
-    custom_styles: Vec<CustomStyle>,
+pub struct Formatter<'a> {
+    custom_styles: Vec<CustomStyle<'a>>,
 }
 
 #[cfg(not(feature = "no_logger"))]
-impl Default for Formatter {
+impl<'a> Default for Formatter<'a> {
     fn default() -> Self {
         Self {
             custom_styles: vec![],
@@ -39,7 +39,7 @@ impl Default for Formatter {
 }
 
 #[cfg(not(feature = "no_logger"))]
-impl Formatter {
+impl<'a> Formatter<'a> {
     /// Create a new formatter with no custom styles defined
     pub fn new() -> Self {
         Self::default()
@@ -57,7 +57,7 @@ impl Formatter {
     /// fmt.new_style("lol", vec!["green", "bold", "on_blue"]);
     ///
     /// // '<lol>' is now a key that can be used in strings
-    pub fn new_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Formatter {
+    pub fn new_style(&mut self, key: &str, colors: Vec<&'a str>) -> &mut Self {
         self.custom_styles.push(CustomStyle::new(key, colors));
 
         self

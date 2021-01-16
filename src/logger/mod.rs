@@ -9,15 +9,15 @@ use crate::formatter::{colorize_string, Ansi, Formatter};
 use crate::output;
 
 #[allow(missing_docs)]
-pub struct Logger {
+pub struct Logger<'a> {
     is_loading: Arc<RwLock<bool>>,
     loading_handle: Option<thread::JoinHandle<()>>,
 
     line_ending: String,
-    formatter: Formatter,
+    formatter: Formatter<'a>,
 }
 
-impl Default for Logger {
+impl<'a> Default for Logger<'a> {
     fn default() -> Self {
         Self {
             is_loading: Arc::new(RwLock::new(false)),
@@ -29,7 +29,7 @@ impl Default for Logger {
     }
 }
 
-impl Logger {
+impl<'a> Logger<'a> {
     /// Initializes a new logger
     ///
     /// # Example
@@ -53,7 +53,7 @@ impl Logger {
     /// ```
     ///
     /// Equivalent macro: `log!()`
-    pub fn log<T: Display>(&mut self, message: T) -> &mut Logger {
+    pub fn log<T: Display>(&mut self, message: T) -> &mut Self {
         self.stdout(message)
     }
 
@@ -67,7 +67,7 @@ impl Logger {
     /// ```
     ///
     /// Equivalent macro: `info!()`
-    pub fn info<T: Display>(&mut self, message: T) -> &mut Logger {
+    pub fn info<T: Display>(&mut self, message: T) -> &mut Self {
         self.stdout(format!("<cyan><info></> {}", message))
     }
 
@@ -81,7 +81,7 @@ impl Logger {
     /// ```
     ///
     /// Equivalent macro: `success!()`
-    pub fn success<T: Display>(&mut self, message: T) -> &mut Logger {
+    pub fn success<T: Display>(&mut self, message: T) -> &mut Self {
         self.stdout(format!("<green><tick></> {}", message))
     }
 
@@ -95,7 +95,7 @@ impl Logger {
     /// ```
     ///
     /// Equivalent macro: `warn!()`
-    pub fn warn<T: Display>(&mut self, message: T) -> &mut Logger {
+    pub fn warn<T: Display>(&mut self, message: T) -> &mut Self {
         self.stdout(format!("<yellow><warn></> {}", message))
     }
 
@@ -109,7 +109,7 @@ impl Logger {
     /// ```
     ///
     /// Equivalent macro: `error!()`
-    pub fn error<T: Display>(&mut self, message: T) -> &mut Logger {
+    pub fn error<T: Display>(&mut self, message: T) -> &mut Self {
         self.stderr(format!("<red><cross></> {}", message))
     }
 
@@ -125,7 +125,7 @@ impl Logger {
     ///     .newline(2)
     ///     .info("And some more in between");
     /// ```
-    pub fn newline(&mut self, amount: usize) -> &mut Logger {
+    pub fn newline(&mut self, amount: usize) -> &mut Self {
         self.done();
         print!("{}", "\n".repeat(amount));
         self
@@ -142,7 +142,7 @@ impl Logger {
     ///     .warn("Indented warning eh? Stands out a bit")
     ///     .newline(5);
     /// ```
-    pub fn indent(&mut self, amount: usize) -> &mut Logger {
+    pub fn indent(&mut self, amount: usize) -> &mut Self {
         self.done();
         print!("{}", "\t".repeat(amount));
         self
@@ -176,7 +176,7 @@ impl Logger {
     ///
     /// logger.error("I give up, I can't do it again!");
     /// ```
-    pub fn loading<T: Display>(&mut self, message: T) -> &mut Logger {
+    pub fn loading<T: Display>(&mut self, message: T) -> &mut Self {
         let mut status = self.is_loading.write().unwrap();
         *status = true;
 
@@ -184,8 +184,6 @@ impl Logger {
 
         let status = self.is_loading.clone();
         let message = self.formatter.colorize(&message.to_string());
-
-        let thread_message = message.clone();
 
         self.loading_handle = Some(thread::spawn(move || {
             let frames: [&str; 6] = ["⠦", "⠇", "⠋", "⠙", "⠸", "⠴"];
@@ -196,7 +194,7 @@ impl Logger {
                     i = 0;
                 }
 
-                let message = format!("\r<cyan>{}</> {}", frames[i], &thread_message);
+                let message = format!("\r<cyan>{}</> {}", frames[i], &message);
                 output::stdout(colorize_string(message), "");
                 io::stdout().flush().unwrap();
 
@@ -213,7 +211,7 @@ impl Logger {
     /// when loading is done, maybe a success message. All other methods (success, warning, error, etc.)
     /// call this one automatically when called so you can use one of those directly
     /// for less clutter.
-    pub fn done(&mut self) -> &mut Logger {
+    pub fn done(&mut self) -> &mut Self {
         if !*self.is_loading.read().unwrap() {
             return self;
         }
@@ -245,7 +243,7 @@ impl Logger {
     ///     .indent(4)
     ///     .log("This is on the same line!");
     /// ```
-    pub fn same(&mut self) -> &mut Logger {
+    pub fn same(&mut self) -> &mut Self {
         self.set_line_ending("");
 
         self
@@ -263,13 +261,13 @@ impl Logger {
     /// // '<lol>' can now be used as a key in strings and will contain
     /// // the defined colors and styles
     /// logger.info("<lol>much shorter than writing all of them</>");
-    pub fn add_style(&mut self, key: &str, colors: Vec<&str>) -> &mut Logger {
+    pub fn add_style(&mut self, key: &str, colors: Vec<&'a str>) -> &mut Self {
         self.formatter.new_style(key, colors);
         self
     }
 
     /// Output to stdout, add timestamps or on the same line
-    fn stdout<T>(&mut self, message: T) -> &mut Logger
+    fn stdout<T>(&mut self, message: T) -> &mut Self
     where
         T: Display,
     {
@@ -281,7 +279,7 @@ impl Logger {
     }
 
     /// Output to stderr, add timestamps or write on the same line
-    fn stderr<T>(&mut self, message: T) -> &mut Logger
+    fn stderr<T>(&mut self, message: T) -> &mut Self
     where
         T: Display,
     {

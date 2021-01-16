@@ -1,15 +1,15 @@
 use crate::formatter::keys::Key;
 
-pub struct CustomStyle {
+pub struct CustomStyle<'a> {
     key: String,
-    colors: Vec<String>,
+    colors: Vec<Key<'a>>,
 }
 
-impl CustomStyle {
-    pub fn new(key: &str, colors: Vec<&str>) -> Self {
+impl<'a> CustomStyle<'a> {
+    pub fn new(key: &str, colors: Vec<&'a str>) -> Self {
         Self {
             key: format!("<{}>", key),
-            colors: colors.iter().map(|s| (*s).to_string()).collect(),
+            colors: colors.iter().map(|s| Key::new(s)).collect(),
         }
     }
 
@@ -22,12 +22,33 @@ impl CustomStyle {
 
         // Turn it into the ansi values it should be
         for color in self.colors.iter() {
-            let key = Key::new(color);
-            let ansi = key.to_ansi();
-
-            colors.push(ansi);
+            colors.push(color.to_ansi());
         }
 
         colors.join("")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::formatter::custom::CustomStyle;
+    use crate::formatter::keys::Key;
+
+    #[test]
+    fn ansi_expansion() {
+        let style = CustomStyle::new("lol", vec!["blue"]);
+        let color = Key::new("blue");
+
+        assert_eq!(style.expand(), color.to_ansi());
+    }
+
+    #[test]
+    fn ansi_expansion_multiple() {
+        let style = CustomStyle::new("lol", vec!["blue", "bold", "on-green"]);
+        let colors = vec![Key::new("blue"), Key::new("bold"), Key::new("on-green")];
+
+        let generated: String = colors.iter().map(|k| k.to_ansi()).collect();
+
+        assert_eq!(style.expand(), generated);
     }
 }
