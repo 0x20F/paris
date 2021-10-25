@@ -15,6 +15,21 @@
    <img src="https://github.com/0x20F/paris/blob/master/example/paris_example.gif"/>
 </p>
 
+<br/>
+<br/>
+
+<h2 align="center">ℹ️ Notice</h2>
+
+If the provided _logging_ API is too simple for your use case (it's definitely not meant for anything too complex) but you still like the formatting style (`<blue></>` etc) then you can still make use of this crate!
+
+By importing the `format` module, you get access to the `Formatter` structure itself. This is what the `Logger` uses in the back end anyway, you're basically stripping away the API.
+
+For even more ease of use the `formatter` module includes a `colorize_string` function which you can use to directly colorize whatever without initializing the formatter. Drawbacks and caveats may apply, read the docs.
+
+###### See [the formatter module](https://docs.rs/paris/1.5.7/paris/formatter/index.html) for more info if needed.
+ 
+
+<br/>
 
 ## How to use
 ```toml
