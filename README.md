@@ -20,7 +20,7 @@
 
 <h2 align="center">Notice</h2>
 
-If the provided _logging_ API is too simple for your use case (it's definitely not meant for anything too complex) but you still like the formatting style (`<blue></>` etc) then you can still make use of this crate!
+If the provided _logging_ API is too simple for your use case (it's definitely not meant for anything too complex) but you still like the formatting style (`<blue></>` etc) then you can still make use of this crate! See [here](https://github.com/0x20F/paris/issues/38#issuecomment-950874653) for a quick example.
 
 By importing the `format` module, you get access to the `Formatter` structure itself. This is what the `Logger` uses in the back end anyway, you're basically stripping away the API.
 
