@@ -18,7 +18,7 @@
 <br/>
 <br/>
 
-<h2 align="center">ℹ️ Notice</h2>
+<h2 align="center">Notice</h2>
 
 If the provided _logging_ API is too simple for your use case (it's definitely not meant for anything too complex) but you still like the formatting style (`<blue></>` etc) then you can still make use of this crate!
 
