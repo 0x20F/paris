@@ -194,7 +194,7 @@ you can use underlines(`_`) or spaces(` `)
 `on-bright-magenta`, `on-bright-white`
 
 #### Styles
-`bold`(`b`), `underline`(`u`), `dimmed`(`d`), `italic`(`i`)
+`bold`(`b`), `underline`(`u`), `dimmed`(`d`), `italic`(`i`), `blink`(`l`), `reverse`(`r`), `hidden`(`h`), `strikethrough`(`s`)
 
 Styles are a bit different, they all have their usual keys, the long and painful to write ones. But they 
 also have shorthand keys (in parenthesis).

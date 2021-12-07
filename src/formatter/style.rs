@@ -15,6 +15,18 @@ pub enum Style {
     Dimmed,
     DimmedReset,
 
+    Blink,
+    BlinkReset,
+
+    Reverse,
+    ReverseReset,
+
+    Hidden,
+    HiddenReset,
+
+    Strikethrough,
+    StrikethroughReset,
+
     None,
 }
 
@@ -32,6 +44,18 @@ impl Style {
 
             Style::Underline => 4,
             Style::UnderlineReset => 24,
+
+            Style::Blink => 5,
+            Style::BlinkReset => 25,
+
+            Style::Reverse => 7,
+            Style::ReverseReset => 27,
+
+            Style::Hidden => 8,
+            Style::HiddenReset => 28,
+
+            Style::Strikethrough => 9,
+            Style::StrikethroughReset => 29,
 
             Style::None => 0,
         }
@@ -62,6 +86,18 @@ impl FromStr for Style {
 
             "underline" | "u" => Ok(Style::Underline),
             "/underline" | "/u" => Ok(Style::UnderlineReset),
+
+            "blink" | "l" => Ok(Style::Blink),
+            "/blink" | "/l" => Ok(Style::BlinkReset),
+
+            "reverse" | "r" => Ok(Style::Reverse),
+            "/reverse" | "/r" => Ok(Style::ReverseReset),
+
+            "hidden" | "h" => Ok(Style::Hidden),
+            "/hidden" | "/h" => Ok(Style::HiddenReset),
+
+            "strikethrough" | "s" => Ok(Style::Strikethrough),
+            "/strikethrough" | "/s" => Ok(Style::StrikethroughReset),
 
             _ => Err(()),
         }
