@@ -176,6 +176,10 @@ mod tests {
     replacement!(dimmed, 2);
     replacement!(italic, 3);
     replacement!(underline, 4);
+    replacement!(blink, 5);
+    replacement!(reverse, 7);
+    replacement!(hidden, 8);
+    replacement!(strikethrough, 9);
 
     // Reset check
     #[test]
