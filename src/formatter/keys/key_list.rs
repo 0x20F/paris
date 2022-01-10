@@ -55,13 +55,17 @@ impl<'a> Iterator for KeyList<'a> {
         loop {
             let key = self.fetch_next_key();
 
-            if key.is_none() { break; }
+            if key.is_none() {
+                break;
+            }
 
             let (key, omit) = key.unwrap();
 
-            // If provided key was a 'fake' with a false opening 
+            // If provided key was a 'fake' with a false opening
             // like this "<---------------" we don't want it in the key list.
-            if omit { continue; }
+            if omit {
+                continue;
+            }
 
             return Some(key);
         }
