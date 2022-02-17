@@ -38,9 +38,7 @@ impl<'a> KeyList<'a> {
 
             // +1 to get the last '>' that's excluded only if the key
             // isn't a 'fake' key with a false opening
-            let adder = if omit {
-                0
-            } else if self.input[..rest].len() == self.input.len() {
+            let adder = if omit || self.input[..rest].len() == self.input.len() {
                 // Don't add anything else if we're at the end of the string
                 0
             } else {
