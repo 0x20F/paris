@@ -38,7 +38,14 @@ impl<'a> KeyList<'a> {
 
             // +1 to get the last '>' that's excluded only if the key
             // isn't a 'fake' key with a false opening
-            let adder = if omit { 0 } else { 1 };
+            let adder = if omit || self.input[..rest].len() == self.input.len() {
+                // Don't add anything else if we're at the end of the string
+                0
+            } else {
+                1
+            };
+
+            println!("Dying {}", &self.input[..(rest + adder)]);
 
             key = Some((Key::new(&self.input[..(rest + adder)]), omit));
             self.input = &self.input[(rest + adder)..];
@@ -92,5 +99,16 @@ mod tests {
         let key_count = KeyList::new(&input).count();
 
         assert_eq!(key_count, 2);
+    }
+
+    #[test]
+    fn mess_around() {
+        let input = "<< powering on 'TV' (0)";
+        let _keys = KeyList::new(&input).count();
+
+        let input = "<< something that doesn't end after weird patterns < alksdfa < ngi2oueng <<ikdoqlksmads <black></>";
+        let keys = KeyList::new(&input).count();
+
+        assert_eq!(keys, 2);
     }
 }
