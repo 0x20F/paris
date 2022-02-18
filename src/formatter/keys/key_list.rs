@@ -45,8 +45,6 @@ impl<'a> KeyList<'a> {
                 1
             };
 
-            println!("Dying {}", &self.input[..(rest + adder)]);
-
             key = Some((Key::new(&self.input[..(rest + adder)]), omit));
             self.input = &self.input[(rest + adder)..];
         }
