@@ -96,7 +96,7 @@ impl<'a> Formatter<'a> {
 
 /// Finds all keys in the given input. If with_colors
 /// is true, it will replace all keys with their respective
-/// ANSI color code. Otherwise it will only replace the 
+/// ANSI color code. Otherwise it will only replace the
 /// keys with an empty string.
 ///
 /// #### This function does not take into account custom styles, you need the struct for that.
