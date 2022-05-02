@@ -15,7 +15,10 @@ fn formatter_can_colorize() {
 
 #[test]
 fn formatter_can_format_without_colors() {
-    println!("{}", formatter::format_string("Something <red>white</>", false));
+    println!(
+        "{}",
+        formatter::format_string("Something <red>white</>", false)
+    );
 }
 
 #[test]
