@@ -1,10 +1,22 @@
 #[cfg(not(feature = "no_logger"))]
 use paris::Logger;
 
+use paris::formatter;
+
 #[cfg(feature = "macros")]
 use paris::{error, info, success, warn};
 
 use paris::LogIcon;
+
+#[test]
+fn formatter_can_colorize() {
+    println!("{}", formatter::colorize_string("Something <red>red</>"));
+}
+
+#[test]
+fn formatter_can_format_without_colors() {
+    println!("{}", formatter::format_string("Something <red>white</>", false));
+}
 
 #[test]
 #[cfg(not(feature = "no_logger"))]
