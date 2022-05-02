@@ -1,6 +1,6 @@
 [package]
 name = "paris"
-version = "1.5.11"
+version = "1.5.12"
 authors = ["Poly <0x20fa@gmail.com>"]
 edition = "2018"
 
