@@ -12,7 +12,7 @@
 
 
 <p align="center">
-   <img src="https://github.com/0x20F/paris/blob/master/example/paris_example.gif"/>
+   <img src="https://github.com/0x20F/paris/blob/master/example/paris_example.gif?raw=true"/>
 </p>
 
 <br/>
