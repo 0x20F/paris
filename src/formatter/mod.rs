@@ -94,24 +94,48 @@ impl<'a> Formatter<'a> {
     }
 }
 
+/// Finds all keys in the given input. If with_colors
+/// is true, it will replace all keys with their respective
+/// ANSI color code. Otherwise it will only replace the
+/// keys with an empty string.
+///
+/// #### This function does not take into account custom styles, you need the struct for that.
+pub fn format_string<S>(input: S, with_colors: bool) -> String
+where
+    S: Into<String>,
+{
+    let input = input.into();
+    let mut output = input.clone();
+    let empty = "";
+
+    for key in KeyList::new(&input) {
+        if with_colors {
+            output = output.replace(&key.to_string(), &key.to_ansi());
+            continue;
+        }
+
+        output = output.replace(&key.to_string(), empty);
+    }
+
+    output
+}
+
 /// Finds all keys in the given input. Keys meaning
 /// whatever the logger uses. Something that looks like `<key>`.
 /// And replaces all those keys with their color, style
 /// or icon equivalent.
+///
+/// This is a wrapper around the `format_string` function, it always passes
+/// true for the second parameter. If you want to have the ability to
+/// both colorize and plain remove the tags out of the strings, you should
+/// that function instead.
 ///
 /// #### This function does not take into account custom styles, you need the struct for that
 pub fn colorize_string<S>(input: S) -> String
 where
     S: Into<String>,
 {
-    let input = input.into();
-    let mut output = input.clone();
-
-    for key in KeyList::new(&input) {
-        output = output.replace(&key.to_string(), &key.to_ansi());
-    }
-
-    output
+    format_string(input, true)
 }
 
 #[cfg(test)]
@@ -201,6 +225,18 @@ mod tests {
 
         // Make sure its still in there
         assert!(parsed.contains("<html>"));
+    }
+
+    #[test]
+    fn no_colors() {
+        let s = String::from("<bright_green>Something is black</>");
+        let parsed = format_string(s, false);
+        let expected = String::from("Something is black");
+
+        assert!(!parsed.contains("<bright_green>"));
+        assert!(!parsed.contains("</>"));
+
+        assert_eq!(parsed, expected);
     }
 
     #[test]
