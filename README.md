@@ -50,8 +50,6 @@ log.info("It's that simple!");
 ##### Timestamps 
 If you'd like timestamps with all your logs you'll
 have to enable the feature when adding the crate as a dependency. 
-
-Notice: This will also include `chrono` as a dependency.
 ```toml
 [dependencies]
 paris = { version = "1.5", features = ["timestamps"] }

@@ -1,6 +1,6 @@
 [package]
 name = "paris"
-version = "1.5.12"
+version = "1.5.13"
 authors = ["Poly <0x20fa@gmail.com>"]
 edition = "2018"
 
@@ -28,14 +28,7 @@ exclude = [
 maintenance = { status = "passively-maintained" }
 
 
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-chrono = { version = "0.4", optional = true }
-
-
 [features]
-timestamps = ["chrono"]
+timestamps = []
 macros = []
 no_logger = []
