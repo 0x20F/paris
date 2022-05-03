@@ -1,17 +1,23 @@
 extern crate chrono;
 
-use chrono::{Timelike, Utc};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn now() -> String {
-    let now = Utc::now();
-    let (is_pm, hour) = now.hour12();
+    let current = SystemTime::now();
+    let since_epoch = current.duration_since(UNIX_EPOCH).expect("Time went backwards");
+    let timestamp = since_epoch.as_secs();
+
+    let hours = (timestamp % 86400 ) / 3600;
+    let minutes = (timestamp % 3600) / 60;
+    let seconds = timestamp % 60;
+
+    let is_pm = hours > 12;
 
     let stamp = format!(
-        "<dimmed>{:02}:{:02}:{:02}.{:03} {}: </>",
-        hour,
-        now.minute(),
-        now.second(),
-        now.nanosecond() / 1_000_000,
+        "<dimmed>{:02}:{:02}:{:02} {}: </>",
+        hours,
+        minutes,
+        seconds,
         if is_pm { "PM" } else { "AM" }
     );
 
