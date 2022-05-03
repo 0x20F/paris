@@ -1,5 +1,3 @@
-extern crate chrono;
-
 use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn now() -> String {
