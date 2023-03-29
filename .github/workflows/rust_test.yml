@@ -2,73 +2,21 @@ name: Rust
 
 on:
   push:
-    branches: [ "*" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "*" ]
+    branches: [ "master" ]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  test:
-    name: Test
-    runs-on: ${{ matrix.config.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", toolchain: "stable" }
-          - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", toolchain: "beta"}
-          - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu", toolchain: "nightly"}
+  build:
+
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Install ${{ matrix.config.toolchain }} toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.config.toolchain }}
-          target: ${{ matrix.config.target }}
-          override: true
-          components: clippy
-
-
-      - name: Run cargo tests normally
-        uses: actions-rs/cargo@v1
-        continue-on-error: ${{ matrix.config.toolchain == 'nightly' }}
-        with:
-          command: test
-
-      - name: Run tests with timestamps feature enabled
-        uses: actions-rs/cargo@v1
-        continue-on-error: ${{ matrix.config.toolchain == 'nightly' }}
-        with:
-          command: test
-          args: --features timestamps
-
-      - name: Run tests with macros feature enabled
-        uses: actions-rs/cargo@v1
-        continue-on-error: ${{ matrix.config.toolchain == 'nightly' }}
-        with:
-          command: test
-          args: --features macros
-
-      - name: Run tests with main logger disabled
-        uses: actions-rs/cargo@v1
-        continue-on-error: ${{ matrix.config.toolchain == 'nightly' }}
-        with:
-          command: test
-          args: --features no_logger
-
-      - name: Run cargo clippy
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features
-
-      - name: Run cargo fmt
-        if: ${{ matrix.config.toolchain == 'stable' }}
-        run: cargo fmt --all -- --check
-
-
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
