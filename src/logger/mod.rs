@@ -177,6 +177,10 @@ impl<'a> Logger<'a> {
     /// logger.error("I give up, I can't do it again!");
     /// ```
     pub fn loading<T: Display>(&mut self, message: T) -> &mut Self {
+        // If already running, stop the currently running thread
+        // and clean it up before adding a new message.
+        self.done();
+
         let mut status = self.is_loading.write().unwrap();
         *status = true;
 
@@ -328,6 +332,17 @@ mod tests {
             .loading("Loading something else")
             .done()
             .error("Done loading instantly lol");
+    }
+
+    #[test]
+    fn multiple_loading() {
+        let mut logger = Logger::new();
+        logger.loading("Loading in the middle of a test is not good!");
+        thread::sleep(Duration::from_secs(1));
+        logger.loading("This will break it?");
+        thread::sleep(Duration::from_secs(1));
+
+        logger.success("Loading done!");
     }
 
     #[test]
