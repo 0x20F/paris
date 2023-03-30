@@ -198,8 +198,8 @@ impl<'a> Logger<'a> {
                     i = 0;
                 }
 
-                let message = format!("\r<cyan>{}</> {}", frames[i], &message);
-                output::stdout(colorize_string(message), "");
+                let message = format!("<cyan>{}</> {}", frames[i], &message);
+                output::stdout(colorize_string(message), "", true);
                 io::stdout().flush().unwrap();
 
                 thread::sleep(Duration::from_millis(100));
@@ -278,7 +278,7 @@ impl<'a> Logger<'a> {
         self.done();
         let message = message.to_string();
 
-        output::stdout(self.formatter.colorize(&message), &self.get_line_ending());
+        output::stdout(self.formatter.colorize(&message), &self.get_line_ending(), false);
         self
     }
 
@@ -290,7 +290,7 @@ impl<'a> Logger<'a> {
         self.done();
         let message = message.to_string();
 
-        output::stderr(self.formatter.colorize(&message), &self.get_line_ending());
+        output::stderr(self.formatter.colorize(&message), &self.get_line_ending(), false);
         self
     }
 
@@ -341,6 +341,18 @@ mod tests {
         thread::sleep(Duration::from_secs(1));
         logger.loading("This will break it?");
         thread::sleep(Duration::from_secs(1));
+
+        logger.success("Loading done!");
+    }
+
+    #[cfg(feature="timestamps")]
+    #[test]
+    fn loading_with_timestamps() {
+        let mut logger = Logger::new();
+        logger.loading("Loading in the middle of a test is not good!");
+        thread::sleep(Duration::from_secs(4));
+        logger.loading("Still loading...");
+        thread::sleep(Duration::from_secs(4));
 
         logger.success("Loading done!");
     }

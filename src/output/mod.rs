@@ -24,23 +24,35 @@ fn current_time() -> String {
 
 /// Writes to stdout without replacing keys
 #[cfg(not(feature = "no_logger"))]
-pub fn stdout<T>(message: T, line_ending: &str)
+pub fn stdout<T>(message: T, line_ending: &str, with_carriage: bool)
 where
     T: Display,
 {
+    let mut carriage = "";
+
+    if with_carriage {
+        carriage = "\r";
+    }
+
     let timestamp = current_time();
-    let message = format!("{}{}{}", timestamp, message, line_ending);
+    let message = format!("{}{}{}{}", carriage, timestamp, message, line_ending);
     print!("{}", message);
 }
 
 /// Writes to stderr without replacing keys
 #[cfg(not(feature = "no_logger"))]
-pub fn stderr<T>(message: T, line_ending: &str)
+pub fn stderr<T>(message: T, line_ending: &str, with_carriage: bool)
 where
     T: Display,
 {
+    let mut carriage = "";
+
+    if with_carriage {
+        carriage = "\r";
+    }
+
     let timestamp = current_time();
-    let message = format!("{}{}{}", timestamp, message, line_ending);
+    let message = format!("{}{}{}{}", carriage, timestamp, message, line_ending);
     eprint!("{}", message);
 }
 
