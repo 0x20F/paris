@@ -278,7 +278,11 @@ impl<'a> Logger<'a> {
         self.done();
         let message = message.to_string();
 
-        output::stdout(self.formatter.colorize(&message), &self.get_line_ending(), false);
+        output::stdout(
+            self.formatter.colorize(&message),
+            &self.get_line_ending(),
+            false,
+        );
         self
     }
 
@@ -290,7 +294,11 @@ impl<'a> Logger<'a> {
         self.done();
         let message = message.to_string();
 
-        output::stderr(self.formatter.colorize(&message), &self.get_line_ending(), false);
+        output::stderr(
+            self.formatter.colorize(&message),
+            &self.get_line_ending(),
+            false,
+        );
         self
     }
 
@@ -345,7 +353,7 @@ mod tests {
         logger.success("Loading done!");
     }
 
-    #[cfg(feature="timestamps")]
+    #[cfg(feature = "timestamps")]
     #[test]
     fn loading_with_timestamps() {
         let mut logger = Logger::new();
